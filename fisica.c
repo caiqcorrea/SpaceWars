@@ -1,10 +1,10 @@
 #include <stdio.h>
-#include "Vetores.cxx"
-#include "Auxiliar.cxx"
+#include "vetores.c"
+#include "auxiliar.c"
 #define G 6.67e-11
 #define RAIO_COLISAO 10.0 //Raio utilizado para checar colisao com a nave
-#define SIZE_X 200		  //Tamanho da horizontal da tela
-#define SIZE_Y 200		  //Tamanho da vertical da tela
+#define SIZE_X 200.0		  //Tamanho da horizontal da tela
+#define SIZE_Y 200.0		  //Tamanho da vertical da tela
 #define MAX_PROJ 100
 #define NUM_NAVES 2
 #define NUM_PLANETAS 1
@@ -58,7 +58,7 @@ enum TipoObj
 	PLANETA
 };
 
-double dt; //Intervalo de tempo da simulacao, lido no arquivo principal
+double dt = e-5; //Intervalo de tempo da simulacao, lido no arquivo principal
 
 /* PROTOTIPAGEM DAS FUNÇÕES */
 
