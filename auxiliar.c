@@ -1,3 +1,8 @@
+/* A biblioteca auxiliar contém uma série de utilidades que
+ * podem ser utilizadas por qualquer parte do programa.
+ */
+
+
 #include <stdlib.h>
 #define string char*
 
@@ -7,6 +12,9 @@ typedef enum
 	TRUE = 1
 } Bool;
 
+void *mallocSafe(int size);
+void freeSafe(void *pnt);
+
 void *mallocSafe(int size){
 	void *ponteiro;
 	ponteiro = malloc(size);
@@ -15,4 +23,9 @@ void *mallocSafe(int size){
 		exit(EXIT_FAILURE);
 	}
 	return ponteiro;
+}
+
+void freeSafe(void *pnt){
+	free(pnt);
+	pnt = NULL;
 }

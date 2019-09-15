@@ -1,9 +1,19 @@
+/* A biblioteca IO deve conter tudo relacionado a saída e entrada
+ * de dados ao programa que não seja das entradas e saída padrão.
+ * 
+ * Utiliza-se esta função para leitura ou escrita de arquivos.
+ * Esta biblioteca não é genérica. Suas funções são todas feitas
+ * com objetivo de ser parte do jogo Space Wars.
+ * 
+ */
+
 #include "fisica.c"
 #include <stdlib.h>
 
-/* PROTOTIPAGEM DAS FUNÇÕES */
+/* P R O T O T I P A G E M   D A S   F U N Ç Õ E S */
 
-//Função que lê todos os inputs de um arquivo informado pelo usuário e atribui valores às variáveis globais
+//Função que lê todos os inputs de um arquivo informado pelo usuário 
+// e atribui valores às variáveis globais
 void lerInputs();
 
 //Função que lê o planeta e inicializa-o
@@ -15,7 +25,7 @@ void lerNave(FILE *arq, Nave *n);
 //Função que lê um projétil e inicializa-o
 void lerProjetil(FILE *arq, Projetil *p, double tempoDeVida);
 
-/* IMPLEMENTAÇÃO DAS FUNÇÕES */
+/* I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S */
 
 void lerInputs()
 {
@@ -25,16 +35,15 @@ void lerInputs()
 	FILE *arq;
 
 	nomeArq = mallocSafe(sizeof(string) * 50);
-
 	printf("Digite o nome do seu arquivo: ");
 	scanf("%s", nomeArq);
 	arq = fopen(nomeArq, "r");
+	freeSafe(nomeArq);
 
 	if (arq == NULL)
 	{
 		printf("Não foi possivel abrir o arquivo.\n");
-		exit(EXIT_FAILURE); //Sai do programa e indica que deu erro.
-							//NÃO SEI AINDA SE exit(EXIT_FAILURE) SAI IMEDIATAMENTE DO PROGRAMA
+		exit(EXIT_FAILURE); //Sai do programa imediatamente e indica erro.
 	}
 
 	lerPlaneta(arq);		   //Lê a primeira linha e atribui valores ao planeta
@@ -45,7 +54,6 @@ void lerInputs()
 		lerProjetil(arq, &(projs[i]), tempoDeVida);
 	printf("O arquivo foi lido com sucesso.\n");
 	fclose(arq);
-	free(nomeArq);
 }
 
 void lerPlaneta(FILE *arq)
