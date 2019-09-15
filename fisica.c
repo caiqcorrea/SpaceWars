@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include "vetores.c"
 #include "auxiliar.c"
+
 #define G 6.67e-11			//Constante gravitacional
 #define RAIO_COLISAO 10.0 	//Raio utilizado para checar colisao com a nave
 #define SIZE_X 200		  	//Tamanho da horizontal da tela
