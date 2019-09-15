@@ -188,7 +188,10 @@ vet2D CalculaForcaSobre(TipoObj tipo, int index)
 		{
 			F = soma(F, Forca(naves[index].o, projs[i].o));
 		}
-		F = soma(F, Forca(naves[index].o, planetas[0].o));
+		for (i = 0; i < NUM_PLANETAS; i++)
+		{
+			F = soma(F, Forca(naves[index].o, planetas[i].o));
+		}
 	}
 	else	//Se é um projétil
 	{
@@ -202,7 +205,11 @@ vet2D CalculaForcaSobre(TipoObj tipo, int index)
 				continue;
 			F = soma(F, Forca(projs[index].o, projs[i].o));
 		}
-		F = soma(F, Forca(projs[index].o, planetas[0].o));
+		for (i = 0; i < NUM_PLANETAS; i++)
+		{
+			F = soma(F, Forca(naves[index].o, planetas[i].o));
+		}
+
 	}
 
 	return F;
