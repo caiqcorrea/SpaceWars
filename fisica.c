@@ -1,3 +1,28 @@
+/* BIBLIOTECA FÍSICA PARA O JOGO SPACE WARS
+ *
+ * Esta biblioteca foi criada especificamente para o jogo Space Wars,
+ * Sua base são as três structs: Nave, Projétil e Planeta, que devem
+ * se encontrar instanciadas dentro dos arrays: naves, projs e planetas.
+ * 
+ * Decidimos implementar uma struct mais básica chamada de Objeto, que existirá
+ * dentro de cada uma das structs mais importantes. Ela possuirá inicialmente
+ * os atributos: massa, posição e velocidade, mas a ideia é que todos os
+ * atributos compartilhados pelos três structs estejam dentro de Objeto (como,
+ * por exemplo, o raio).
+ * Dessa forma, podemos criar funções genéricas que recebem apenas Objetos ao
+ * invés de três (ou mais) funções que fazem a mesma coisa, mas uma para cada
+ * tipo de struct.
+ * 
+ * Todos os calculos feitos são baseados na Teoria da Gravitação Universal de
+ * Isaac Newton.
+ * https://en.wikipedia.org/wiki/Newton%27s_law_of_universal_gravitation
+ * É sabido que determinar posições exatas de orbitas complexas (como as do jogo) 
+ * é um problema em aberto na matemática e na física, então o professor nos
+ * recomendou usar o método numérico de Range-Kutta.
+ * 
+ *
+ */
+
 #include <stdio.h>
 #include "vetores.c"
 #include "auxiliar.c"
@@ -14,17 +39,17 @@
 		Vetor: Estrutura vet2D, representa um vetor em R²
 */
 
-/* ESTRUTURAS E VARIÁVEIS GLOBAIS */
+/* E S T R U T U R A S   E   V A R I Á V E I S   G L O B A I S */
 
 /* Struct Objeto possui uma massa, posição e velocidade. 
  * Ele é um objeto genérico que deve estar dentro de outros structs importantes
- * do programa, como as naves, projeteis e 
+ * do programa, como as naves, projetéis e planetas.
  */
 typedef struct
 {
 	double m; //massa
-	vet2D p;  //posicao
-	vet2D v;
+	vet2D p;  //posição
+	vet2D v; //velocidade
 } Objeto;
 
 /* Struct Nave contém um objeto próprio e um nome que é o nome da nave.
@@ -88,12 +113,12 @@ typedef enum
 	PROJETIL
 } TipoObj;
 
+//Intervalo de tempo da simulacao, lido no arquivo principal
+double dt; 
 
-double dt; //Intervalo de tempo da simulacao, lido no arquivo principal
+/* P R O T O T I P A G E M   D A S   F U N Ç Õ E S */
 
-/* PROTOTIPAGEM DAS FUNÇÕES */
-
-//Dados dois objetos, retorna o forca gravitacional exercida entre o1 e o2. 
+//Dados dois objetos, retorna a força gravitacional exercida entre o1 e o2. 
 //O vetor retornado deve ser aplicado em o1.
 vet2D Forca(Objeto o1, Objeto o2); 
 
@@ -103,12 +128,12 @@ void IncVel(vet2D F, Objeto *o);
 //Dado um objeto e uma velocidade, incrementa a posicao desse objeto
 void IncPos(vet2D v, Objeto *o); 
 
-//Recebe um objeto e calcula a forca gerada sobre ele pelos outros objetos.
+//Recebe um objeto e calcula a força gerada sobre ele pelos outros objetos.
 //Devemos referenciar o objeto passando seu tipo e qual seu índice dentro do seu respectivo array (nave ou projs) 
 //(se o objeto é do tipo planeta, então o índice é indiferente)
 vet2D CalculaForcaSobre(TipoObj tipo, int index); 
 
-/* IMPLEMENTAÇÃO DAS FUNÇÕES */
+/* I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S */
 
 vet2D Forca(Objeto o1, Objeto o2)
 {
@@ -189,7 +214,5 @@ double distanciaEntre(Objeto o1, Objeto o2)
 
 Bool checaColisaoEntre(Objeto o1, Objeto o2)
 {
-	if (distanciaEntre(o1, o2) < RAIO_COLISAO)
-		return TRUE;
-	return FALSE;
+	return (distanciaEntre(o1, o2) < RAIO_COLISAO);
 }
