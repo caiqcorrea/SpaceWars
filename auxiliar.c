@@ -39,7 +39,7 @@ typedef enum {
 
 	/* Este erro é retornando quando se tenta abrir um arquivo e não consegue.
 	 */
-	file_not_find_exception,
+	file_not_find_exception
 	
 } errorCode;
 
@@ -53,11 +53,10 @@ void throwException(string nomeFunc, string mensagem, errorCode e);
 
 //Função pause, copiada do EP1 de Estrutura de Dados e Algoritmos I, matéria ministrada
 //pela professora Cris no segundo semestre de 2019
-//iume.usp.br/~cris
+//ime.usp.br/~cris
 //
 //A função pausa o programa até o usuário dar clicar ENTER
 void pause();
-
 
 
 void *mallocSafe(int size)
@@ -65,7 +64,7 @@ void *mallocSafe(int size)
 	void *ponteiro;
 	ponteiro = malloc(size);
 	if (ponteiro == NULL)
-		throwException("mallocSafe", "Socorro! Malloc devolveu NULL!", stack_overflow);
+		throwException("mallocSafe", "Socorro! Malloc devolveu NULL!", stack_overflow_exception);
 	return ponteiro;
 }
 
@@ -78,7 +77,6 @@ void freeSafe(void *pnt)
 void throwException(string nomeFunc, string mensagem, errorCode e)
 {
 	fprintf(stderr, "ERRO NA FUNCAO %s()\n%s\nerror code = %d\n", nomeFunc, mensagem, e);
-	freeAll();
 	exit(EXIT_FAILURE);
 }
 
