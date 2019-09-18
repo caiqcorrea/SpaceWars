@@ -129,6 +129,21 @@ void IncVel(vet2D F, Objeto *o);
 //Dado um objeto e uma velocidade, incrementa a posicao desse objeto
 void IncPos(vet2D v, Objeto *o); 
 
+/*Percorre o vetor de projeteis e elimina os projeteis que estão com tempo menor ou igual a 0.*/
+void AtualizaProjeteis();
+
+/*Função recebe um tipo de objeto e um índice, e atualiza o estado de movimento do objeto indicado pelo índice.*/
+void AtualizaObj(TipoObj tipo, int index);
+
+/*Recebe um indice de projetil e um intervalo dt, e calcula o novo tempo de vida do projetil. Se o tempo estiver esgotado, retorna 1. Se não, retorna 0.*/
+int AtualizaTempo(int index);
+
+/*Percorre o vetor de projeteis e remove os projeteis que estão com tempo menor ou igual a 0 do vetor, alterando a variável global tot_projs.*/
+void AtualizaProjeteis();
+
+/*Atualiza o estado de movimento de todos os projéteis e depois de todas as naves, a cada intervalo de tempo dt.*/
+void AtualizaPosicoes();
+
 //Recebe um objeto e calcula a força gerada sobre ele pelos outros objetos.
 //Devemos referenciar o objeto passando seu tipo e qual seu índice dentro do seu respectivo array (nave ou projs) 
 //(se o objeto é do tipo planeta, então o índice é indiferente)
@@ -141,7 +156,7 @@ vet2D Forca(Objeto o1, Objeto o2)
 	vet2D F, aux;
 
 	aux = sub(o1.p, o2.p);
-	F = mult(-G * o1.m * o2.m / pow(2, norma(aux)), versor(aux));
+	F = mult(-G * o1.m * o2.m / pow(norma(aux), 2), versor(aux));
 
 	return F;
 }
@@ -225,7 +240,7 @@ Bool checaColisaoEntre(Objeto o1, Objeto o2)
 	return (distanciaEntre(o1, o2) < RAIO_COLISAO);
 }
 
-void AtualizaObj(TipoObj tipo, int index, double dt) { /*Função recebe um tipo de objeto, um índice, e um intervalo padrão dt, e atualiza o estado de movimento do objeto indicado pelo índice.*/
+void AtualizaObj(TipoObj tipo, int index) { /*Função recebe um tipo de objeto, um índice, e um intervalo padrão dt, e atualiza o estado de movimento do objeto indicado pelo índice.*/
 
 	vet2D F;
 
@@ -251,7 +266,7 @@ void AtualizaObj(TipoObj tipo, int index, double dt) { /*Função recebe um tipo
 
 }
 
-int AtualizaTempo(int index, double dt) { /*Recebe um indice e um intervalo dt, e calcula o novo tempo de vida do objeto. Se o tempo estiver esgotado, retorna 1. Se não, retorna 0.*/
+int AtualizaTempo(int index) { /*Recebe um indice e um intervalo dt, e calcula o novo tempo de vida do objeto. Se o tempo estiver esgotado, retorna 1. Se não, retorna 0.*/
 	
 	projs[index].tempoRestante = projs[index].tempoRestante - dt;
 	
@@ -265,36 +280,39 @@ int AtualizaTempo(int index, double dt) { /*Recebe um indice e um intervalo dt, 
 	}
 }
 
-void AtualizaPosicoes(double dt, int n, int pause) { /*Atualiza o estado de movimento de todos os projéteis e depois de todas as naves, a cada intervalo de tempo dt. Realiza n atualizações.*/
+void AtualizaProjeteis() { /*Percorre o vetor de projeteis e elimina os projeteis que estão com tempo menor ou igual a 0.*/
 
-	int loop_counter;
+	for (int i = 0; i < tot_projs; i++) { 
 
-	for (loop_counter = 0; loop_counter < n; loop_counter++) {
+		if (AtualizaTempo(i) == 1) { /* Tempo do projetil terminou */
 
-		for (int i = 0; i < tot_projs; i++) { /*projeteis*/
-
-			if (AtualizaTempo(i, dt) == 1) { /* Tempo do projetil terminou */
-
-				if (i == tot_projs - 1) {
-					tot_projs--;
-				}
-
-				else {
-					for (int j = i; j < tot_projs - 1, j++) {
-						projs[j] = projs[j + 1];
-					}
-					tot_projs--;
-				}
+			if (i == tot_projs - 1) {
+				tot_projs--;
 			}
-		}
-		for (i = 0; i < tot_projs; i++) { /*Atualiza o estado de movimento dos projeteis remanescentes*/
-				AtualizaObj(PROJETIL, i, dt);
-			}
-		
 
-		for (int i = 0; i < NUM_NAVES; i++) { /* naves */
-			AtualizaObj(NAVE, i, dt);
+			else {
+				for (int j = i; j < tot_projs - 1, j++) {
+					projs[j] = projs[j + 1];
+				}
+				tot_projs--;
+			}
 		}
 	}
+
 }
 
+void AtualizaPosicoes() { /*Atualiza o estado de movimento de todos os projéteis e depois de todas as naves, a cada intervalo de tempo dt. Realiza n atualizações.*/
+
+	int i;
+	AtualizaProjeteis();
+
+	for (i = 0; i < tot_projs; i++) {
+		AtualizaObj(PROJETIL, i, dt);
+	}
+
+
+	for (i = 0; i < NUM_NAVES; i++) { /* naves */
+		AtualizaObj(NAVE, i, dt);
+	}
+
+}

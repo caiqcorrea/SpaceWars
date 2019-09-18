@@ -9,6 +9,9 @@
 
 #include "fisica.c"
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
 
 /* P R O T O T I P A G E M   D A S   F U N Ç Õ E S */
 
