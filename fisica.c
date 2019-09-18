@@ -175,7 +175,7 @@ vet2D CalculaForcaSobre(TipoObj tipo, int index)
 	int i;
 
 	if (tipo == PLANETA)
-		return NULL_VET;	//Não se aplica força alguma sobre o planeta
+		return NULL_VET; //Não se aplica força alguma sobre o planeta
 	if (tipo == NAVE)	//Se é uma nave
 	{
 		for (i = 0; i < NUM_NAVES; i++)
