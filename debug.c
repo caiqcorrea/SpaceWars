@@ -1,21 +1,88 @@
 //MÓDULO CRIADO ESPECIALMENTE PARA DEPURAÇÕES E TESTES
 #include "IO.c"
 
-int main(){
+//Imprime as propriedades de uma nave
+void imprimeNave(Nave n);
+
+//Imprime as propriedades de um projétil
+void imprimeProjetil(Projetil p);
+
+//Imprime as propriedades de um planeta
+void imprimePlaneta(Planeta p);
+
+//Imprime todas as naves
+void imprimeNaves();
+
+//Imprime todos os projéteis
+void imprimeProjeteis();
+
+//Imprime todos os planetas
+void imprimePlanetas();
+
+//Imprime todos os tipos de objetos
+void imprimeTudo();
+
+int main()
+{
     lerInputs();
+    imprimeTudo();
+    setbuf(stdin, NULL);
 
-    printf("Propriedades da Terra:\n");
-    printf("\tMassa = %lf\n\tRaio = %lf\n\tPosição = %lf %lf\n\tVelocidade = %lf %lf\n",
-        TERRA.mass, TERRA.raio, TERRA.pos.x, TERRA.pos.y, TERRA.vel.x, TERRA.vel.y);
-    printf("\nPropriedades da Nave %s\n", naves[0].nome);
-    printf("\tMassa = %lf\n\tPosição = %lf %lf\n\tVelocidade = %lf %lf\n",
-        naves[0].mass, naves[0].pos.x, naves[0].pos.y, naves[0].vel.x, naves[0].vel.y);
-    printf("\nPropriedades da Nave %s\n", naves[1].nome);
-    printf("\tMassa = %lf\n\tPosição = %lf %lf\n\tVelocidade = %lf %lf\n",
-        naves[1].mass, naves[1].pos.x, naves[1].pos.y, naves[1].vel.x, naves[1].vel.y);
-    printf("\n");
-    printf("dt = %lf\n\n", dt);
+    while (AtualizaJogo())
+    {
+        imprimeNaves();
+        pause();
+    }
+
+    printf("dt = %.5lf\n\n", dt);
     printf("Fim\n");
-
+    freeAll();
     return 0;
+}
+
+void imprimeNave(Nave n)
+{
+    fprintf(stdout, "Nave %s: ", n.nome);
+    fprintf(stdout, "\tMassa = %.2lf\tPos = (%.2lf , %.2lf)\tVel = (%.2lf , %.2lf)\n",
+            n.mass, n.pos.x, n.pos.y, n.vel.x, n.vel.y);
+}
+
+void imprimeProjetil(Projetil p)
+{
+    fprintf(stdout, "Projetil:\tMassa = %.2lf\tPos = (%.2lf , %.2lf)\tVel = (%.2lf , %.2lf)\tRestam = %.2lf\n",
+            p.mass, p.pos.x, p.pos.y, p.vel.x, p.vel.y, p.tempoRestante);
+}
+
+void imprimePlaneta(Planeta p)
+{
+    fprintf(stdout, "Planeta:\tMassa = %.2lf\tPos = (%.2lf , %.2lf)\tVel = (%.2lf , %.2lf)\tR = %.2lf\n",
+            p.mass, p.pos.x, p.pos.y, p.vel.x, p.vel.y, p.raio);
+}
+
+void imprimeNaves()
+{
+    int i;
+    for (i = 0; i < NUM_NAVES; i++)
+        imprimeNave(naves[i]);
+}
+
+void imprimeProjeteis()
+{
+    int i;
+    for (i = 0; i < tot_projs; i++)
+        imprimeProjetil(projs[i]);
+}
+
+void imprimePlanetas()
+{
+    int i;
+    for (i = 0; i < NUM_PLANETAS; i++)
+        imprimePlaneta(planetas[i]);
+}
+
+void imprimeTudo()
+{
+    imprimePlanetas();
+    imprimeNaves();
+    imprimeProjeteis();
 }
