@@ -18,7 +18,7 @@
  * https://en.wikipedia.org/wiki/Newton%27s_law_of_universal_gravitation
  * É sabido que determinar posições exatas de orbitas complexas (como as do jogo) 
  * é um problema em aberto na matemática e na física, então o professor nos
- * recomendou usar o método numérico de Range-Kutta.
+ * recomendou usar o método numérico de Runge-Kutta.
  * 
  *
  */
@@ -140,7 +140,7 @@ vet2D Forca(Objeto o1, Objeto o2)
 {
 	vet2D F, aux;
 
-	aux = sub(o2.p, o1.p);
+	aux = sub(o1.p, o2.p);
 	F = mult(-G * o1.m * o2.m / pow(2, norma(aux)), versor(aux));
 
 	return F;
@@ -148,7 +148,7 @@ vet2D Forca(Objeto o1, Objeto o2)
 
 void IncVel(vet2D F, Objeto *o)
 {
-	o->v = soma(o->v, mult(o->m * dt, F));
+	o->v = soma(o->v, mult((dt / (o->m)), F));
 }
 
 void IncPos(vet2D v, Objeto *o)
@@ -207,7 +207,7 @@ vet2D CalculaForcaSobre(TipoObj tipo, int index)
 		}
 		for (i = 0; i < NUM_PLANETAS; i++)
 		{
-			F = soma(F, Forca(naves[index].o, planetas[i].o));
+			F = soma(F, Forca(projs[index].o, planetas[i].o));
 		}
 
 	}
@@ -224,3 +224,77 @@ Bool checaColisaoEntre(Objeto o1, Objeto o2)
 {
 	return (distanciaEntre(o1, o2) < RAIO_COLISAO);
 }
+
+void AtualizaObj(TipoObj tipo, int index, double dt) { /*Função recebe um tipo de objeto, um índice, e um intervalo padrão dt, e atualiza o estado de movimento do objeto indicado pelo índice.*/
+
+	vet2D F;
+
+	if (tipo == PLANETA) {
+
+		return; /*O planeta não se move.*/
+	
+	}
+	else if (tipo == NAVE) {
+
+		F = CalculaForcaSobre(NAVE, index);
+		IncVel(F, &(naves[index].o));
+		IncPos(F, &(naves[index].o));
+
+	}
+	else { /* projetil */
+
+		F = CalculaForcaSobre(PROJETIL, index);
+		IncVel(F, &(projs[index].o));
+		IncPos(F, &(projs[index].o));
+
+	}
+
+}
+
+int AtualizaTempo(int index, double dt) { /*Recebe um indice e um intervalo dt, e calcula o novo tempo de vida do objeto. Se o tempo estiver esgotado, retorna 1. Se não, retorna 0.*/
+	
+	projs[index].tempoRestante = projs[index].tempoRestante - dt;
+	
+	if (projs[index].tempoRestante < 0) {
+
+		return(1);
+	}
+	else {
+
+		return(0);
+	}
+}
+
+void AtualizaPosicoes(double dt, int n, int pause) { /*Atualiza o estado de movimento de todos os projéteis e depois de todas as naves, a cada intervalo de tempo dt. Realiza n atualizações.*/
+
+	int loop_counter;
+
+	for (loop_counter = 0; loop_counter < n; loop_counter++) {
+
+		for (int i = 0; i < tot_projs; i++) { /*projeteis*/
+
+			if (AtualizaTempo(i, dt) == 1) { /* Tempo do projetil terminou */
+
+				if (i == tot_projs - 1) {
+					tot_projs--;
+				}
+
+				else {
+					for (int j = i; j < tot_projs - 1, j++) {
+						projs[j] = projs[j + 1];
+					}
+					tot_projs--;
+				}
+			}
+		}
+		for (i = 0; i < tot_projs; i++) { /*Atualiza o estado de movimento dos projeteis remanescentes*/
+				AtualizaObj(PROJETIL, i, dt);
+			}
+		
+
+		for (int i = 0; i < NUM_NAVES; i++) { /* naves */
+			AtualizaObj(NAVE, i, dt);
+		}
+	}
+}
+
