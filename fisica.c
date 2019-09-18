@@ -20,27 +20,24 @@
  * é um problema em aberto na matemática e na física, então o professor nos
  * recomendou usar o método numérico de Runge-Kutta.
  * 
- *
+ * Convenções de nomenclatura:
+ *		Array: Variáveis do tipo v[MAX]
+ *		Vetor: Estrutura vet2D, representa um vetor em R²
  */
 
 #include <stdio.h>
 #include "vetores.c"
 #include "auxiliar.c"
 
-#define G 6.67e-11			//Constante gravitacional
-#define RAIO_COLISAO 10.0 	//Raio utilizado para checar colisao com a nave
-#define SIZE_X 200		  	//Tamanho da horizontal da tela
-#define SIZE_Y 200		  	//Tamanho da vertical da tela
-#define MAX_PROJ 100		//Número máximo de projéteis
-#define NUM_NAVES 2			//Número de naves
-#define NUM_PLANETAS 1		//Número de planetas
+#define G 6.67e-11		  //Constante gravitacional
+#define RAIO_COLISAO 10.0 //Raio utilizado para checar colisao com a nave
+#define SIZE_X 1e10		  //Tamanho da horizontal da tela
+#define SIZE_Y 1e10		  //Tamanho da vertical da tela
+#define MAX_PROJ 100	  //Número máximo de projéteis
+#define NUM_NAVES 2		  //Número de naves
+#define NUM_PLANETAS 1	//Número de planetas
 
-/* Convenções de nomenclatura:
-		Array: Variáveis do tipo v[MAX]
-		Vetor: Estrutura vet2D, representa um vetor em R²
-*/
-
-/* E S T R U T U R A S   E   V A R I Á V E I S   G L O B A I S */
+/*--------------- E S T R U T U R A S   E   V A R I Á V E I S   G L O B A I S ---------------*/
 
 /* Struct Objeto possui uma massa, posição e velocidade. 
  * Ele é um objeto genérico que deve estar dentro de outros structs importantes
@@ -50,7 +47,7 @@ typedef struct
 {
 	double m; //massa
 	vet2D p;  //posição
-	vet2D v; //velocidade
+	vet2D v;  //velocidade
 } Objeto;
 
 /* Struct Nave contém um objeto próprio e um nome que é o nome da nave.
@@ -86,19 +83,19 @@ typedef struct
  * Os defines funcionam também caso tenhamos um ponteiro para um struct.
  * Basta fazer ponteiro->vel
  */
-#define vel o.v		// Macro para a velocidade de um objeto
-#define mass o.m	// Macro para a massa de um objeto
-#define pos o.p		// Macro para a posição de um objeto
+#define vel o.v  // Macro para a velocidade de um objeto
+#define mass o.m // Macro para a massa de um objeto
+#define pos o.p  // Macro para a posição de um objeto
 
 /* Armazenaremos todos os objetos na tela através de arrays globais,
  * um para cada tipo: Nave, Planeta e Projetil.
  * Os tamanhos desses arrays estão definidos no começo desse arquivo e podem ser
  * editados hard-coded (quem sabe futuramente em tempo de execução)
  */
-Nave naves[NUM_NAVES];	//O array que contém as duas naves dos jogadores
+Nave naves[NUM_NAVES];			//O array que contém as duas naves dos jogadores
 Planeta planetas[NUM_PLANETAS]; //O array que contém o planeta central
-Projetil projs[MAX_PROJ]; //O que array que contém os projéteis que estão atualmente na tela
-int tot_projs; //O número de elementos do array projs
+Projetil projs[MAX_PROJ];		//O que array que contém os projéteis que estão atualmente na tela
+int tot_projs;					//O número de elementos do array projs
 
 #define TERRA planetas[0] //Como só há um planeta, vamos chamá-lo de TERRA
 
@@ -115,26 +112,42 @@ typedef enum
 } TipoObj;
 
 //Intervalo de tempo da simulacao, lido no arquivo principal
-double dt; 
+double dt;
 
-/* P R O T O T I P A G E M   D A S   F U N Ç Õ E S */
+/*--------------- P R O T O T I P A G E M   D A S   F U N Ç Õ E S ---------------*/
 
-//Dados dois objetos, retorna a força gravitacional exercida entre o1 e o2. 
+//Dados dois objetos, retorna a força gravitacional exercida entre o1 e o2.
 //O vetor retornado deve ser aplicado em o1.
-vet2D Forca(Objeto o1, Objeto o2); 
+vet2D Forca(Objeto o1, Objeto o2);
 
 //Dado um objeto e uma forca, incrementa a velocidade desse objeto
-void IncVel(vet2D F, Objeto *o); 
+void IncVel(vet2D F, Objeto *o);
 
 //Dado um objeto e uma velocidade, incrementa a posicao desse objeto
-void IncPos(vet2D v, Objeto *o); 
+void IncPos(vet2D v, Objeto *o);
 
 //Recebe um objeto e calcula a força gerada sobre ele pelos outros objetos.
-//Devemos referenciar o objeto passando seu tipo e qual seu índice dentro do seu respectivo array (nave ou projs) 
+//Devemos referenciar o objeto passando seu tipo e qual seu índice dentro do seu respectivo array (nave ou projs)
 //(se o objeto é do tipo planeta, então o índice é indiferente)
-vet2D CalculaForcaSobre(TipoObj tipo, int index); 
+vet2D CalculaForcaSobre(TipoObj tipo, int index);
 
-/* I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S */
+//Dados um tipo de objeto e um índice do vetor onde esse objeto se encontra
+//a função retorna este objeto.
+//A função verifica se o índice está dentro dos limites
+Objeto getObjeto(TipoObj tipo, int indice);
+
+//Dados um tipo de objeto, um índice do vetor referente ao tipo desse objeto e o objeto em si,
+//a função sobrescreve o array no índice i com o objeto o.
+//A função verifica se o índice está dentro dos limites
+void setObjeto(TipoObj tipo, int indice, Objeto o);
+
+//Dados dois objetos, retorna a distância entre eles
+double distanciaEntre(Objeto o1, Objeto o2);
+
+//Dados dois objetos, retorna TRUE se eles colidiram e FALSE caso contrário.
+Bool checaColisaoEntre(Objeto o1, Objeto o2);
+
+/*--------------- I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S ---------------*/
 
 vet2D Forca(Objeto o1, Objeto o2)
 {
@@ -175,7 +188,7 @@ vet2D CalculaForcaSobre(TipoObj tipo, int index)
 	int i;
 
 	if (tipo == PLANETA)
-		return NULL_VET;	//Não se aplica força alguma sobre o planeta
+		return NULL_VET; //Não se aplica força alguma sobre o planeta
 	if (tipo == NAVE)	//Se é uma nave
 	{
 		for (i = 0; i < NUM_NAVES; i++)
@@ -185,20 +198,14 @@ vet2D CalculaForcaSobre(TipoObj tipo, int index)
 			F = soma(F, Forca(naves[index].o, naves[i].o));
 		}
 		for (i = 0; i < tot_projs; i++)
-		{
 			F = soma(F, Forca(naves[index].o, projs[i].o));
-		}
 		for (i = 0; i < NUM_PLANETAS; i++)
-		{
 			F = soma(F, Forca(naves[index].o, planetas[i].o));
-		}
 	}
-	else	//Se é um projétil
+	else //Se é um projétil
 	{
 		for (i = 0; i < NUM_NAVES; i++)
-		{
 			F = soma(F, Forca(projs[index].o, naves[i].o));
-		}
 		for (i = 0; i < tot_projs; i++)
 		{
 			if (i == index)
@@ -206,10 +213,7 @@ vet2D CalculaForcaSobre(TipoObj tipo, int index)
 			F = soma(F, Forca(projs[index].o, projs[i].o));
 		}
 		for (i = 0; i < NUM_PLANETAS; i++)
-		{
 			F = soma(F, Forca(projs[index].o, planetas[i].o));
-		}
-
 	}
 
 	return F;
@@ -225,76 +229,107 @@ Bool checaColisaoEntre(Objeto o1, Objeto o2)
 	return (distanciaEntre(o1, o2) < RAIO_COLISAO);
 }
 
-void AtualizaObj(TipoObj tipo, int index, double dt) { /*Função recebe um tipo de objeto, um índice, e um intervalo padrão dt, e atualiza o estado de movimento do objeto indicado pelo índice.*/
-
-	vet2D F;
-
-	if (tipo == PLANETA) {
-
-		return; /*O planeta não se move.*/
-	
+Objeto getObjeto(TipoObj tipo, int indice)
+{
+	switch (tipo)
+	{
+	case PLANETA:
+		if (0 <= indice && indice < NUM_PLANETAS)
+			return planetas[indice].o;
+		else
+			retorneErro("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+	case NAVE:
+		if (0 <= indice && indice < NUM_NAVES)
+			return naves[indice].o;
+		else
+			retorneErro("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+	case PROJETIL:
+		if (0 <= indice && indice < tot_projs)
+			return projs[indice].o;
+		else
+			retorneErro("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+	default:
+		retorneErro("getObjeto", "tipo nao identificado", var_type_undefined);
 	}
-	else if (tipo == NAVE) {
+}
+void setObjeto(TipoObj tipo, int indice, Objeto o)
+{
+	switch (tipo)
+	{
+	case PLANETA:
+		if (0 <= indice && indice < NUM_PLANETAS)
+			planetas[indice].o = o;
+		else
+			retorneErro("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+	case NAVE:
+		if (0 <= indice && indice < NUM_NAVES)
+			naves[indice].o = o;
+		else
+			retorneErro("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+	case PROJETIL:
+		if (0 <= indice && indice < tot_projs)
+			projs[indice].o = o;
+		else
+			retorneErro("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+	default:
+		retorneErro("getObjeto", "tipo nao identificado", var_type_undefined);
+	}
+}
 
+/*Função recebe um tipo de objeto, um índice, e um intervalo padrão dt, 
+e atualiza o estado de movimento do objeto indicado pelo índice.*/
+void AtualizaObj(TipoObj tipo, int index)
+{
+	vet2D F;
+	if (tipo == PLANETA)
+		return; /*O planeta não se move.*/
+	if (tipo == NAVE)
+	{
 		F = CalculaForcaSobre(NAVE, index);
 		IncVel(F, &(naves[index].o));
 		IncPos(F, &(naves[index].o));
-
 	}
-	else { /* projetil */
-
+	else
+	{ /* projetil */
 		F = CalculaForcaSobre(PROJETIL, index);
 		IncVel(F, &(projs[index].o));
 		IncPos(F, &(projs[index].o));
-
-	}
-
-}
-
-int AtualizaTempo(int index, double dt) { /*Recebe um indice e um intervalo dt, e calcula o novo tempo de vida do objeto. Se o tempo estiver esgotado, retorna 1. Se não, retorna 0.*/
-	
-	projs[index].tempoRestante = projs[index].tempoRestante - dt;
-	
-	if (projs[index].tempoRestante < 0) {
-
-		return(1);
-	}
-	else {
-
-		return(0);
 	}
 }
+/*Recebe um indice e um intervalo dt, e calcula o novo tempo de vida do objeto. 
+Se o tempo estiver esgotado, retorna 1. Se não, retorna 0.*/
+Bool AtualizaTempo(int index)
+{
+	projs[index].tempoRestante -= dt;
+	return (projs[index].tempoRestante < 0);
+}
 
-void AtualizaPosicoes(double dt, int n, int pause) { /*Atualiza o estado de movimento de todos os projéteis e depois de todas as naves, a cada intervalo de tempo dt. Realiza n atualizações.*/
+/*Atualiza o estado de movimento de todos os projéteis e depois de todas as naves, 
+a cada intervalo de tempo dt. Realiza n atualizações.*/
+void AtualizaPosicoes(double dt, int n, int pause)
+{
+	int loop_counter, i, j;
 
-	int loop_counter;
-
-	for (loop_counter = 0; loop_counter < n; loop_counter++) {
-
-		for (int i = 0; i < tot_projs; i++) { /*projeteis*/
-
-			if (AtualizaTempo(i, dt) == 1) { /* Tempo do projetil terminou */
-
-				if (i == tot_projs - 1) {
+	for (loop_counter = 0; loop_counter < n; loop_counter++)
+	{
+		for (i = 0; i < tot_projs; i++) /*projeteis*/
+		{
+			if (AtualizaTempo(i) == TRUE) /* Tempo do projetil terminou */
+			{
+				if (i == tot_projs - 1)
 					tot_projs--;
-				}
-
-				else {
-					for (int j = i; j < tot_projs - 1, j++) {
+				else
+				{
+					for (j = i; j < tot_projs - 1; j++)
 						projs[j] = projs[j + 1];
-					}
 					tot_projs--;
 				}
 			}
 		}
-		for (i = 0; i < tot_projs; i++) { /*Atualiza o estado de movimento dos projeteis remanescentes*/
-				AtualizaObj(PROJETIL, i, dt);
-			}
-		
+		for (i = 0; i < tot_projs; i++) /*Atualiza o estado de movimento dos projeteis remanescentes*/
+			AtualizaObj(PROJETIL, i);
 
-		for (int i = 0; i < NUM_NAVES; i++) { /* naves */
-			AtualizaObj(NAVE, i, dt);
-		}
+		for (int i = 0; i < NUM_NAVES; i++) /* naves */
+			AtualizaObj(NAVE, i);
 	}
 }
-
