@@ -214,8 +214,8 @@ vet2D CalculaForcaSobre(Objeto *o)
 	int i;
 	for (i = 0; i < NUM_NAVES; i++)
 		F = soma(F, Forca(*o, naves[i].o));
-	for (i = 0; i < NUM_PLANETAS; i++)
-		F = soma(F, Forca(*o, planetas[i].o));
+	/*for (i = 0; i < NUM_PLANETAS; i++)
+		F = soma(F, Forca(*o, planetas[i].o));*/
 	for (i = 0; i < tot_projs; i++)
 		F = soma(F, Forca(*o, projs[i].o));
 	return F;
@@ -251,7 +251,7 @@ Objeto *getObjeto(TipoObj tipo, int indice)
 		else
 			throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
 	default:
-		throwException("getObjeto", "tipo nao identificado", var_type_undefined);
+		throwException("getObjeto", "tipo nao identificado", var_type_undefined_exception);
 	}
 }
 void setObjeto(TipoObj tipo, int indice, Objeto o)
@@ -274,7 +274,7 @@ void setObjeto(TipoObj tipo, int indice, Objeto o)
 		else
 			throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
 	default:
-		throwException("getObjeto", "tipo nao identificado", var_type_undefined);
+		throwException("getObjeto", "tipo nao identificado", var_type_undefined_exception);
 	}
 }
 
