@@ -127,14 +127,11 @@ void IncVel(vet2D F, Objeto *o);
 void IncPos(vet2D v, Objeto *o);
 
 //Recebe um objeto e calcula a força gerada sobre ele pelos outros objetos.
-//Devemos referenciar o objeto passando seu tipo e qual seu índice dentro do seu respectivo array (nave ou projs)
-//(se o objeto é do tipo planeta, então o índice é indiferente)
-vet2D CalculaForcaSobre(TipoObj tipo, int index);
+vet2D CalculaForcaSobre(Objeto *o);
 
-//Dados um tipo de objeto e um índice do vetor onde esse objeto se encontra
-//a função retorna este objeto.
+//Dados um tipo de objeto e um índice do vetor onde esse objeto se encontra a função retorna um apontador para este.
 //A função verifica se o índice está dentro dos limites
-Objeto getObjeto(TipoObj tipo, int indice);
+Objeto *getObjeto(TipoObj tipo, int indice);
 
 //Dados um tipo de objeto, um índice do vetor referente ao tipo desse objeto e o objeto em si,
 //a função sobrescreve o array no índice i com o objeto o.
@@ -147,6 +144,36 @@ double distanciaEntre(Objeto o1, Objeto o2);
 //Dados dois objetos, retorna TRUE se eles colidiram e FALSE caso contrário.
 Bool checaColisaoEntre(Objeto o1, Objeto o2);
 
+//Dado um objeto, atualiza suas propriedades
+void AtualizaObjeto(Objeto *o);
+
+//Atualiza todos os objetos (Naves, Projéteis e Planetas)
+void AtualizaObjetos();
+
+//Dado um projétil, reduz seu tempo de vida de acordo com dt
+void ReduzTempoProj(Projetil *p);
+
+//Método responsável por reduz o tempo de vida de todos os projéteis
+void ReduzTempoProjs();
+
+//Dados um projétil, retorna TRUE se ele está morto e FALSE caso contrário
+Bool VerificaSeProjMorreu(Projetil p);
+
+//Atualiza o estado atual do jogo
+//Este método deve:
+//	Atualizar as posições de todos os objetos em tela
+//	Verificar colisão entre dois quaisquer objetos
+//		Se isso acontecer, deve tomar a ação correta dependendo do tipo de objeto que colidiu
+//	Verifica se os projéteis ainda estão com tempo de vida positivo
+//		Se isso não acontece, deve remover o projétil do array
+//
+//A função devolve TRUE se o jogo continua e FALSE se o jogo terminou por qualquer motivo
+//(Pode ser que mudemos o retorno no futuro)
+Bool AtualizaJogo();
+
+//Esta função dá free em todas as alocações de memória relacionadas aos três arrays da biblioteca física
+void freeAll();
+
 /*--------------- I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S ---------------*/
 
 vet2D Forca(Objeto o1, Objeto o2)
@@ -154,9 +181,8 @@ vet2D Forca(Objeto o1, Objeto o2)
 	vet2D F, aux;
 
 	aux = sub(o1.p, o2.p);
-	F = mult(-G * o1.m * o2.m / pow(2, norma(aux)), versor(aux));
-
-	return F;
+	if(norma(aux) == 0) return NULL_VET;
+	return mult(-G * o1.m * o2.m / pow(norma(aux), 2), versor(aux));
 }
 
 void IncVel(vet2D F, Objeto *o)
@@ -182,40 +208,16 @@ void IncPos(vet2D v, Objeto *o)
 		o->p.y += SIZE_Y;
 }
 
-vet2D CalculaForcaSobre(TipoObj tipo, int index)
+vet2D CalculaForcaSobre(Objeto *o)
 {
 	vet2D F = NULL_VET;
 	int i;
-
-	if (tipo == PLANETA)
-		return NULL_VET; //Não se aplica força alguma sobre o planeta
-	if (tipo == NAVE)	//Se é uma nave
-	{
-		for (i = 0; i < NUM_NAVES; i++)
-		{
-			if (i == index)
-				continue;
-			F = soma(F, Forca(naves[index].o, naves[i].o));
-		}
-		for (i = 0; i < tot_projs; i++)
-			F = soma(F, Forca(naves[index].o, projs[i].o));
-		for (i = 0; i < NUM_PLANETAS; i++)
-			F = soma(F, Forca(naves[index].o, planetas[i].o));
-	}
-	else //Se é um projétil
-	{
-		for (i = 0; i < NUM_NAVES; i++)
-			F = soma(F, Forca(projs[index].o, naves[i].o));
-		for (i = 0; i < tot_projs; i++)
-		{
-			if (i == index)
-				continue;
-			F = soma(F, Forca(projs[index].o, projs[i].o));
-		}
-		for (i = 0; i < NUM_PLANETAS; i++)
-			F = soma(F, Forca(projs[index].o, planetas[i].o));
-	}
-
+	for (i = 0; i < NUM_NAVES; i++)
+		F = soma(F, Forca(*o, naves[i].o));
+	for (i = 0; i < NUM_PLANETAS; i++)
+		F = soma(F, Forca(*o, planetas[i].o));
+	for (i = 0; i < tot_projs; i++)
+		F = soma(F, Forca(*o, projs[i].o));
 	return F;
 }
 
@@ -229,27 +231,27 @@ Bool checaColisaoEntre(Objeto o1, Objeto o2)
 	return (distanciaEntre(o1, o2) < RAIO_COLISAO);
 }
 
-Objeto getObjeto(TipoObj tipo, int indice)
+Objeto *getObjeto(TipoObj tipo, int indice)
 {
 	switch (tipo)
 	{
 	case PLANETA:
 		if (0 <= indice && indice < NUM_PLANETAS)
-			return planetas[indice].o;
+			return &(planetas[indice].o);
 		else
-			retorneErro("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+			throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
 	case NAVE:
 		if (0 <= indice && indice < NUM_NAVES)
-			return naves[indice].o;
+			return &(naves[indice].o);
 		else
-			retorneErro("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+			throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
 	case PROJETIL:
 		if (0 <= indice && indice < tot_projs)
-			return projs[indice].o;
+			return &(projs[indice].o);
 		else
-			retorneErro("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+			throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
 	default:
-		retorneErro("getObjeto", "tipo nao identificado", var_type_undefined);
+		throwException("getObjeto", "tipo nao identificado", var_type_undefined);
 	}
 }
 void setObjeto(TipoObj tipo, int indice, Objeto o)
@@ -260,76 +262,91 @@ void setObjeto(TipoObj tipo, int indice, Objeto o)
 		if (0 <= indice && indice < NUM_PLANETAS)
 			planetas[indice].o = o;
 		else
-			retorneErro("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+			throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
 	case NAVE:
 		if (0 <= indice && indice < NUM_NAVES)
 			naves[indice].o = o;
 		else
-			retorneErro("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+			throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
 	case PROJETIL:
 		if (0 <= indice && indice < tot_projs)
 			projs[indice].o = o;
 		else
-			retorneErro("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+			throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
 	default:
-		retorneErro("getObjeto", "tipo nao identificado", var_type_undefined);
+		throwException("getObjeto", "tipo nao identificado", var_type_undefined);
 	}
 }
 
-/*Função recebe um tipo de objeto, um índice, e um intervalo padrão dt, 
-e atualiza o estado de movimento do objeto indicado pelo índice.*/
-void AtualizaObj(TipoObj tipo, int index)
+void AtualizaObjeto(Objeto *o)
 {
-	vet2D F;
-	if (tipo == PLANETA)
-		return; /*O planeta não se move.*/
-	if (tipo == NAVE)
+	vet2D F = CalculaForcaSobre(o);
+	IncPos(o->v, o);
+	IncVel(F, o);
+}
+
+void AtualizaObjetos()
+{
+	int i;
+	//Planetas não precisam ser atualizados (pelo menos na versão atual)
+	for (i = 0; i < NUM_NAVES; i++){
+		AtualizaObjeto(getObjeto(NAVE, i));
+	}
+	for (i = 0; i < tot_projs; i++)
+		AtualizaObjeto(getObjeto(PROJETIL, i));
+}
+
+void ReduzTempoProj(Projetil *p)
+{
+	p->tempoRestante -= dt;
+}
+
+/* Essa função foi criada para facilitar a edição de código caso queiramos, no futuro,
+ * mudar a forma de reduzir o tempo dos projéteis (como reduzir apenas de alguns e de outros não)
+ */
+void ReduzTempoProjs()
+{
+	int i;
+	for (i = 0; i < tot_projs; i++)
+		ReduzTempoProj(&(projs[i]));
+}
+
+Bool VerificaSeProjMorreu(Projetil p)
+{
+	return p.tempoRestante <= 0;
+}
+
+/* ESTA FUNÇÃO RECEBERÁ ATUALIZAÇÕES NO FUTURO:
+ *		Remover o projétil caso ele morreu (fazer uma função remove de array)
+ *		Checar colisão (EP2)
+ */
+Bool AtualizaJogo()
+{
+	int i, j;
+	//Primeiro atualizamos a posição e velocidade de todos os objetos
+	AtualizaObjetos();
+	//Depois, devemos reduzir o tempo de todos os projéteis
+	ReduzTempoProjs();
+	//Verificamos se algum projétil sumiu e removemos-o se sim
+	/*for (i = 0; i < tot_projs; i++)
 	{
-		F = CalculaForcaSobre(NAVE, index);
-		IncVel(F, &(naves[index].o));
-		IncPos(F, &(naves[index].o));
-	}
-	else
-	{ /* projetil */
-		F = CalculaForcaSobre(PROJETIL, index);
-		IncVel(F, &(projs[index].o));
-		IncPos(F, &(projs[index].o));
-	}
-}
-/*Recebe um indice e um intervalo dt, e calcula o novo tempo de vida do objeto. 
-Se o tempo estiver esgotado, retorna 1. Se não, retorna 0.*/
-Bool AtualizaTempo(int index)
-{
-	projs[index].tempoRestante -= dt;
-	return (projs[index].tempoRestante < 0);
-}
-
-/*Atualiza o estado de movimento de todos os projéteis e depois de todas as naves, 
-a cada intervalo de tempo dt. Realiza n atualizações.*/
-void AtualizaPosicoes(double dt, int n, int pause)
-{
-	int loop_counter, i, j;
-
-	for (loop_counter = 0; loop_counter < n; loop_counter++)
-	{
-		for (i = 0; i < tot_projs; i++) /*projeteis*/
-		{
-			if (AtualizaTempo(i) == TRUE) /* Tempo do projetil terminou */
+		if (VerificaSeProjMorreu(projs[i]))
+		{ //Remove do array (FAZER FUTURAMENTE UMA FUNÇÃO À PARTE)
+			if (i != tot_projs - 1)
 			{
-				if (i == tot_projs - 1)
-					tot_projs--;
-				else
-				{
-					for (j = i; j < tot_projs - 1; j++)
-						projs[j] = projs[j + 1];
-					tot_projs--;
-				}
+				for (j = i; j < tot_projs - 1; j++)
+					projs[j] = projs[j + 1];
 			}
+			tot_projs--;
 		}
-		for (i = 0; i < tot_projs; i++) /*Atualiza o estado de movimento dos projeteis remanescentes*/
-			AtualizaObj(PROJETIL, i);
+	}*/
+	//VERIFICAR COLISÃO (EP2)
 
-		for (int i = 0; i < NUM_NAVES; i++) /* naves */
-			AtualizaObj(NAVE, i);
-	}
+	return TRUE; //Por hora, o jogo sempre deve continuar
+}
+
+void freeAll(){
+	int i;
+	for(i = 0; i < NUM_NAVES; i++)
+		freeSafe(naves[i].nome);
 }

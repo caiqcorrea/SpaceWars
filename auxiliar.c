@@ -30,24 +30,42 @@ typedef enum {
 	/* Este erro é retornado quando uma função tenta alocar memória e o computador
 	 * não possui memória disponível.
 	 */
-	stack_overflow,
+	stack_overflow_exception,
 
 	/* Este erro é retornado quando o usuário especifica um tipo de variável errado
 	 * para uma função.
 	 */ 
-	var_type_undefined
+	var_type_undefined_exception,
+
+	/* Este erro é retornando quando se tenta abrir um arquivo e não consegue.
+	 */
+	file_not_find_exception,
+	
 } errorCode;
 
 void *mallocSafe(int size);
 void freeSafe(void *pnt);
-void retorneErro(string nomeFunc, string mensagem, errorCode e);
+
+//Função que envia uma exception ao strerr com o nome da função que retornou erro e uma mensagem ao usuário
+//Além disso, deve receber um código de erro
+//Esta função dá para o programa e indica ao sistema que houve um erro na execução
+void throwException(string nomeFunc, string mensagem, errorCode e);
+
+//Função pause, copiada do EP1 de Estrutura de Dados e Algoritmos I, matéria ministrada
+//pela professora Cris no segundo semestre de 2019
+//iume.usp.br/~cris
+//
+//A função pausa o programa até o usuário dar clicar ENTER
+void pause();
+
+
 
 void *mallocSafe(int size)
 {
 	void *ponteiro;
 	ponteiro = malloc(size);
 	if (ponteiro == NULL)
-		retorneErro("mallocSafe", "Socorro! Malloc devolveu NULL!", stack_overflow);
+		throwException("mallocSafe", "Socorro! Malloc devolveu NULL!", stack_overflow);
 	return ponteiro;
 }
 
@@ -57,8 +75,25 @@ void freeSafe(void *pnt)
 	pnt = NULL;
 }
 
-void retorneErro(string nomeFunc, string mensagem, errorCode e)
+void throwException(string nomeFunc, string mensagem, errorCode e)
 {
 	fprintf(stderr, "ERRO NA FUNCAO %s()\n%s\nerror code = %d\n", nomeFunc, mensagem, e);
+	freeAll();
 	exit(EXIT_FAILURE);
 }
+
+/* 
+ * pause()
+ *
+ * Para a execucao do programa ate que um ENTER seja digitado.
+ */
+void pause()
+{
+    char ch;
+
+    printf("Digite ENTER para continuar. ");
+    do
+    {
+        scanf("%c", &ch);
+    } while (ch != '\n'); //ENTER
+} 

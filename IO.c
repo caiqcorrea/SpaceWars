@@ -12,7 +12,7 @@
 
 /* P R O T O T I P A G E M   D A S   F U N Ç Õ E S */
 
-//Função que lê todos os inputs de um arquivo informado pelo usuário 
+//Função que lê todos os inputs de um arquivo informado pelo usuário
 // e atribui valores às variáveis globais
 void lerInputs();
 
@@ -40,10 +40,9 @@ void lerInputs()
 	arq = fopen(nomeArq, "r");
 	freeSafe(nomeArq);
 
-	if (arq == NULL)
-	{
-		printf("Não foi possivel abrir o arquivo.\n");
-		exit(EXIT_FAILURE); //Sai do programa imediatamente e indica erro.
+	if (arq == NULL){
+		fclose(arq);
+		throwException("lerInputs", "Não foi possivel abrir o arquivo.", file_not_find_exception);
 	}
 
 	lerPlaneta(arq);		   //Lê a primeira linha e atribui valores ao planeta
