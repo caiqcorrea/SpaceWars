@@ -31,19 +31,18 @@ void lerInputs()
 {
 	int i;
 	double tempoDeVida;
-	string nomeArq;
 	FILE *arq;
-
+	string nomeArq;
+	
 	nomeArq = mallocSafe(sizeof(string) * 50);
 	printf("Digite o nome do seu arquivo: ");
 	scanf("%s", nomeArq);
+	
 	arq = fopen(nomeArq, "r");
 	freeSafe(nomeArq);
 
-	if (arq == NULL){
-		fclose(arq);
+	if (arq == NULL)
 		throwException("lerInputs", "Não foi possivel abrir o arquivo.", file_not_find_exception);
-	}
 
 	lerPlaneta(arq);		   //Lê a primeira linha e atribui valores ao planeta
 	lerNave(arq, &(naves[0])); //Lê a segunda linha e atribui valores à primeira nave
@@ -58,7 +57,8 @@ void lerInputs()
 void lerPlaneta(FILE *arq)
 {
 	TERRA.pos = NULL_VET;
-	fscanf(arq, "%lf %lf %lf", &(TERRA.raio), &(TERRA.mass), &dt);
+	fscanf(arq, "%lf %lf %lf", &(TERRA.raio), &(TERRA.mass), &tRestante);
+	dt = 0.01;
 }
 
 void lerNave(FILE *arq, Nave *n)

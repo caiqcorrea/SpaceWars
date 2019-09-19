@@ -3,6 +3,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #define string char *
 
 typedef enum
@@ -20,26 +21,26 @@ typedef enum {
 	/* Este erro é retornado quando se tenta acessar índices de um array ou matriz
 	 * que não deveriam ser acessados pelo usuário.
 	 */
-	index_out_of_range_exception,
+	index_out_of_range_exception = -1,
 
 	/* Este erro é retornado quando o usuário tenta acessar um ponteiro nulo ou 
 	 * algum campo de um ponteiro nulo.
 	 */
-	null_pointer_exception,
+	null_pointer_exception = 0,
 
 	/* Este erro é retornado quando uma função tenta alocar memória e o computador
 	 * não possui memória disponível.
 	 */
-	stack_overflow_exception,
+	stack_overflow_exception = 1,
 
 	/* Este erro é retornado quando o usuário especifica um tipo de variável errado
 	 * para uma função.
 	 */ 
-	var_type_undefined_exception,
+	var_type_undefined_exception = 2,
 
 	/* Este erro é retornando quando se tenta abrir um arquivo e não consegue.
 	 */
-	file_not_find_exception
+	file_not_find_exception = 3
 	
 } errorCode;
 

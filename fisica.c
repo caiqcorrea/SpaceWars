@@ -114,6 +114,9 @@ typedef enum
 //Intervalo de tempo da simulacao, lido no arquivo principal
 double dt;
 
+//Tempo restante de simulação;
+double tRestante;
+
 /*--------------- P R O T O T I P A G E M   D A S   F U N Ç Õ E S ---------------*/
 
 //Dados dois objetos, retorna a força gravitacional exercida entre o1 e o2.
@@ -127,7 +130,7 @@ void IncVel(vet2D F, Objeto *o);
 void IncPos(vet2D v, Objeto *o);
 
 //Recebe um objeto e calcula a força gerada sobre ele pelos outros objetos.
-vet2D CalculaForcaSobre(Objeto *o);
+vet2D CalculaForcaSobre(Objeto o);
 
 //Dados um tipo de objeto e um índice do vetor onde esse objeto se encontra a função retorna um apontador para este.
 //A função verifica se o índice está dentro dos limites
@@ -178,10 +181,9 @@ void freeAll();
 
 vet2D Forca(Objeto o1, Objeto o2)
 {
-	vet2D F, aux;
-
-	aux = sub(o1.p, o2.p);
+	vet2D aux = sub(o1.p, o2.p);
 	if(norma(aux) == 0) return NULL_VET;
+
 	return mult(-G * o1.m * o2.m / pow(norma(aux), 2), versor(aux));
 }
 
@@ -208,16 +210,16 @@ void IncPos(vet2D v, Objeto *o)
 		o->p.y += SIZE_Y;
 }
 
-vet2D CalculaForcaSobre(Objeto *o)
+vet2D CalculaForcaSobre(Objeto o)
 {
 	vet2D F = NULL_VET;
 	int i;
 	for (i = 0; i < NUM_NAVES; i++)
-		F = soma(F, Forca(*o, naves[i].o));
-	/*for (i = 0; i < NUM_PLANETAS; i++)
-		F = soma(F, Forca(*o, planetas[i].o));*/
+		F = soma(F, Forca(o, naves[i].o));
+	for (i = 0; i < NUM_PLANETAS; i++)
+		F = soma(F, Forca(o, planetas[i].o));
 	for (i = 0; i < tot_projs; i++)
-		F = soma(F, Forca(*o, projs[i].o));
+		F = soma(F, Forca(o, projs[i].o));
 	return F;
 }
 
@@ -253,6 +255,7 @@ Objeto *getObjeto(TipoObj tipo, int indice)
 	default:
 		throwException("getObjeto", "tipo nao identificado", var_type_undefined_exception);
 	}
+	return NULL; //Só para o compilador não reclamar
 }
 void setObjeto(TipoObj tipo, int indice, Objeto o)
 {
@@ -280,18 +283,17 @@ void setObjeto(TipoObj tipo, int indice, Objeto o)
 
 void AtualizaObjeto(Objeto *o)
 {
-	vet2D F = CalculaForcaSobre(o);
 	IncPos(o->v, o);
-	IncVel(F, o);
+	IncVel(CalculaForcaSobre(*o), o);
 }
 
 void AtualizaObjetos()
 {
 	int i;
 	//Planetas não precisam ser atualizados (pelo menos na versão atual)
-	for (i = 0; i < NUM_NAVES; i++){
+	for (i = 0; i < NUM_NAVES; i++)
 		AtualizaObjeto(getObjeto(NAVE, i));
-	}
+	
 	for (i = 0; i < tot_projs; i++)
 		AtualizaObjeto(getObjeto(PROJETIL, i));
 }
@@ -322,7 +324,7 @@ Bool VerificaSeProjMorreu(Projetil p)
  */
 Bool AtualizaJogo()
 {
-	int i, j;
+	//int i, j;
 	//Primeiro atualizamos a posição e velocidade de todos os objetos
 	AtualizaObjetos();
 	//Depois, devemos reduzir o tempo de todos os projéteis
@@ -342,7 +344,9 @@ Bool AtualizaJogo()
 	}*/
 	//VERIFICAR COLISÃO (EP2)
 
-	return TRUE; //Por hora, o jogo sempre deve continuar
+	tRestante -= dt;
+
+	return (tRestante > 0);
 }
 
 void freeAll(){

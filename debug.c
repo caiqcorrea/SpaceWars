@@ -22,7 +22,7 @@ void imprimePlanetas();
 //Imprime todos os tipos de objetos
 void imprimeTudo();
 
-int main()
+int main(int argc, char *argv[])
 {
     lerInputs();
     imprimeTudo();
