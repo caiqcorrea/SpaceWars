@@ -25,157 +25,7 @@
  *		Vetor: Estrutura vet2D, representa um vetor em R²
  */
 
-#include <stdio.h>
-#include "vetores.c"
-#include "auxiliar.c"
-
-#define G 6.67e-11		  //Constante gravitacional
-#define RAIO_COLISAO 10.0 //Raio utilizado para checar colisao com a nave
-#define SIZE_X 1e10		  //Tamanho da horizontal da tela
-#define SIZE_Y 1e10		  //Tamanho da vertical da tela
-#define MAX_PROJ 100	  //Número máximo de projéteis
-#define NUM_NAVES 2		  //Número de naves
-#define NUM_PLANETAS 1	//Número de planetas
-
-/*--------------- E S T R U T U R A S   E   V A R I Á V E I S   G L O B A I S ---------------*/
-
-/* Struct Objeto possui uma massa, posição e velocidade. 
- * Ele é um objeto genérico que deve estar dentro de outros structs importantes
- * do programa, como as naves, projetéis e planetas.
- */
-typedef struct
-{
-	double m; //massa
-	vet2D p;  //posição
-	vet2D v;  //velocidade
-} Objeto;
-
-/* Struct Nave contém um objeto próprio e um nome que é o nome da nave.
- *
- */
-typedef struct
-{
-	Objeto o;
-	string nome;
-} Nave;
-
-/* Struct Projetil possui um objeto e um tempoRestante na tela.
- * A cada quadro, o tempo retante é decrementado de dt e ao chegar em zero,
- * devemos exclui-lo do array de projéteis.
- */
-typedef struct
-{
-	Objeto o;
-	double tempoRestante;
-} Projetil;
-
-/* Struct Planeta possui, além de um objeto, um raio que deve
- * ser usado para cálculos de gravidade e para checar colisões
- */
-typedef struct
-{
-	Objeto o;
-	double raio;
-} Planeta;
-
-/* Defines que facilitam na hora de acessar um campo dos objetos que estão dentro
- * das structs. Basta fazer naves[0].vel para obter a velocidade da nave 0.
- * Os defines funcionam também caso tenhamos um ponteiro para um struct.
- * Basta fazer ponteiro->vel
- */
-#define vel o.v  // Macro para a velocidade de um objeto
-#define mass o.m // Macro para a massa de um objeto
-#define pos o.p  // Macro para a posição de um objeto
-
-/* Armazenaremos todos os objetos na tela através de arrays globais,
- * um para cada tipo: Nave, Planeta e Projetil.
- * Os tamanhos desses arrays estão definidos no começo desse arquivo e podem ser
- * editados hard-coded (quem sabe futuramente em tempo de execução)
- */
-Nave naves[NUM_NAVES];			//O array que contém as duas naves dos jogadores
-Planeta planetas[NUM_PLANETAS]; //O array que contém o planeta central
-Projetil projs[MAX_PROJ];		//O que array que contém os projéteis que estão atualmente na tela
-int tot_projs;					//O número de elementos do array projs
-
-#define TERRA planetas[0] //Como só há um planeta, vamos chamá-lo de TERRA
-
-/* Um enum com os tipos de objetos possíveis.
- * Serve para fazermos referência a qual dos três arrays estamos falando.
- * Por exemplo, uma função x com parâmetros um Objeto e um TipoObj. Dessa forma, com uma só função,
- * nós podemos fazer o mesmo tipo de tarefa aplicada a qualquer um dos três tipos de objeto.
- */
-typedef enum
-{
-	NAVE,
-	PLANETA,
-	PROJETIL
-} TipoObj;
-
-//Intervalo de tempo da simulacao, lido no arquivo principal
-double dt;
-
-//Tempo restante de simulação;
-double tRestante;
-
-/*--------------- P R O T O T I P A G E M   D A S   F U N Ç Õ E S ---------------*/
-
-//Dados dois objetos, retorna a força gravitacional exercida entre o1 e o2.
-//O vetor retornado deve ser aplicado em o1.
-vet2D Forca(Objeto o1, Objeto o2);
-
-//Dado um objeto e uma forca, incrementa a velocidade desse objeto
-void IncVel(vet2D F, Objeto *o);
-
-//Dado um objeto e uma velocidade, incrementa a posicao desse objeto
-void IncPos(vet2D v, Objeto *o);
-
-//Recebe um objeto e calcula a força gerada sobre ele pelos outros objetos.
-vet2D CalculaForcaSobre(Objeto o);
-
-//Dados um tipo de objeto e um índice do vetor onde esse objeto se encontra a função retorna um apontador para este.
-//A função verifica se o índice está dentro dos limites
-Objeto *getObjeto(TipoObj tipo, int indice);
-
-//Dados um tipo de objeto, um índice do vetor referente ao tipo desse objeto e o objeto em si,
-//a função sobrescreve o array no índice i com o objeto o.
-//A função verifica se o índice está dentro dos limites
-void setObjeto(TipoObj tipo, int indice, Objeto o);
-
-//Dados dois objetos, retorna a distância entre eles
-double distanciaEntre(Objeto o1, Objeto o2);
-
-//Dados dois objetos, retorna TRUE se eles colidiram e FALSE caso contrário.
-Bool checaColisaoEntre(Objeto o1, Objeto o2);
-
-//Dado um objeto, atualiza suas propriedades
-void AtualizaObjeto(Objeto *o);
-
-//Atualiza todos os objetos (Naves, Projéteis e Planetas)
-void AtualizaObjetos();
-
-//Dado um projétil, reduz seu tempo de vida de acordo com dt
-void ReduzTempoProj(Projetil *p);
-
-//Método responsável por reduz o tempo de vida de todos os projéteis
-void ReduzTempoProjs();
-
-//Dados um projétil, retorna TRUE se ele está morto e FALSE caso contrário
-Bool VerificaSeProjMorreu(Projetil p);
-
-//Atualiza o estado atual do jogo
-//Este método deve:
-//	Atualizar as posições de todos os objetos em tela
-//	Verificar colisão entre dois quaisquer objetos
-//		Se isso acontecer, deve tomar a ação correta dependendo do tipo de objeto que colidiu
-//	Verifica se os projéteis ainda estão com tempo de vida positivo
-//		Se isso não acontece, deve remover o projétil do array
-//
-//A função devolve TRUE se o jogo continua e FALSE se o jogo terminou por qualquer motivo
-//(Pode ser que mudemos o retorno no futuro)
-Bool AtualizaJogo();
-
-//Esta função dá free em todas as alocações de memória relacionadas aos três arrays da biblioteca física
-void freeAll();
+#include "fisica.h"
 
 /*--------------- I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S ---------------*/
 
@@ -192,9 +42,9 @@ void IncVel(vet2D F, Objeto *o)
 	o->v = soma(o->v, mult((dt / (o->m)), F));
 }
 
-void IncPos(vet2D v, Objeto *o)
+void IncPos(Objeto *o)
 {
-	o->p = soma(o->p, mult(dt, v));
+	o->p = soma(o->p, mult(dt, o->v));
 
 	//Casos em que o objeto sai da tela: trazemos ele de volta do lado oposto
 	while (o->p.x > SIZE_X / 2)
@@ -214,12 +64,12 @@ vet2D CalculaForcaSobre(Objeto o)
 {
 	vet2D F = NULL_VET;
 	int i;
-	for (i = 0; i < NUM_NAVES; i++)
-		F = soma(F, Forca(o, naves[i].o));
-	for (i = 0; i < NUM_PLANETAS; i++)
-		F = soma(F, Forca(o, planetas[i].o));
-	for (i = 0; i < tot_projs; i++)
-		F = soma(F, Forca(o, projs[i].o));
+	TipoObj tipo;
+	
+	for(tipo = 0 ; tipo < NUM_TIPO_OBJ ; tipo++)
+		for (i = 0; i < tot_obj[tipo]; i++)
+			F = soma(F, Forca(o, naves[i].o));
+
 	return F;
 }
 
@@ -235,47 +85,45 @@ Bool checaColisaoEntre(Objeto o1, Objeto o2)
 
 Objeto *getObjeto(TipoObj tipo, int indice)
 {
-	switch (tipo)
+	if (!(0 <= indice && indice < tot_obj[tipo]))
+		throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+
+	else switch (tipo)
 	{
 	case PLANETA:
-		if (0 <= indice && indice < NUM_PLANETAS)
-			return &(planetas[indice].o);
-		else
-			throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+		return &(planetas[indice].o);
+			
 	case NAVE:
-		if (0 <= indice && indice < NUM_NAVES)
-			return &(naves[indice].o);
-		else
-			throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+		return &(naves[indice].o);
+			
 	case PROJETIL:
-		if (0 <= indice && indice < tot_projs)
-			return &(projs[indice].o);
-		else
-			throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+		return &(projs[indice].o);
+			
 	default:
 		throwException("getObjeto", "tipo nao identificado", var_type_undefined_exception);
 	}
+	
 	return NULL; //Só para o compilador não reclamar
 }
 void setObjeto(TipoObj tipo, int indice, Objeto o)
 {
-	switch (tipo)
+	if (!(0 <= indice && indice < tot_obj[tipo]))
+		throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+
+	else switch (tipo)
 	{
 	case PLANETA:
-		if (0 <= indice && indice < NUM_PLANETAS)
-			planetas[indice].o = o;
-		else
-			throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+		planetas[indice].o = o;
+		break;
+
 	case NAVE:
-		if (0 <= indice && indice < NUM_NAVES)
-			naves[indice].o = o;
-		else
-			throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+		naves[indice].o = o;
+		break;
+
 	case PROJETIL:
-		if (0 <= indice && indice < tot_projs)
-			projs[indice].o = o;
-		else
-			throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+		projs[indice].o = o;
+		break;
+
 	default:
 		throwException("getObjeto", "tipo nao identificado", var_type_undefined_exception);
 	}
@@ -283,7 +131,7 @@ void setObjeto(TipoObj tipo, int indice, Objeto o)
 
 void AtualizaObjeto(Objeto *o)
 {
-	IncPos(o->v, o);
+	IncPos(o);
 	IncVel(CalculaForcaSobre(*o), o);
 }
 
@@ -291,11 +139,11 @@ void AtualizaObjetos()
 {
 	int i;
 	//Planetas não precisam ser atualizados (pelo menos na versão atual)
-	for (i = 0; i < NUM_NAVES; i++)
-		AtualizaObjeto(getObjeto(NAVE, i));
-	
-	for (i = 0; i < tot_projs; i++)
-		AtualizaObjeto(getObjeto(PROJETIL, i));
+	TipoObj tipo;
+	//Planetas não precisam ser atualizados (pelo menos na versão atual)
+	for(tipo = 0 ; tipo < NUM_TIPO_OBJ ; tipo++)
+		for (i = 0; i < tot_obj[tipo]; i++)
+			if(tipo != PLANETA) AtualizaObjeto(getObjeto(tipo, i));
 }
 
 void ReduzTempoProj(Projetil *p)
@@ -309,7 +157,7 @@ void ReduzTempoProj(Projetil *p)
 void ReduzTempoProjs()
 {
 	int i;
-	for (i = 0; i < tot_projs; i++)
+	for (i = 0; i < tot_obj[PROJETIL]; i++)
 		ReduzTempoProj(&(projs[i]));
 }
 
@@ -351,6 +199,6 @@ Bool AtualizaJogo()
 
 void freeAll(){
 	int i;
-	for(i = 0; i < NUM_NAVES; i++)
+	for(i = 0; i < tot_obj[NAVE]; i++)
 		freeSafe(naves[i].nome);
 }
