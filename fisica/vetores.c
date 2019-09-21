@@ -4,6 +4,8 @@
 
 #include "vetores.h"
 
+#include<math.h>
+
 /* I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S */
 
 double norma(vet2D v)

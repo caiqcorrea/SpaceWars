@@ -27,6 +27,33 @@
 
 #include "fisica.h"
 
+#include "vetores.h"
+#include "../auxiliar.h"
+
+#include<math.h>
+#include<stddef.h>
+
+/*--------------- V A R I Á V E I S   G L O B A I S ---------------*/
+
+int tot_obj[NUM_TIPO_OBJ] = MAX_OBJ;		//O número de objetos de cada tipo
+
+/* Armazenaremos todos os objetos na tela através de arrays globais,
+ * um para cada tipo: Nave, Planeta e Projetil.
+ * Os tamanhos desses arrays estão definidos no começo desse arquivo e podem ser
+ * editados hard-coded (quem sabe futuramente em tempo de execução)
+ */
+ Nave naves[MAX_NAVES];			//O array que contém as duas naves dos jogadores
+Planeta planetas[MAX_PLANETAS]; //O array que contém o planeta central
+Projetil projs[MAX_PROJ];		//O que array que contém os projéteis que estão atualmente na tela
+
+#define TERRA planetas[0] //Como só há um planeta, vamos chamá-lo de TERRA
+
+//Intervalo de tempo da simulacao, lido no arquivo principal. Por padrão, é 0.01
+double dt = 0.01;
+
+//Tempo restante de simulação;
+double tRestante;
+
 /*--------------- I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S ---------------*/
 
 vet2D Forca(Objeto o1, Objeto o2)

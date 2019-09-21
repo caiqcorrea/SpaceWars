@@ -24,9 +24,12 @@
  *		Array: Variáveis do tipo v[MAX]
  *		Vetor: Estrutura vet2D, representa um vetor em R²
  */
-
-#include "vetores.h"
-#include "auxiliar.c"
+ 
+ #ifndef _FISICA_H
+ #define _FISICA_H
+ 
+ #include "vetores.h"
+ #include "../auxiliar.h"
 
 /*--------------- M A C R O S ---------------*/
 
@@ -41,7 +44,7 @@
 #define NUM_TIPO_OBJ 3	//Número de tipos de objeto
 #define MAX_OBJ {MAX_PLANETAS, MAX_NAVES, MAX_PROJ}	//Array contendo o número máximo de cada tipo de objeto
 
-/*--------------- E S T R U T U R A S   E   V A R I Á V E I S   G L O B A I S ---------------*/
+/*--------------- E S T R U T U R A S ---------------*/
 
 /* Struct Objeto possui uma massa, posição e velocidade. 
  * Ele é um objeto genérico que deve estar dentro de outros structs importantes
@@ -103,24 +106,27 @@ typedef enum
 	PLANETA,
 	PROJETIL
 } TipoObj;
-int tot_obj[NUM_TIPO_OBJ] = MAX_OBJ;		//O número de objetos de cada tipo
+
+/*--------------- V A R I Á V E I S   G L O B A I S ---------------*/
+
+extern int tot_obj[NUM_TIPO_OBJ];		//O número de objetos de cada tipo
 
 /* Armazenaremos todos os objetos na tela através de arrays globais,
  * um para cada tipo: Nave, Planeta e Projetil.
  * Os tamanhos desses arrays estão definidos no começo desse arquivo e podem ser
  * editados hard-coded (quem sabe futuramente em tempo de execução)
  */
-Nave naves[MAX_NAVES];			//O array que contém as duas naves dos jogadores
-Planeta planetas[MAX_PLANETAS]; //O array que contém o planeta central
-Projetil projs[MAX_PROJ];		//O que array que contém os projéteis que estão atualmente na tela
+extern Nave naves[MAX_NAVES];			//O array que contém as duas naves dos jogadores
+extern Planeta planetas[MAX_PLANETAS]; //O array que contém o planeta central
+extern Projetil projs[MAX_PROJ];		//O que array que contém os projéteis que estão atualmente na tela
 
 #define TERRA planetas[0] //Como só há um planeta, vamos chamá-lo de TERRA
 
 //Intervalo de tempo da simulacao, lido no arquivo principal. Por padrão, é 0.01
-double dt = 0.01;
+extern double dt;
 
 //Tempo restante de simulação;
-double tRestante;
+extern double tRestante;
 
 /*--------------- F U N Ç Õ E S ---------------*/
 
@@ -191,3 +197,5 @@ Bool AtualizaJogo();
 
 //Esta função dá free em todas as alocações de memória relacionadas aos três arrays da biblioteca física
 void freeAll();
+
+#endif
