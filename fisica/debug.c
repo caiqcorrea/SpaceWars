@@ -30,27 +30,33 @@ int main(int argc, char *argv[])
 {
 	FILE *arq;
 	string nomeArq;
+	dt = 0.01; //Inicializamos o dt como 0.01 (este valor pode ser alterado)
 	
+    //Pedimos um arquivo e abrimos ele
 	nomeArq = mallocSafe(sizeof(string) * 50);
 	printf("Digite o nome do seu arquivo: ");
 	scanf("%s", nomeArq);
-	
 	arq = fopen(nomeArq, "r");
 	freeSafe(nomeArq);
-	if (arq == NULL)
+
+	if (arq == NULL) //Verificando se o usuário deu o nome correto
 		throwException("lerInputs", "Não foi possivel abrir o arquivo.", file_not_find_exception);
 
-    lerInputs(arq);
-    imprimeTudo();
-    setbuf(stdin, NULL);
+    lerInputs(arq); //Lemos os inputs (a função fecha o arquivo para nós)
+    imprimeTudo(); //e jogamos tudo o que foi lido na tela
+    setbuf(stdin, NULL); //(apenas para evitar possíveis erros)
 
+    //Enquanto a simulação não terminar
     while (AtualizaJogo())
     {
+        //Imprimimos as naves e os projéteis
         imprimeNaves();
-        pause();
+        imprimeProjeteis();
+        //Imprimir o planeta toda hora é desnecessário, mas caso queira, apenas tire o //
+        //imprimePlanetas();
+        pause(); //E pausamos até o usuário digitar ENTER
     }
 
-    printf("dt = %.5lf\n\n", dt);
     printf("Fim\n");
     freeAll();
     return 0;

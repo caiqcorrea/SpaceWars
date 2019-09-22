@@ -6,14 +6,14 @@
  * com objetivo de ser parte do jogo Space Wars.
  */
 
- #include "IO.h"
+#include "IO.h"
 
 #include "fisica/fisica.h"
 #include "fisica/vetores.h"
 #include "auxiliar.h"
 
-#include<stdio.h>
- 
+#include <stdio.h>
+
 /* I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S */
 
 void lerInputs(FILE *arq)
@@ -21,7 +21,7 @@ void lerInputs(FILE *arq)
 	int i;
 	double tempoDeVida;
 
-	lerTerra(arq);		   //Lê a primeira linha e atribui valores ao planeta
+	lerTerra(arq);			   //Lê a primeira linha e atribui valores ao planeta
 	lerNave(arq, &(naves[0])); //Lê a segunda linha e atribui valores à primeira nave
 	lerNave(arq, &(naves[1])); //Lê a segunda linha e atribui valores à segunda nave
 	fscanf(arq, "%d %lf", &tot_obj[PROJETIL], &tempoDeVida);
@@ -35,7 +35,6 @@ void lerTerra(FILE *arq)
 {
 	TERRA.pos = NULL_VET;
 	fscanf(arq, "%lf %lf %lf", &(TERRA.raio), &(TERRA.mass), &tRestante);
-	dt = 0.01;
 }
 
 void lerNave(FILE *arq, Nave *n)

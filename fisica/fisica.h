@@ -24,12 +24,12 @@
  *		Array: Variáveis do tipo v[MAX]
  *		Vetor: Estrutura vet2D, representa um vetor em R²
  */
- 
- #ifndef _FISICA_H
- #define _FISICA_H
- 
- #include "vetores.h"
- #include "../auxiliar.h"
+
+#ifndef _FISICA_H
+#define _FISICA_H
+
+#include "vetores.h"
+#include "../auxiliar.h"
 
 /*--------------- M A C R O S ---------------*/
 
@@ -42,7 +42,7 @@
 #define MAX_PLANETAS 1	//Número de planetas
 
 #define NUM_TIPO_OBJ 3 //Número de tipos de objeto
-#define MAX_OBJ { MAX_PLANETAS, MAX_NAVES, MAX_PROJ } //Array contendo o número máximo de cada tipo de objeto
+#define MAX_OBJ { MAX_NAVES, MAX_PLANETAS, MAX_PROJ } //Array contendo o número máximo de cada tipo de objeto
 
 /*--------------- E S T R U T U R A S ---------------*/
 
@@ -108,16 +108,16 @@ typedef enum
 
 /*--------------- V A R I Á V E I S   G L O B A I S ---------------*/
 
-extern int tot_obj[NUM_TIPO_OBJ];		//O número de objetos de cada tipo
+extern int tot_obj[NUM_TIPO_OBJ]; //O número de objetos de cada tipo
 
 /* Armazenaremos todos os objetos na tela através de arrays globais,
  * um para cada tipo: Nave, Planeta e Projetil.
  * Os tamanhos desses arrays estão definidos no começo desse arquivo e podem ser
  * editados hard-coded (quem sabe futuramente em tempo de execução)
  */
-extern Nave naves[MAX_NAVES];			//O array que contém as duas naves dos jogadores
+extern Nave naves[MAX_NAVES];		   //O array que contém as duas naves dos jogadores
 extern Planeta planetas[MAX_PLANETAS]; //O array que contém o planeta central
-extern Projetil projs[MAX_PROJ];		//O que array que contém os projéteis que estão atualmente na tela
+extern Projetil projs[MAX_PROJ];	   //O que array que contém os projéteis que estão atualmente na tela
 
 #define TERRA planetas[0] //Como só há um planeta, vamos chamá-lo de TERRA
 
@@ -179,6 +179,10 @@ void ReduzTempoProjs();
 
 //Dados um projétil, retorna TRUE se ele está morto e FALSE caso contrário
 Bool VerificaSeProjMorreu(Projetil p);
+
+//Dado um índice que representa uma posição do array de projéteis
+//a função remove este projétil.
+void RemoveProj(int index);
 
 /* OUTRAS FUNÇÕES 	*/
 
