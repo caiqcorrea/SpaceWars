@@ -161,8 +161,8 @@ void setObjeto(TipoObj tipo, int indice, Objeto o)
 
 void AtualizaObjeto(Objeto *o)
 {
-	IncPos(o);
 	IncVel(CalculaForcaSobre(*o), o);
+	IncPos(o);
 }
 
 void AtualizaObjetos()
