@@ -12,5 +12,5 @@ https://www.youtube.com/watch?time_continue=2&v=7bzWnaH-0sg
 
 O jogo é composto por duas naves que estão num duelo espacial entre si nas órbitas de um planeta.
 
-Esse projeto foi proposto pelo profesor Doutor Marco Dimas Gubitoso, ministrando a disciplina de Técnicas de Programação I, do IME-USP.
+Esse projeto foi proposto pelo professor Doutor Marco Dimas Gubitoso, ministrando a disciplina de Técnicas de Programação I, do IME-USP.
 Somos um grupo de três bacharelandos de Ciência da Computação e estamos animados para implementar esse projeto ao longo do semestre.

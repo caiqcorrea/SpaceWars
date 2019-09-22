@@ -35,8 +35,8 @@
 
 #define G 6.67e-11		  //Constante gravitacional
 #define RAIO_COLISAO 10.0 //Raio utilizado para checar colisao com a nave
-#define SIZE_X 1e10		  //Tamanho da horizontal da tela
-#define SIZE_Y 1e10		  //Tamanho da vertical da tela
+#define SIZE_X 1e100		  //Tamanho da horizontal da tela
+#define SIZE_Y 1e100		  //Tamanho da vertical da tela
 #define MAX_PROJ 100	  //Número máximo de projéteis
 #define MAX_NAVES 2		  //Número de naves
 #define MAX_PLANETAS 1	//Número de planetas

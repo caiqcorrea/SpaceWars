@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 
     while (AtualizaJogo())
     {
-    	printf("Tempo: %.3lf", tempo);
+    	printf("Tempo: %.3lf\n", tempo);
     	tempo+= dt;
         //Imprimimos as naves e os projéteis
         imprimeNaves();
