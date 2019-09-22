@@ -1,5 +1,9 @@
 //MÓDULO CRIADO ESPECIALMENTE PARA DEPURAÇÕES E TESTES
-#include "IO.c"
+
+#include "../IO.h"
+#include "fisica.h"
+
+#include<stdio.h>
 
 //Imprime as propriedades de uma nave
 void imprimeNave(Nave n);
@@ -24,7 +28,19 @@ void imprimeTudo();
 
 int main(int argc, char *argv[])
 {
-    lerInputs();
+	FILE *arq;
+	string nomeArq;
+	
+	nomeArq = mallocSafe(sizeof(string) * 50);
+	printf("Digite o nome do seu arquivo: ");
+	scanf("%s", nomeArq);
+	
+	arq = fopen(nomeArq, "r");
+	freeSafe(nomeArq);
+	if (arq == NULL)
+		throwException("lerInputs", "Não foi possivel abrir o arquivo.", file_not_find_exception);
+
+    lerInputs(arq);
     imprimeTudo();
     setbuf(stdin, NULL);
 
@@ -62,21 +78,21 @@ void imprimePlaneta(Planeta p)
 void imprimeNaves()
 {
     int i;
-    for (i = 0; i < NUM_NAVES; i++)
+    for (i = 0; i < tot_obj[NAVE]; i++)
         imprimeNave(naves[i]);
 }
 
 void imprimeProjeteis()
 {
     int i;
-    for (i = 0; i < tot_projs; i++)
+    for (i = 0; i < tot_obj[PROJETIL]; i++)
         imprimeProjetil(projs[i]);
 }
 
 void imprimePlanetas()
 {
     int i;
-    for (i = 0; i < NUM_PLANETAS; i++)
+    for (i = 0; i < tot_obj[PLANETA]; i++)
         imprimePlaneta(planetas[i]);
 }
 

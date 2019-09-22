@@ -2,17 +2,19 @@
  * A princípio, ela pode ser utilizada para quaisquer fins.
  */
 
-#include <math.h>
+#ifndef _VETORES_H
+#define _VETORES_H
 
-/* E S T R U T U R A S   E   V A R I Á V E I S   G L O B A I S */
+/* M A C R O S */
 
-/* Defines para referenciar às funções que retornam vetores prontos
- * Quando se quer criar um vetor nulo ou um dos vetores canônicos,
+/* Quando se quer criar um vetor nulo ou um dos vetores canônicos,
  *  pode-se chamar pelo nome deles
  */
 #define NULL_VET null_vet()
 #define I_VET i_vet()
 #define J_VET j_vet()
+
+/* E S T R U T U R A S */
 
 typedef struct
 {
@@ -57,3 +59,5 @@ vet2D i_vet();
 
 //Cria e retorna um vetor cartesiano (0,1)
 vet2D j_vet(); 
+
+#endif
