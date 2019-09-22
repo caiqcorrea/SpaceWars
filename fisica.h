@@ -38,8 +38,8 @@
 #define MAX_NAVES 2		  //Número de naves
 #define MAX_PLANETAS 1	//Número de planetas
 
-#define NUM_TIPO_OBJ 3	//Número de tipos de objeto
-#define MAX_OBJ {MAX_PLANETAS, MAX_NAVES, MAX_PROJ}	//Array contendo o número máximo de cada tipo de objeto
+#define NUM_TIPO_OBJ 3 //Número de tipos de objeto
+#define MAX_OBJ { MAX_PLANETAS, MAX_NAVES, MAX_PROJ } //Array contendo o número máximo de cada tipo de objeto
 
 /*--------------- E S T R U T U R A S   E   V A R I Á V E I S   G L O B A I S ---------------*/
 
@@ -91,7 +91,6 @@ typedef struct
 #define mass o.m // Macro para a massa de um objeto
 #define pos o.p  // Macro para a posição de um objeto
 
-
 /* Um enum com os tipos de objetos possíveis.
  * Serve para fazermos referência a qual dos três arrays estamos falando.
  * Por exemplo, uma função x com parâmetros um Objeto e um TipoObj. Dessa forma, com uma só função,
@@ -103,7 +102,7 @@ typedef enum
 	PLANETA,
 	PROJETIL
 } TipoObj;
-int tot_obj[NUM_TIPO_OBJ] = MAX_OBJ;		//O número de objetos de cada tipo
+int tot_obj[NUM_TIPO_OBJ] = MAX_OBJ; //O número de objetos de cada tipo
 
 /* Armazenaremos todos os objetos na tela através de arrays globais,
  * um para cada tipo: Nave, Planeta e Projetil.
