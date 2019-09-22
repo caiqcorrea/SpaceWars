@@ -48,8 +48,8 @@ Projetil projs[MAX_PROJ];		//O que array que contém os projéteis que estão at
 
 #define TERRA planetas[0] //Como só há um planeta, vamos chamá-lo de TERRA
 
-//Intervalo de tempo da simulacao, lido no arquivo principal. Por padrão, é 0.01
-double dt = 0.01;
+//Intervalo de tempo da simulacao, lido no arquivo principal. Por padrão, é 0.001
+double dt;
 
 //Tempo restante de simulação;
 double tRestante;
@@ -96,7 +96,7 @@ vet2D CalculaForcaSobre(Objeto o)
 
 	for (tipo = 0; tipo < NUM_TIPO_OBJ; tipo++)
 		for (i = 0; i < tot_obj[tipo]; i++)
-			F = soma(F, Forca(o, naves[i].o));
+			F = soma(F, Forca(o, *getObjeto(tipo, i)));
 
 	return F;
 }

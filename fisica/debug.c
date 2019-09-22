@@ -30,7 +30,6 @@ int main(int argc, char *argv[])
 {
 	FILE *arq;
 	string nomeArq;
-	dt = 0.01; //Inicializamos o dt como 0.01 (este valor pode ser alterado)
 	
     //Pedimos um arquivo e abrimos ele
 	nomeArq = mallocSafe(sizeof(string) * 50);
@@ -65,19 +64,19 @@ int main(int argc, char *argv[])
 void imprimeNave(Nave n)
 {
     fprintf(stdout, "Nave %s: ", n.nome);
-    fprintf(stdout, "\tMassa = %.2lf\tPos = (%.2lf , %.2lf)\tVel = (%.2lf , %.2lf)\n",
+    fprintf(stdout, "\tMassa = %3.2lf\tPos = (%3.2lf , %3.2lf)\tVel = (%3.2lf , %3.2lf)\n",
             n.mass, n.pos.x, n.pos.y, n.vel.x, n.vel.y);
 }
 
 void imprimeProjetil(Projetil p)
 {
-    fprintf(stdout, "Projetil:\tMassa = %.2lf\tPos = (%.2lf , %.2lf)\tVel = (%.2lf , %.2lf)\tRestam = %.2lf\n",
-            p.mass, p.pos.x, p.pos.y, p.vel.x, p.vel.y, p.tempoRestante);
+    fprintf(stdout, "Projetil:\tMassa = %3.2lf\tPos = (%3.2lf , %3.2lf)\tVel = (%3.2lf , %3.2lf)\tRestam = %3.2lf\tForca = (%3.2lf , %3.2lf)\n",
+            p.mass, p.pos.x, p.pos.y, p.vel.x, p.vel.y, p.tempoRestante, CalculaForcaSobre(p.o).x, CalculaForcaSobre(p.o).y);
 }
 
 void imprimePlaneta(Planeta p)
 {
-    fprintf(stdout, "Planeta:\tMassa = %.2lf\tPos = (%.2lf , %.2lf)\tVel = (%.2lf , %.2lf)\tR = %.2lf\n",
+    fprintf(stdout, "Planeta:\tMassa = %3.2lf\tPos = (%3.2lf , %3.2lf)\tVel = (%3.2lf , %3.2lf)\tR = %3.2lf\n",
             p.mass, p.pos.x, p.pos.y, p.vel.x, p.vel.y, p.raio);
 }
 

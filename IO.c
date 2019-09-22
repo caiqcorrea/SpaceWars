@@ -21,6 +21,7 @@ void lerInputs(FILE *arq)
 	int i;
 	double tempoDeVida;
 
+	dt = 0.001; //Inicializamos o dt como 0.001 (este valor pode ser alterado)
 	lerTerra(arq);			   //Lê a primeira linha e atribui valores ao planeta
 	lerNave(arq, &(naves[0])); //Lê a segunda linha e atribui valores à primeira nave
 	lerNave(arq, &(naves[1])); //Lê a segunda linha e atribui valores à segunda nave

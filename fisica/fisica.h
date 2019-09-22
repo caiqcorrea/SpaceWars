@@ -121,7 +121,7 @@ extern Projetil projs[MAX_PROJ];	   //O que array que contém os projéteis que 
 
 #define TERRA planetas[0] //Como só há um planeta, vamos chamá-lo de TERRA
 
-//Intervalo de tempo da simulacao, lido no arquivo principal. Por padrão, é 0.01
+//Intervalo de tempo da simulacao, lido no arquivo principal. Por padrão, é 0.001
 extern double dt;
 
 //Tempo restante de simulação;

@@ -3,11 +3,14 @@
 
 # ---- V A R I Á V E I S   D E   A M B I E N T E ---- #
 
-VPATH = ./fisica
+VPATH = ./fisica:./objfiles
+
 CC = gcc
 CFLAGS = -Wall -O2 -Wno-unused-result -lm
 
 # ---- R E G R A S ---- #
+
+default : debug move_o
 
 debug : debug.o IO.o auxiliar.o vetores.o fisica.o
 	${CC} $^ ${CFLAGS} -o $@
@@ -27,15 +30,20 @@ vetores.o : vetores.c vetores.h
 fisica.o : fisica.c fisica.h vetores.h auxiliar.h
 	${CC} ${CFLAGS} -c $<
 
-.PHONY: clean_o clean_debug clean_all
+.PHONY: clean_o clean_debug clean_all move_o
 
-clean_all :
-	rm *.o
-	rm debug
+move_o :
+	touch dummy.o
+	mkdir -p objfiles
+	mv -f *.o objfiles
+	rm -f ./objfiles/dummy.o
+
+clean_all : clean_o clean_debug
 
 clean_o :
-	rm *.o
+	rm -f *.o
+	rm -f ./objfiles/*.o
 
 clean_debug :
-	rm debug
+	rm -f debug
 
