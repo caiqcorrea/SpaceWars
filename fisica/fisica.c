@@ -170,15 +170,10 @@ void AtualizaObjetos()
 	int i;
 	TipoObj tipo;
 	//Planetas não precisam ser atualizados (pelo menos na versão atual)
-<<<<<<< HEAD
-	for (tipo = 0; tipo < NUM_TIPO_OBJ; tipo++)
-		for (i = 0; i < tot_obj[tipo]; i++)
-			if (tipo != PLANETA)
-=======
+
 	for(tipo = 0 ; tipo < NUM_TIPO_OBJ ; tipo++)
 		if(tipo != PLANETA)
 			for (i = 0; i < tot_obj[tipo]; i++)
->>>>>>> 363ae34805b1c0049c7507786eda9c2f10f47d8a
 				AtualizaObjeto(getObjeto(tipo, i));
 }
 
