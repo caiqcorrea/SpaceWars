@@ -41,11 +41,11 @@ void lerTerra(FILE *arq)
 void lerNave(FILE *arq, Nave *n)
 {
 	n->nome = mallocSafe(sizeof(string) * 50);
-	fscanf(arq, "%s %lf %lf %lf %lf %lf", n->nome, &(n->mass), &(n->vel.x), &(n->vel.y), &(n->pos.x), &(n->pos.y));
+	fscanf(arq, "%s %lf %lf %lf %lf %lf", n->nome, &(n->mass), &(n->pos.x), &(n->pos.y), &(n->vel.x), &(n->vel.y));
 }
 
 void lerProjetil(FILE *arq, Projetil *p, double tempoDeVida)
 {
-	fscanf(arq, "%lf %lf %lf %lf %lf", &(p->mass), &(p->vel.x), &(p->vel.y), &(p->pos.x), &(p->pos.y));
+	fscanf(arq, "%lf %lf %lf %lf %lf", &(p->mass), &(p->pos.x), &(p->pos.y), &(p->vel.x), &(p->vel.y));
 	p->tempoRestante = tempoDeVida;
 }

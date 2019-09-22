@@ -1,5 +1,4 @@
 #Makefile para fazer o jogo SpaceWars
-#Paiolla coloca os comentários certinho aqui pq eu n sei fazer isso n
 
 # ---- V A R I Á V E I S   D E   A M B I E N T E ---- #
 

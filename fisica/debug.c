@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
 {
 	FILE *arq;
 	string nomeArq;
+	double tempo = 0;
 	
     //Pedimos um arquivo e abrimos ele
 	nomeArq = mallocSafe(sizeof(string) * 50);
@@ -49,12 +50,15 @@ int main(int argc, char *argv[])
 
     while (AtualizaJogo())
     {
+    	printf("Tempo: %.3lf", tempo);
+    	tempo+= dt;
         //Imprimimos as naves e os projéteis
         imprimeNaves();
         imprimeProjeteis();
         //Imprimir o planeta toda hora é desnecessário, mas caso queira, apenas tire o //
         //imprimePlanetas();
-        pause(); //E pausamos até o usuário digitar ENTER
+        printf("\n\n");
+       // pause(); //E pausamos até o usuário digitar ENTER
     }
 
     printf("Fim\n");
