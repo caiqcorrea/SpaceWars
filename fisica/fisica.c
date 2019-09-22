@@ -95,7 +95,7 @@ vet2D CalculaForcaSobre(Objeto o)
 	
 	for(tipo = 0 ; tipo < NUM_TIPO_OBJ ; tipo++)
 		for (i = 0; i < tot_obj[tipo]; i++)
-			F = soma(F, Forca(o, naves[i].o));
+			F = soma(F, Forca(o, *getObjeto(tipo, i)));
 
 	return F;
 }
@@ -165,12 +165,12 @@ void AtualizaObjeto(Objeto *o)
 void AtualizaObjetos()
 {
 	int i;
-	//Planetas não precisam ser atualizados (pelo menos na versão atual)
 	TipoObj tipo;
 	//Planetas não precisam ser atualizados (pelo menos na versão atual)
 	for(tipo = 0 ; tipo < NUM_TIPO_OBJ ; tipo++)
-		for (i = 0; i < tot_obj[tipo]; i++)
-			if(tipo != PLANETA) AtualizaObjeto(getObjeto(tipo, i));
+		if(tipo != PLANETA)
+			for (i = 0; i < tot_obj[tipo]; i++)
+				AtualizaObjeto(getObjeto(tipo, i));
 }
 
 void ReduzTempoProj(Projetil *p)

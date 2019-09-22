@@ -44,6 +44,8 @@ int main(int argc, char *argv[])
     imprimeTudo();
     setbuf(stdin, NULL);
 
+	printf("%lf %lf %lf \n\n\n", norma(CalculaForcaSobre(naves[0].o)), TERRA.mass, norma(Forca(TERRA.o, naves[0].o)));
+
     while (AtualizaJogo())
     {
         imprimeNaves();
