@@ -41,8 +41,13 @@
 #define MAX_NAVES 2		  //Número de naves
 #define MAX_PLANETAS 1	//Número de planetas
 
+<<<<<<< HEAD
 #define NUM_TIPO_OBJ 3 //Número de tipos de objeto
 #define MAX_OBJ { MAX_NAVES, MAX_PLANETAS, MAX_PROJ } //Array contendo o número máximo de cada tipo de objeto
+=======
+#define NUM_TIPO_OBJ 3	//Número de tipos de objeto
+#define MAX_OBJ {MAX_NAVES, MAX_PLANETAS, MAX_PROJ}	//Array contendo o número máximo de cada tipo de objeto
+>>>>>>> 363ae34805b1c0049c7507786eda9c2f10f47d8a
 
 /*--------------- E S T R U T U R A S ---------------*/
 

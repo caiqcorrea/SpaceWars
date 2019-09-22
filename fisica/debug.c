@@ -45,7 +45,12 @@ int main(int argc, char *argv[])
     imprimeTudo(); //e jogamos tudo o que foi lido na tela
     setbuf(stdin, NULL); //(apenas para evitar possíveis erros)
 
+<<<<<<< HEAD
     //Enquanto a simulação não terminar
+=======
+	printf("%lf %lf %lf \n\n\n", norma(CalculaForcaSobre(naves[0].o)), TERRA.mass, norma(Forca(TERRA.o, naves[0].o)));
+
+>>>>>>> 363ae34805b1c0049c7507786eda9c2f10f47d8a
     while (AtualizaJogo())
     {
         //Imprimimos as naves e os projéteis
