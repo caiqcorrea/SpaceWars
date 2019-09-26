@@ -35,17 +35,21 @@ void lerInputs(FILE *arq)
 void lerTerra(FILE *arq)
 {
 	TERRA.pos = NULL_VET;
-	fscanf(arq, "%lf %lf %lf", &(TERRA.raio), &(TERRA.mass), &tRestante);
+	fscanf(arq, "%lf %lf %lf", &(TERRA.radius), &(TERRA.mass), &tRestante);
 }
 
 void lerNave(FILE *arq, Nave *n)
 {
 	n->nome = mallocSafe(sizeof(string) * 50);
 	fscanf(arq, "%s %lf %lf %lf %lf %lf", n->nome, &(n->mass), &(n->pos.x), &(n->pos.y), &(n->vel.x), &(n->vel.y));
+	n->HP = MAX_HP;
+	n->radius = RAIO_NAVES;
 }
 
 void lerProjetil(FILE *arq, Projetil *p, double tempoDeVida)
 {
 	fscanf(arq, "%lf %lf %lf %lf %lf", &(p->mass), &(p->pos.x), &(p->pos.y), &(p->vel.x), &(p->vel.y));
 	p->tempoRestante = tempoDeVida;
+	p->radius = RAIO_PROJS;
+	p->dano = 1;
 }

@@ -56,6 +56,54 @@ double tRestante;
 
 /*--------------- I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S ---------------*/
 
+Objeto *GetObjeto(TipoObj tipo, int indice)
+{
+	if (!(0 <= indice && indice < tot_obj[tipo]))
+		throwException("GetObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+
+	else
+		switch (tipo)
+		{
+		case PLANETA:
+			return &(planetas[indice].o);
+
+		case NAVE:
+			return &(naves[indice].o);
+
+		case PROJETIL:
+			return &(projs[indice].o);
+
+		default:
+			throwException("GetObjeto", "tipo nao identificado", var_type_undefined_exception);
+		}
+
+	return NULL; //Só para o compilador não reclamar
+}
+void SetObjeto(TipoObj tipo, int indice, Objeto o)
+{
+	if (!(0 <= indice && indice < tot_obj[tipo]))
+		throwException("SetObjeto", "indexOutOfRangeException", index_out_of_range_exception);
+
+	else
+		switch (tipo)
+		{
+		case PLANETA:
+			planetas[indice].o = o;
+			break;
+
+		case NAVE:
+			naves[indice].o = o;
+			break;
+
+		case PROJETIL:
+			projs[indice].o = o;
+			break;
+
+		default:
+			throwException("SetObjeto", "tipo nao identificado", var_type_undefined_exception);
+		}
+}
+
 vet2D Forca(Objeto o1, Objeto o2)
 {
 	vet2D aux = sub(o1.p, o2.p);
@@ -96,67 +144,14 @@ vet2D CalculaForcaSobre(Objeto o)
 
 	for (tipo = 0; tipo < NUM_TIPO_OBJ; tipo++)
 		for (i = 0; i < tot_obj[tipo]; i++)
-			F = soma(F, Forca(o, *getObjeto(tipo, i)));
+			F = soma(F, Forca(o, *GetObjeto(tipo, i)));
 
 	return F;
 }
 
-double distanciaEntre(Objeto o1, Objeto o2)
+double DistanciaEntre(Objeto o1, Objeto o2)
 {
 	return norma(sub(o1.p, o2.p));
-}
-
-Bool checaColisaoEntre(Objeto o1, Objeto o2)
-{
-	return (distanciaEntre(o1, o2) < RAIO_COLISAO);
-}
-
-Objeto *getObjeto(TipoObj tipo, int indice)
-{
-	if (!(0 <= indice && indice < tot_obj[tipo]))
-		throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
-
-	else
-		switch (tipo)
-		{
-		case PLANETA:
-			return &(planetas[indice].o);
-
-		case NAVE:
-			return &(naves[indice].o);
-
-		case PROJETIL:
-			return &(projs[indice].o);
-
-		default:
-			throwException("getObjeto", "tipo nao identificado", var_type_undefined_exception);
-		}
-
-	return NULL; //Só para o compilador não reclamar
-}
-void setObjeto(TipoObj tipo, int indice, Objeto o)
-{
-	if (!(0 <= indice && indice < tot_obj[tipo]))
-		throwException("getObjeto", "indexOutOfRangeException", index_out_of_range_exception);
-
-	else
-		switch (tipo)
-		{
-		case PLANETA:
-			planetas[indice].o = o;
-			break;
-
-		case NAVE:
-			naves[indice].o = o;
-			break;
-
-		case PROJETIL:
-			projs[indice].o = o;
-			break;
-
-		default:
-			throwException("getObjeto", "tipo nao identificado", var_type_undefined_exception);
-		}
 }
 
 void AtualizaObjeto(Objeto *o)
@@ -174,7 +169,7 @@ void AtualizaObjetos()
 	for(tipo = 0 ; tipo < NUM_TIPO_OBJ ; tipo++)
 		if(tipo != PLANETA)
 			for (i = 0; i < tot_obj[tipo]; i++)
-				AtualizaObjeto(getObjeto(tipo, i));
+				AtualizaObjeto(GetObjeto(tipo, i));
 }
 
 void ReduzTempoProj(Projetil *p)
@@ -205,12 +200,109 @@ void RemoveProj(int index)
 	tot_obj[PROJETIL]--;
 }
 
+Bool ChecaColisaoEntre(Objeto o1, Objeto o2)
+{
+	return (DistanciaEntre(o1, o2) < o1.r + o2.r);
+}
+
+void ChecaTodasColisoes()
+{
+	int i, j;
+	Bool colidiu;
+
+	//PROJÉTEIS
+	for(i = 0, colidiu = FALSE; i < tot_obj[PROJETIL]; i++)
+	{
+		//com PLANETAS
+		for(j = 0; !colidiu && j < tot_obj[PLANETA]; j++){
+			if(ChecaColisaoEntre(*GetObjeto(PROJETIL, i), *GetObjeto(PLANETA, j))){
+				RemoveProj(i);
+				colidiu = TRUE;
+			}
+		}
+		//com outro PROJÉTIL
+		for(j = i+1; !colidiu && j < tot_obj[PROJETIL]; j++){
+			//Note que começamos de i + 1 pois assumimos todos os i-1 projéteis anteriores não colidiram com ninguém
+			//e i não colide consigo mesmo.
+			//Conclusão: se i colide com um j, então j > i
+			if(ChecaColisaoEntre(*GetObjeto(PROJETIL, i), *GetObjeto(PROJETIL, j))){
+				RemoveProj(j); //Como j > i, removemos ele primeiro. Assim o i-ésimo projétil do array continua sendo aquele
+				RemoveProj(i); //que colidiu. Se fosse o contrário (remover i primeiro) seria o (j-1)-ésimo quem colidiu com o i-ésimo
+				colidiu = TRUE;
+			}
+		}
+		//com NAVES
+		for(j = 0; !colidiu && j < tot_obj[NAVE]; j++){
+			if(ChecaColisaoEntre(*GetObjeto(PROJETIL, i), *GetObjeto(NAVE, j))){
+				RemoveProj(i);
+				DecrementaVida(&(naves[j]), projs[i].dano);
+				colidiu = TRUE;
+			}
+		}
+
+		if(colidiu) i--; //Removemos o i-ésimo, então o próximo a ser visto é quem virou o i-ésimo
+		//Note que se o projétil colide com um planeta (a primeira verificação) a função não entra nos outros for's
+	}
+
+	//NAVES
+	for (i = 0, colidiu = FALSE; i < tot_obj[NAVE]; i++)
+	{
+		//com PLANETAS
+		for (j = 0; !colidiu && j < tot_obj[PLANETA]; j++)
+		{
+			if(ChecaColisaoEntre(*GetObjeto(NAVE, i), *GetObjeto(PLANETA, j))){
+				Destroi(&(naves[i]));
+				colidiu = TRUE;
+			}
+		}
+		//com outras NAVES
+		for(j = i+1; !colidiu && j < tot_obj[NAVE]; j++){
+			//Começamos de i+1 pois as i-1 primeiras naves não colidiram com outras naves e naves[i] não colide com si própria
+			if(ChecaColisaoEntre(*GetObjeto(NAVE, i), *GetObjeto(NAVE, j))){
+				Destroi(&(naves[j]));
+				Destroi(&(naves[i]));
+				colidiu = TRUE;
+			}
+		}
+		if(colidiu) break; //Se colidiu, paramos por aqui. O jogo terminou.
+	}
+}
+
+void DecrementaVida(Nave *n, int valor)
+{
+	n->HP -= valor;
+}
+
+void IncrementaVida(Nave *n, int valor)
+{
+	n->HP += valor;
+}
+
+Bool EstaViva(Nave n)
+{
+	return (n.HP > 0); //Se 0, está morta
+}
+
+Bool TodasEstaoVivas()
+{
+	int i;
+	for (i = 0; i < tot_obj[NAVE]; i++)
+		if(!EstaViva(naves[i])) return FALSE;
+	return TRUE;
+}
+
+void Destroi(Nave *n)
+{
+	DecrementaVida(n, n->HP); //Faz a vida zerar
+}
+
 /* ESTA FUNÇÃO RECEBERÁ ATUALIZAÇÕES NO FUTURO:
  *		Checar colisão (EP2)
  */
 Bool AtualizaJogo()
 {
 	int i;
+	Bool todasNavesVivas;
 	//Primeiro atualizamos a posição e velocidade de todos os objetos
 	AtualizaObjetos();
 	//Depois, devemos reduzir o tempo de todos os projéteis
@@ -220,11 +312,13 @@ Bool AtualizaJogo()
 		if (VerificaSeProjMorreu(projs[i])) //Se o projétil morreu
 			RemoveProj(i); //Removemos o projétil de índice i
 
-	//VERIFICAR COLISÃO (EP2)
+	ChecaTodasColisoes();
+	todasNavesVivas = TodasEstaoVivas();
 
 	tRestante -= dt; //Decrementamos o tempo restante de simulação
 
-	return (tRestante > 0); //E a simulação continua enquanto o tempo for positivo
+	//E a simulação continua enquanto o tempo for positivo e não há naves mortas
+	return (tRestante > 0) && !todasNavesVivas; 
 }
 
 void freeAll()

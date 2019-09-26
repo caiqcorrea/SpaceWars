@@ -34,15 +34,21 @@
 /*--------------- M A C R O S ---------------*/
 
 #define G 6.67e-11		  //Constante gravitacional
-#define RAIO_COLISAO 10.0 //Raio utilizado para checar colisao com a nave
-#define SIZE_X 1e100		  //Tamanho da horizontal da tela
-#define SIZE_Y 1e100		  //Tamanho da vertical da tela
+
+#define SIZE_X 1e100	  //Tamanho da horizontal da tela
+#define SIZE_Y 1e100	  //Tamanho da vertical da tela
+
 #define MAX_PROJ 100	  //Número máximo de projéteis
 #define MAX_NAVES 2		  //Número de naves
 #define MAX_PLANETAS 1	//Número de planetas
 
+#define RAIO_NAVES 100	//Raio padrão das naves (por enquanto é uma constante)
+#define RAIO_PROJS 20	//Raio padrão dos projéteis (por enquanto é uma constante)
+#define MAX_HP 10		//Número máximo de pontos de vida (as naves começam com este valor) (por enquanto é uma constante)
+
 #define NUM_TIPO_OBJ 3 //Número de tipos de objeto
 #define MAX_OBJ { MAX_NAVES, MAX_PLANETAS, MAX_PROJ } //Array contendo o número máximo de cada tipo de objeto
+//MAX_OBJ[NAVE] := MAX_NAVES e assim por diante
 
 /*--------------- E S T R U T U R A S ---------------*/
 
@@ -53,6 +59,7 @@
 typedef struct
 {
 	double m; //massa
+	double r; //raio
 	vet2D p;  //posição
 	vet2D v;  //velocidade
 } Objeto;
@@ -64,6 +71,7 @@ typedef struct
 {
 	Objeto o;
 	string nome;
+	int HP; //Pontos de vida
 } Nave;
 
 /* Struct Projetil possui um objeto e um tempoRestante na tela.
@@ -73,16 +81,15 @@ typedef struct
 typedef struct
 {
 	Objeto o;
-	double tempoRestante;
+	double tempoRestante;	//O tempo de vida restante do projétil (ele some quando o tempo vai a zero)
+	int dano;				//A quantidade de pontos de vida que o projétil tira se acertar
 } Projetil;
 
-/* Struct Planeta possui, além de um objeto, um raio que deve
- * ser usado para cálculos de gravidade e para checar colisões
+/* Struct Planeta, por enquanto, possui apenas um objeto
  */
 typedef struct
 {
 	Objeto o;
-	double raio;
 } Planeta;
 
 /* Defines que facilitam na hora de acessar um campo dos objetos que estão dentro
@@ -93,6 +100,7 @@ typedef struct
 #define vel o.v  // Macro para a velocidade de um objeto
 #define mass o.m // Macro para a massa de um objeto
 #define pos o.p  // Macro para a posição de um objeto
+#define radius o.r //Macro para o raio de um objeto
 
 /* Um enum com os tipos de objetos possíveis.
  * Serve para fazermos referência a qual dos três arrays estamos falando.
@@ -142,21 +150,18 @@ void IncVel(vet2D F, Objeto *o);
 void IncPos(Objeto *o);
 
 //Dados dois objetos, retorna a distância entre eles
-double distanciaEntre(Objeto o1, Objeto o2);
-
-//Dados dois objetos, retorna TRUE se eles colidiram e FALSE caso contrário.
-Bool checaColisaoEntre(Objeto o1, Objeto o2);
+double DistanciaEntre(Objeto o1, Objeto o2);
 
 /* FUNÇÕES DE INTERFACE ENTRE NAVES, PLANETAS E PROJETEIS E SEUS OBJETOS */
 
 //Dados um tipo de objeto e um índice do vetor onde esse objeto se encontra a função retorna um apontador para este.
 //A função verifica se o índice está dentro dos limites
-Objeto *getObjeto(TipoObj tipo, int indice);
+Objeto *GetObjeto(TipoObj tipo, int indice);
 
 //Dados um tipo de objeto, um índice do vetor referente ao tipo desse objeto e o objeto em si,
 //a função sobrescreve o array no índice i com o objeto o.
 //A função verifica se o índice está dentro dos limites
-void setObjeto(TipoObj tipo, int indice, Objeto o);
+void SetObjeto(TipoObj tipo, int indice, Objeto o);
 
 /* FUNÇÕES QUE ITERAM SOBRE TODOS OS OBJETOS EM JOGO */
 
@@ -183,6 +188,32 @@ Bool VerificaSeProjMorreu(Projetil p);
 //Dado um índice que representa uma posição do array de projéteis
 //a função remove este projétil.
 void RemoveProj(int index);
+
+/* FUNÇÕES SOBRE COLISÃO */ 
+//Função responsável por checar todas as possíveis colisões entre todos os objetos em jogo
+//Se um projétil colide com um planeta ou outro projétil, ele apenas desaparece
+//Se um projétil colide com uma nave, a nave deve perder pontos de vida
+//Se uma nave colide com um planeta ou com outra nave, ela explode (pontos de vida vão a zero)
+void ChecaTodasColisoes();
+
+//Dados dois objetos, retorna TRUE se eles colidiram e FALSE caso contrário.
+Bool ChecaColisaoEntre(Objeto o1, Objeto o2);
+
+/* FUNÇÕES PARA VIDA DAS NAVES */
+//Dados uma nave n e um valor de pontos de vida, decrementa a vida de n em valor 
+void DecrementaVida(Nave *n, int valor);
+
+//Dados uma nave n e um valor de pontos de vida, incrementa a vida de n em valor 
+void IncrementaVida(Nave *n, int valor);
+
+//Dada uma nave n, a função reduz seus pontos de vida a 0
+void Destroi(Nave *n);
+
+//Checa e retorna se a nave n ainda está viva
+Bool EstaViva(Nave n);
+
+//Checa se todas as naves estão vivas
+Bool TodasEstaoVivas();
 
 /* OUTRAS FUNÇÕES 	*/
 
