@@ -4,7 +4,7 @@
 
 #include "vetores.h"
 
-#include<math.h>
+#include <math.h>
 
 /* I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S */
 
@@ -77,4 +77,15 @@ vet2D j_vet()
 {
 	vet2D j = {0, 1};
 	return j;
+}
+
+vet2D multiplicaPorMatriz(mat2D M, vet2D v)
+{
+	return soma(mult(v.x, M.v1), mult(v.y, M.v2));
+}
+
+vet2D rotaciona(vet2D x, double angulo)
+{
+	mat2D R = {{cos(angulo), sin(angulo)}, {-sin(angulo), cos(angulo)}};
+	return multiplicaPorMatriz(M, x);
 }

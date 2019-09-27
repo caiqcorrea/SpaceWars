@@ -35,8 +35,8 @@
 
 #define G 6.67e-11		  //Constante gravitacional
 
-#define SIZE_X 1e100	  //Tamanho da horizontal da tela
-#define SIZE_Y 1e100	  //Tamanho da vertical da tela
+#define SIZE_X_FIS 1e100	  //Tamanho da horizontal da tela
+#define SIZE_Y_FIS (SIZE_X_FIS*SIZE_RATIO)	  //Tamanho da vertical da tela
 
 #define MAX_PROJ 100	  //Número máximo de projéteis
 #define MAX_NAVES 2		  //Número de naves
@@ -62,6 +62,7 @@ typedef struct
 	double r; //raio
 	vet2D p;  //posição
 	vet2D v;  //velocidade
+	Sprite s;  //sprite
 } Objeto;
 
 /* Struct Nave contém um objeto próprio e um nome que é o nome da nave.
@@ -101,6 +102,7 @@ typedef struct
 #define mass o.m // Macro para a massa de um objeto
 #define pos o.p  // Macro para a posição de um objeto
 #define radius o.r //Macro para o raio de um objeto
+#define img o.s  //Macro para o sprite de um objeto
 
 /* Um enum com os tipos de objetos possíveis.
  * Serve para fazermos referência a qual dos três arrays estamos falando.

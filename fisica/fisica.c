@@ -123,17 +123,17 @@ void IncPos(Objeto *o)
 	o->p = soma(o->p, mult(dt, o->v));
 
 	//Casos em que o objeto sai da tela: trazemos ele de volta do lado oposto
-	while (o->p.x > SIZE_X / 2)
-		o->p.x -= SIZE_X;
+	while (o->p.x > SIZE_X_FIS / 2)
+		o->p.x -= SIZE_X_FIS;
 
-	while (o->p.x < -SIZE_X / 2)
-		o->p.x += SIZE_X;
+	while (o->p.x < -SIZE_X_FIS / 2)
+		o->p.x += SIZE_X_FIS;
 
-	while (o->p.y > SIZE_Y / 2)
-		o->p.y -= SIZE_Y;
+	while (o->p.y > SIZE_Y_FIS / 2)
+		o->p.y -= SIZE_Y_FIS;
 
-	while (o->p.y < -SIZE_Y / 2)
-		o->p.y += SIZE_Y;
+	while (o->p.y < -SIZE_Y_FIS / 2)
+		o->p.y += SIZE_Y_FIS;
 }
 
 vet2D CalculaForcaSobre(Objeto o)

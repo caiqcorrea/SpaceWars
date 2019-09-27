@@ -22,6 +22,11 @@ typedef struct
 	double y;
 } vet2D; //Vetor em 2D, representado em duas coordenadas cartesianas
 
+typedef struct
+{
+	vet2D v1, v2; //Vetores colunas da matriz
+} mat2D; //Uma matriz 2x2
+
 /* F U N Ç Õ E S */
 
 //Norma do vetor em 2D
@@ -59,5 +64,11 @@ vet2D i_vet();
 
 //Cria e retorna um vetor cartesiano (0,1)
 vet2D j_vet(); 
+
+//Dados um vetor x e uma matriz M, faz o produto Mx
+vet2D multiplicaPorMatriz(mat2D M, vet2D x);
+
+//Dado um vetor x e um angulo, rotaciona esse vetor pelo angulo
+vet2D rotaciona(vet2D x, double angulo);
 
 #endif

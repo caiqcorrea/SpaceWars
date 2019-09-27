@@ -7,6 +7,8 @@
 
 #define string char *
 
+#define SIZE_RATIO 9/16
+
 /* E S T R U T U R A S */
 
 typedef enum
