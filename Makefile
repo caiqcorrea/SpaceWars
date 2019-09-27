@@ -2,10 +2,12 @@
 
 # ---- V A R I Á V E I S   D E   A M B I E N T E ---- #
 
-VPATH = ./fisica:./objfiles
+VPATH = ./fisica:./graficos:./obj
 
 CC = gcc
 CFLAGS = -Wall -O2 -Wno-unused-result -lm
+
+OBJ_PATH = ./obj
 
 # ---- R E G R A S ---- #
 
@@ -15,33 +17,31 @@ debug : debug.o IO.o auxiliar.o vetores.o fisica.o
 	${CC} $^ ${CFLAGS} -o $@
 
 debug.o : debug.c IO.h
-	${CC} ${CFLAGS} -c $<
+	${CC} -c $< ${CFLAGS} -o $@
 
 IO.o : IO.c IO.h vetores.h fisica.h auxiliar.h
-	${CC} ${CFLAGS} -c $<
+	${CC} -c $< ${CFLAGS} -o $@
 
 auxiliar.o : auxiliar.c auxiliar.h
-	${CC} ${CFLAGS} -c $<
+	${CC} -c $< ${CFLAGS} -o $@
 
 vetores.o : vetores.c vetores.h
-	${CC} ${CFLAGS} -c $<
+	${CC} -c $< ${CFLAGS} -o $@
 
 fisica.o : fisica.c fisica.h vetores.h auxiliar.h
-	${CC} ${CFLAGS} -c $<
-
-.PHONY: clean_o clean_debug clean_all move_o
+	${CC} -c $< ${CFLAGS} -o $@
 
 move_o :
-	touch dummy.o
-	mkdir -p objfiles
-	mv -f *.o objfiles
-	rm -f ./objfiles/dummy.o
+	mv -f *.o $(OBJ_PATH) 2>/dev/null; true
+
+.PHONY: clean_o clean_debug clean_all
 
 clean_all : clean_o clean_debug
 
 clean_o :
 	rm -f *.o
-	rm -f ./objfiles/*.o
+	rm -f $(OBJ_PATH)/*
+	rmdir -f $(OBJ_PATH)
 
 clean_debug :
 	rm -f debug
