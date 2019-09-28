@@ -86,6 +86,6 @@ vet2D multiplicaPorMatriz(mat2D M, vet2D v)
 
 vet2D rotaciona(vet2D x, double angulo)
 {
-	mat2D R = {{cos(angulo), sin(angulo)}, {-sin(angulo), cos(angulo)}};
+	mat2D R = {{cos(angulo), -sin(angulo)}, {sin(angulo), cos(angulo)}};
 	return multiplicaPorMatriz(M, x);
 }
