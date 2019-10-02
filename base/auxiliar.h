@@ -5,9 +5,9 @@
 #ifndef _AUXILIAR_H
 #define _AUXILIAR_H
 
-#define string char *
-
 #define SIZE_RATIO 9/16
+
+typedef char* string;
 
 /* E S T R U T U R A S */
 
