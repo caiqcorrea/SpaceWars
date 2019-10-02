@@ -11,7 +11,6 @@
 
 #include "../fisica/vetores.h"
 #include "../auxiliar.h"
-#include "../fisica/fisica.h"
 
 #define SIZE_X_WIN 1280
 #define SIZE_Y_WIN (SIZE_X_WIN*SIZE_RATIO)
@@ -30,11 +29,6 @@ PIC getImg(Sprite spr);
 void rotateSprite(Sprite spr, double ang);
 
 void colocaImgEm(WINDOW *win, PIC pic, vet2D pos);
-
-//Dado uma coordenada calculada pela biblioteca física, esta função converte para
-//a posição na janela
-//Por exemplo, a origem física é o centro da janela.
-vet2D converteCoordenada(vet2D coordFis);
 
 //Desenha o fundo na tela *win
 void desenhaFundo(WINDOW *win);

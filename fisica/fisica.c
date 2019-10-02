@@ -27,8 +27,8 @@
 
 #include "fisica.h"
 
-#include "vetores.h"
-#include "../auxiliar.h"
+#include "../base/vetores.h"
+#include "../base/auxiliar.h"
 
 #include <math.h>
 #include <stddef.h>

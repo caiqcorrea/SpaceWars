@@ -1,7 +1,7 @@
 //MÓDULO CRIADO ESPECIALMENTE PARA DEPURAÇÕES E TESTES
 
-#include "../IO.h"
-#include "fisica.h"
+#include "fisica/IO.h"
+#include "fisica/fisica.h"
 
 #include<stdio.h>
 
@@ -82,7 +82,7 @@ void imprimeProjetil(Projetil p)
 void imprimePlaneta(Planeta p)
 {
     fprintf(stdout, "Planeta:\tMassa = %3.2lf\tPos = (%3.2lf , %3.2lf)\tVel = (%3.2lf , %3.2lf)\tR = %3.2lf\n",
-            p.mass, p.pos.x, p.pos.y, p.vel.x, p.vel.y, p.raio);
+            p.mass, p.pos.x, p.pos.y, p.vel.x, p.vel.y, p.radius);
 }
 
 void imprimeNaves()
