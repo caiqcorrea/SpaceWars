@@ -9,8 +9,9 @@
 #ifndef _IO_H
 #define _IO_H
 
-#include<stdio.h>
 #include "../fisica/fisica.h"
+
+#include<stdio.h>
 
 /* F U N Ç Õ E S */
 
