@@ -18,7 +18,7 @@
 
 #define NUM_ROTACOES 12
 
-enum NOME_SPR
+typedef enum 
 {
 	IMG_NAVE1,
 	IMG_NAVE2,
@@ -38,7 +38,7 @@ enum NOME_SPR
 	IMG_BOOSTER_CARLINHOS,
 	IMG_FUNDO,
 	NUM_SPR //SEMPRE POR ÚLTIMO, ESTE É APENAS O NÚMERO DE ELEMENTOS DO ENUM
-};
+} NOME_SPR;
 
 //Matriz com todas as imagens usadas ao longo do programa.
 //Cada linha possui uma imagem padrão e suas 11 rotações.

@@ -25,6 +25,12 @@ extern WINDOW *workbench;
 //ao mudar de quadro, damos um workbenchFlush() para atualizar a showingWindow.
 extern WINDOW *showingWindow;
 
+//Função que, dada uma posição utilizada pela biblioteca física, converte para
+//uma posição para ser utilizada pela biblioteca gráfica.
+//Por exemplo, o ponto (0,0) da física é (width/2 , height/2) da tela
+//Esta função deve fazer essa conversãoS
+vet2D converteParaPixel(vet2D pos_em_metros);
+
 //Desenha o pleneta p na janela win
 void desenhaPlaneta(Planeta p);
 
