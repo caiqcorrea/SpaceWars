@@ -2,10 +2,10 @@
 
 # ---- V A R I Á V E I S   D E   A M B I E N T E ---- #
 
-VPATH = ./fisica:./graficos:./obj
+VPATH = ./base:./fisica:./graficos:./obj
 
 CC = gcc
-CFLAGS = -Wall -O2 -Wno-unused-result -lm
+CFLAGS = -Wall -O3 -Wno-unused-result --pedantic -lm
 
 OBJ_PATH = ./obj
 
@@ -32,7 +32,7 @@ fisica.o : fisica.c fisica.h vetores.h auxiliar.h
 	${CC} -c $< ${CFLAGS} -o $@
 
 move_o :
-	mv -f *.o $(OBJ_PATH) 2>/dev/null; true
+	mkdir $(OBJ_PATH); mv -f *.o $(OBJ_PATH) 2>/dev/null; true
 
 .PHONY: clean_o clean_debug clean_all
 
@@ -41,7 +41,7 @@ clean_all : clean_o clean_debug
 clean_o :
 	rm -f *.o
 	rm -f $(OBJ_PATH)/*
-	rmdir -f $(OBJ_PATH)
+	rmdir $(OBJ_PATH)
 
 clean_debug :
 	rm -f debug

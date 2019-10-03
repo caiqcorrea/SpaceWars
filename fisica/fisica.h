@@ -28,8 +28,8 @@
 #ifndef _FISICA_H
 #define _FISICA_H
 
-#include "vetores.h"
-#include "../auxiliar.h"
+#include "../base/vetores.h"
+#include "../base/auxiliar.h"
 
 /*--------------- M A C R O S ---------------*/
 
@@ -62,7 +62,6 @@ typedef struct
 	double r; //raio
 	vet2D p;  //posição
 	vet2D v;  //velocidade
-	Sprite s;  //sprite
 } Objeto;
 
 /* Struct Nave contém um objeto próprio e um nome que é o nome da nave.

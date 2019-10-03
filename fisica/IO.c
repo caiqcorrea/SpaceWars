@@ -8,9 +8,9 @@
 
 #include "IO.h"
 
-#include "fisica/fisica.h"
-#include "fisica/vetores.h"
-#include "auxiliar.h"
+#include "../fisica/fisica.h"
+#include "../base/vetores.h"
+#include "../base/auxiliar.h"
 
 #include <stdio.h>
 
