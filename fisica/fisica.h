@@ -41,12 +41,13 @@
 #define MAX_PROJ 100	  //Número máximo de projéteis
 #define MAX_NAVES 2		  //Número de naves
 #define MAX_PLANETAS 1	//Número de planetas
+#define MAX_BOOSTER 10 //Número máximo de boosters
 
 #define RAIO_NAVES 100	//Raio padrão das naves (por enquanto é uma constante)
 #define RAIO_PROJS 20	//Raio padrão dos projéteis (por enquanto é uma constante)
 #define MAX_HP 10		//Número máximo de pontos de vida (as naves começam com este valor) (por enquanto é uma constante)
 
-#define NUM_TIPO_OBJ 3 //Número de tipos de objeto
+#define NUM_TIPO_OBJ 4 //Número de tipos de objeto
 #define MAX_OBJ { MAX_NAVES, MAX_PLANETAS, MAX_PROJ } //Array contendo o número máximo de cada tipo de objeto
 //MAX_OBJ[NAVE] := MAX_NAVES e assim por diante
 
