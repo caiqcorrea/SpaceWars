@@ -32,7 +32,7 @@ fisica.o : fisica.c fisica.h vetores.h auxiliar.h
 	${CC} -c $< ${CFLAGS} -o $@
 
 move_o :
-	mkdir $(OBJ_PATH); mv -f *.o $(OBJ_PATH) 2>/dev/null; true
+	mkdir $(OBJ_PATH) 2>/dev/null; mv -f *.o $(OBJ_PATH) 2>/dev/null; true
 
 .PHONY: clean_o clean_debug clean_all
 
