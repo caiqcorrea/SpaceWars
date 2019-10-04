@@ -44,7 +44,8 @@ int tot_obj[NUM_TIPO_OBJ] = MAX_OBJ; //O número de objetos de cada tipo
  */
 Nave naves[MAX_NAVES];			//O array que contém as duas naves dos jogadores
 Planeta planetas[MAX_PLANETAS]; //O array que contém o planeta central
-Projetil projs[MAX_PROJ];		//O que array que contém os projéteis que estão atualmente na tela
+Projetil projs[MAX_PROJ];		//O array que contém os projéteis que estão atualmente na tela
+Booster boosters[MAX_BOOSTERS]; //O array que contém os boosters que estão atualmente na tela
 
 #define TERRA planetas[0] //Como só há um planeta, vamos chamá-lo de TERRA
 
@@ -73,6 +74,9 @@ Objeto *GetObjeto(TipoObj tipo, int indice)
 		case PROJETIL:
 			return &(projs[indice].o);
 
+		case BOOSTER:
+			return &(boosters[indice].o);
+
 		default:
 			throwException("GetObjeto", "tipo nao identificado", var_type_undefined_exception);
 		}
@@ -97,6 +101,10 @@ void SetObjeto(TipoObj tipo, int indice, Objeto o)
 
 		case PROJETIL:
 			projs[indice].o = o;
+			break;
+
+		case BOOSTER:
+			boosters[indice].o = o;
 			break;
 
 		default:
@@ -166,8 +174,8 @@ void AtualizaObjetos()
 	TipoObj tipo;
 	//Planetas não precisam ser atualizados (pelo menos na versão atual)
 
-	for(tipo = 0 ; tipo < NUM_TIPO_OBJ ; tipo++)
-		if(tipo != PLANETA)
+	for (tipo = 0; tipo < NUM_TIPO_OBJ; tipo++)
+		if (tipo != PLANETA)
 			for (i = 0; i < tot_obj[tipo]; i++)
 				AtualizaObjeto(GetObjeto(tipo, i));
 }
@@ -195,8 +203,8 @@ Bool VerificaSeProjMorreu(Projetil p)
 void RemoveProj(int index)
 {
 	int i;
-	for(i = index; i < tot_obj[PROJETIL]; i++)
-		projs[i] = projs[i+1];
+	for (i = index; i < tot_obj[PROJETIL]; i++)
+		projs[i] = projs[i + 1];
 	tot_obj[PROJETIL]--;
 }
 
@@ -209,62 +217,78 @@ void ChecaTodasColisoes()
 {
 	int i, j;
 	Bool colidiu;
-
 	//PROJÉTEIS
-	for(i = 0, colidiu = FALSE; i < tot_obj[PROJETIL]; i++)
+	for (i = 0; i < tot_obj[PROJETIL]; i++)
 	{
+		colidiu = FALSE;
+
 		//com PLANETAS
-		for(j = 0; !colidiu && j < tot_obj[PLANETA]; j++){
-			if(ChecaColisaoEntre(*GetObjeto(PROJETIL, i), *GetObjeto(PLANETA, j))){
+		for (j = 0; !colidiu && j < tot_obj[PLANETA]; j++)
+		{
+			if (ChecaColisaoEntre(*GetObjeto(PROJETIL, i), *GetObjeto(PLANETA, j)))
+			{
 				RemoveProj(i);
 				colidiu = TRUE;
 			}
 		}
 		//com outro PROJÉTIL
-		for(j = i+1; !colidiu && j < tot_obj[PROJETIL]; j++){
+		for (j = i + 1; !colidiu && j < tot_obj[PROJETIL]; j++)
+		{
 			//Note que começamos de i + 1 pois assumimos todos os i-1 projéteis anteriores não colidiram com ninguém
 			//e i não colide consigo mesmo.
 			//Conclusão: se i colide com um j, então j > i
-			if(ChecaColisaoEntre(*GetObjeto(PROJETIL, i), *GetObjeto(PROJETIL, j))){
+			if (ChecaColisaoEntre(*GetObjeto(PROJETIL, i), *GetObjeto(PROJETIL, j)))
+			{
 				RemoveProj(j); //Como j > i, removemos ele primeiro. Assim o i-ésimo projétil do array continua sendo aquele
 				RemoveProj(i); //que colidiu. Se fosse o contrário (remover i primeiro) seria o (j-1)-ésimo quem colidiu com o i-ésimo
 				colidiu = TRUE;
 			}
 		}
 		//com NAVES
-		for(j = 0; !colidiu && j < tot_obj[NAVE]; j++){
-			if(ChecaColisaoEntre(*GetObjeto(PROJETIL, i), *GetObjeto(NAVE, j))){
+		for (j = 0; !colidiu && j < tot_obj[NAVE]; j++)
+		{
+			if (ChecaColisaoEntre(*GetObjeto(PROJETIL, i), *GetObjeto(NAVE, j)))
+			{
 				RemoveProj(i);
 				DecrementaVida(&(naves[j]), projs[i].dano);
 				colidiu = TRUE;
 			}
 		}
 
-		if(colidiu) i--; //Removemos o i-ésimo, então o próximo a ser visto é quem virou o i-ésimo
-		//Note que se o projétil colide com um planeta (a primeira verificação) a função não entra nos outros for's
+		if (colidiu)
+			i--; //Removemos o i-ésimo, então o próximo a ser visto é quem virou o i-ésimo
+				//Note que se o projétil colide com um planeta (a primeira verificação) a função não entra nos outros for's
 	}
-
 	//NAVES
-	for (i = 0, colidiu = FALSE; i < tot_obj[NAVE]; i++)
+	for (i = 0; i < tot_obj[NAVE]; i++)
 	{
+		colidiu = FALSE;
 		//com PLANETAS
 		for (j = 0; !colidiu && j < tot_obj[PLANETA]; j++)
 		{
-			if(ChecaColisaoEntre(*GetObjeto(NAVE, i), *GetObjeto(PLANETA, j))){
+			if (ChecaColisaoEntre(*GetObjeto(NAVE, i), *GetObjeto(PLANETA, j)))
+			{
+				printf("Nave %d colidindo com o planeta\n", i);
+				printf("Planeta:\n");
+				printf("raio = %f pos = (%f, %f) vel = (%f, %f) mass = %f\n", planetas[j].radius,
+				planetas[j].pos.x, planetas[j].pos.y, planetas[j].vel.x, planetas[j].vel.y, planetas[j].mass);
 				Destroi(&(naves[i]));
 				colidiu = TRUE;
 			}
 		}
 		//com outras NAVES
-		for(j = i+1; !colidiu && j < tot_obj[NAVE]; j++){
+		for (j = i + 1; !colidiu && j < tot_obj[NAVE]; j++)
+		{
 			//Começamos de i+1 pois as i-1 primeiras naves não colidiram com outras naves e naves[i] não colide com si própria
-			if(ChecaColisaoEntre(*GetObjeto(NAVE, i), *GetObjeto(NAVE, j))){
+			if (ChecaColisaoEntre(*GetObjeto(NAVE, i), *GetObjeto(NAVE, j)))
+			{
 				Destroi(&(naves[j]));
 				Destroi(&(naves[i]));
 				colidiu = TRUE;
 			}
 		}
-		if(colidiu) break; //Se colidiu, paramos por aqui. O jogo terminou.
+		if (colidiu)
+			break; //Se colidiu, paramos por aqui. O jogo terminou.
 	}
 }
 
@@ -287,18 +311,18 @@ Bool TodasEstaoVivas()
 {
 	int i;
 	for (i = 0; i < tot_obj[NAVE]; i++)
-		if(!EstaViva(naves[i])) return FALSE;
+		if (!EstaViva(naves[i]))
+			return FALSE;
 	return TRUE;
 }
 
 void Destroi(Nave *n)
 {
+	printf("Destruindo a nave: %s\n", n->nome);
+	printf("Ela está em: (%f, %f) com velocidade (%f, %f)\n", n->pos.x, n->pos.y, n->vel.x, n->vel.y);
 	DecrementaVida(n, n->HP); //Faz a vida zerar
 }
 
-/* ESTA FUNÇÃO RECEBERÁ ATUALIZAÇÕES NO FUTURO:
- *		Checar colisão (EP2)
- */
 Bool AtualizaJogo()
 {
 	int i;
@@ -310,15 +334,17 @@ Bool AtualizaJogo()
 	//Verificamos se algum projétil sumiu e removemos-o se sim
 	for (i = 0; i < tot_obj[PROJETIL]; i++)
 		if (VerificaSeProjMorreu(projs[i])) //Se o projétil morreu
-			RemoveProj(i); //Removemos o projétil de índice i
+			RemoveProj(i);					//Removemos o projétil de índice i
 
 	ChecaTodasColisoes();
 	todasNavesVivas = TodasEstaoVivas();
 
+	printf("Tempo Restante = %f\n", tRestante);
 	tRestante -= dt; //Decrementamos o tempo restante de simulação
+	printf("Naves vivas = %d", todasNavesVivas);
 
 	//E a simulação continua enquanto o tempo for positivo e não há naves mortas
-	return (tRestante > 0) && !todasNavesVivas; 
+	return ((tRestante > 0.0) && todasNavesVivas);
 }
 
 void freeAll()

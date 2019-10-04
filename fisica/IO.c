@@ -16,12 +16,13 @@
 
 /* I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S */
 
+/* FUNÇÕES DE INICIALIZAÇÃO DA PARTE FÍSICA */
 void lerInputs(FILE *arq)
 {
 	int i;
 	double tempoDeVida;
 
-	dt = 0.001; //Inicializamos o dt como 0.001 (este valor pode ser alterado)
+	dt = 0.1;				   //Inicializamos o dt como 0.001 (este valor pode ser alterado)
 	lerTerra(arq);			   //Lê a primeira linha e atribui valores ao planeta
 	lerNave(arq, &(naves[0])); //Lê a segunda linha e atribui valores à primeira nave
 	lerNave(arq, &(naves[1])); //Lê a segunda linha e atribui valores à segunda nave
@@ -52,4 +53,19 @@ void lerProjetil(FILE *arq, Projetil *p, double tempoDeVida)
 	p->tempoRestante = tempoDeVida;
 	p->radius = RAIO_PROJS;
 	p->dano = 1;
+}
+
+/* FUNÇÕES PARA BOOSTERS */
+//Função que lê o arquivo booster.cfg
+void leitura()
+{
+	string leituraAtual;
+	FILE *cfg;
+	cfg = fopen(BOOSTERCFG_PATH, "r");
+
+	while((leituraAtual = fscanf(cfg, "%s")) != EOF)
+	{
+		printf("''%s''\n", leituraAtual);
+	}
+	printf("FIM!\n");
 }
