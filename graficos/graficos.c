@@ -30,15 +30,15 @@ void picsInit(WINDOW *win){
 		if(spr_file == NULL)
 			throwException("picsInit()", strcat(filename, " não encontrado"), file_not_find_exception);
 		
-		fscanf(spr_file, "%d %d", &sizex_aux, &sizey_aux);
+		fscanf(spr_file, "%d %d ", &sizex_aux, &sizey_aux);
 		
-		if(getc(spr_file) != EOF)
+		if(!feof(spr_file))
 			fscanf(spr_file, "%d", &n_imgs);
 		else
 			n_imgs = NUM_ROTACOES;
 		
 		pics[i].n_imgs = n_imgs;	
-		pics[i].imgs = malloc(n_imgs*sizeof(PIC));
+		pics[i].imgs = mallocSafe(n_imgs*sizeof(PIC));
 		pics[i].width = sizex_aux;
 		pics[i].height = sizey_aux;
 		
@@ -55,6 +55,8 @@ void grafInit(){
 }
 
 PIC getImg(Sprite spr){
+	if(spr.img>= NUM_SPR)
+		throwException("getSprite()", "Indice do Sprite inválido", index_out_of_range_exception);
 	return pics[spr.img].imgs[ ( (int) round((pics[spr.img].n_imgs*spr.angle)/(2*M_PI)) )%pics[spr.img].n_imgs ];
 }
 
@@ -77,7 +79,7 @@ void desenhaSpriteEm(WINDOW *win, Sprite spr, vet2D pos){
 void desenhaFundo_Index(WINDOW *win, int index){
 	if(index >= pics[IMG_FUNDO].n_imgs || index < 0)
 		throwException("desenhaFundo_Index()", "Não há fundo correspondente ao índice", index_out_of_range_exception);
-
+	WClear(win);
 	PutPic(win, pics[IMG_FUNDO].imgs[index], 0, 0, pics[IMG_FUNDO].width, pics[IMG_FUNDO].height, 0, 0);
 }
 
@@ -85,11 +87,19 @@ void desenhaFundo(WINDOW *win){
 	desenhaFundo_Index(win, 0);
 }
 
+void workbenchFlush(){
+	PutPic(showingWindow, workbench, 0, 0, SIZE_X_WIN, SIZE_Y_WIN, 0, 0);
+	WFlush();
+}
+
 int main(){
 	double a, b;
 	Sprite spr = {0, 0}; vet2D vet = {0, 256};
 	grafInit();
-	desenhaSpriteEm(showingWindow, spr, vet);
+	desenhaSpriteEm(workbench, spr, vet);
+	pause();
+	workbenchFlush();
+	
 	while(1){
 		scanf("%lf %lf", &a, &b);
 		printf("%d", (int) round(a/b));
