@@ -23,7 +23,7 @@ void picsInit(){
 	char filename[MAX_NOME_SPR_FILE];
 	FILE* spr_file;
 	for(i=0 ; i<1 ; i++){
-		snprintf(filename, sizeof(filename), "pics/%d/size.txt", i);
+		snprintf(filename, sizeof(filename), "pics/%d/size", i);
 		spr_file = fopen(filename, "r");
 		fscanf(spr_file, "%d %d", &sizex_aux, &sizey_aux);
 		
