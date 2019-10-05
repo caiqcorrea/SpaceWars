@@ -7,6 +7,8 @@
 
 #define SIZE_RATIO 9/16
 
+#define MIN(x, y) (x<y?x:y)
+
 typedef char* string;
 
 /* E S T R U T U R A S */

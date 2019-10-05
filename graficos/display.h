@@ -13,18 +13,6 @@ extern Sprite SprPlanetas[MAX_PLANETAS];
 extern Sprite SprProjs[MAX_PROJ];
 extern Sprite SprBooster[];
 
-//Esta janela deve ser utilizada para servir receber todas as atualizações
-//de tela antes de passarmos para a tela principal que está sendo exibida para o usuário.
-//Após colocarmos tudo o que deve ser exibido em um quadro, damos um workbenchFlush()
-//para jogar essa janela na janela principal.
-extern WINDOW *workbench;
-
-//Esta é a janela que é exibida ao usuário durante todo o jogo.
-//IMPORTANTE: não atualize esta janela diretamente.
-//Todas as modificações feitas entre um frame e outro devem ser feitas no workbench e,
-//ao mudar de quadro, damos um workbenchFlush() para atualizar a showingWindow.
-extern WINDOW *showingWindow;
-
 //Função que, dada uma posição utilizada pela biblioteca física, converte para
 //uma posição para ser utilizada pela biblioteca gráfica.
 //Por exemplo, o ponto (0,0) da física é (width/2 , height/2) da tela
@@ -57,8 +45,5 @@ void desenhaExplosao(vet2D p);
 
 //Desenha um booster na posição p
 void desenhaBooster(vet2D p);
-
-//Esta atualiza showingWindow com o conteúdo de workbench, sobrescrevendo o que havia lá
-void workbenchFlush();
 
 #endif

@@ -5,6 +5,9 @@
 #  include <X11/xpm.h>
 #endif
 
+#ifndef _XWC_H
+#define _XWC_H
+
 typedef unsigned long Color;
 
 typedef struct {
@@ -139,3 +142,5 @@ KeyCode WGetKey(WINDOW *w);
 
 /* Retorna o KeySym da última tecla lida */
 KeySym WLastKeySym();
+
+#endif
