@@ -56,6 +56,8 @@ typedef enum
 	NUM_SPR //SEMPRE POR ÚLTIMO, ESTE É APENAS O NÚMERO DE ELEMENTOS DO ENUM
 } NOME_SPR;
 
+//Estrutura que contém um array de PICs, junto com o número de elementos do array
+//e o tamanho dos PICs
 struct Pics
 {
 	PIC *imgs;		//Array de imagens
@@ -64,7 +66,7 @@ struct Pics
 };
 
 //Matriz com todas as imagens usadas ao longo do programa.
-//Cada linha possui uma imagem padrão e suas 11 rotações.
+//Cada linha possui uma imagem e, por padrão, suas 11 rotações
 extern struct Pics pics[NUM_SPR];
 
 typedef struct
@@ -87,8 +89,9 @@ void winsInit();
 //Dentro da pasta i, estão todas rotações da i-ésima sprite
 //Ou seja, para a linha i da matriz pics, temos que todos os elementos desse linhas
 //estão contidos na pasta i.
+//Inicializa os PICs no formato da janela win
 //Não é recomendado chamar esta função, para inicializar corretamente use grafInit()
-void picsInit();
+void picsInit(WINDOW *win);
 
 //Inicializa os pics e as janelas corretamente
 void grafInit();
@@ -99,11 +102,19 @@ PIC getImg(Sprite spr);
 //Dada uma sprite e um ângulo ang, incrementa o ângulo da imagem em ang
 void rotateSprite(Sprite *spr, double ang);
 
+//Dada uma sprite e um ângulo ang, seta o angulo da imagem para ang
+void setAngSprite(Sprite *spr, double ang);
+
 //Dado uma sprite, uma posição e uma janela, a função deseja a imagem atual
 //da sprite na posição (em pixels) da janela.
 void desenhaSpriteEm(WINDOW *win, Sprite spr, vet2D pos);
 
-//Desenha o fundo na tela *win
+//Desenha o fundo index na tela *win
+//Podem haver vários fundos. Caso index seja maior que o
+//número de funda, acontece um erro
+void desenhaFundo_Index(WINDOW *win, int index);
+
+//Desenha o fundo 0 na tela *win
 //Note que ao desenhar o fundo, todos os conteúdos da janela são sobrescritos
 void desenhaFundo(WINDOW *win);
 

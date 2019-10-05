@@ -7,6 +7,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
+#include<string.h>
 
 WINDOW *workbench;
 WINDOW *showingWindow;
@@ -18,13 +19,17 @@ void winsInit(){
 	workbench = NewPic(showingWindow, SIZE_X_WIN, SIZE_Y_WIN);
 }
 
-void picsInit(){
+void picsInit(WINDOW *win){
 	int i, j, sizex_aux, sizey_aux, n_imgs;
 	char filename[MAX_NOME_SPR_FILE];
 	FILE* spr_file;
 	for(i=0 ; i<1 ; i++){
 		snprintf(filename, sizeof(filename), "pics/%d/size", i);
 		spr_file = fopen(filename, "r");
+		
+		if(spr_file == NULL)
+			throwException("picsInit()", strcat(filename, " não encontrado"), file_not_find_exception);
+		
 		fscanf(spr_file, "%d %d", &sizex_aux, &sizey_aux);
 		
 		if(getc(spr_file) != EOF)
@@ -39,35 +44,51 @@ void picsInit(){
 		
 		for(j=0 ; j<n_imgs ; j++){
 			snprintf(filename, sizeof(filename), "pics/%d/%d.xpm", i, j);
-			pics[i].imgs[j] = ReadPic(showingWindow, filename, NULL);
+			pics[i].imgs[j] = ReadPic(win, filename, NULL);
 		}
 	}
 }
 
 void grafInit(){
 	winsInit();
-	picsInit();
+	picsInit(workbench);
 }
 
 PIC getImg(Sprite spr){
-	int index;
-	index = (int) round((pics[spr.img].n_imgs*spr.angle)/(2*M_PI))%pics[spr.img].n_imgs;
-	return pics[spr.img].imgs[index];
+	return pics[spr.img].imgs[ ( (int) round((pics[spr.img].n_imgs*spr.angle)/(2*M_PI)) )%pics[spr.img].n_imgs ];
 }
 
 void rotateSprite(Sprite *spr, double ang){
 	spr->angle += ang;
+	while(spr->angle > 2*M_PI)
+		spr->angle -= 2*M_PI;
+}
+
+void setAngSprite(Sprite *spr, double ang){
+	spr->angle = ang;
+	while(spr->angle > 2*M_PI)
+		spr->angle -= 2*M_PI;
 }
 
 void desenhaSpriteEm(WINDOW *win, Sprite spr, vet2D pos){
-	PutPic(win, getImg(spr), 0, 0, pics[0].width, pics[0].height, ((int)pos.x) - (pics[spr.img].width/2), ((int)pos.y) - (pics[spr.img].height/2));
+	PutPic(win, getImg(spr), 0, 0, pics[spr.img].width, pics[spr.img].height, ((int)pos.x) - (pics[spr.img].width/2), ((int)pos.y) - (pics[spr.img].height/2));
+}
+
+void desenhaFundo_Index(WINDOW *win, int index){
+	if(index >= pics[IMG_FUNDO].n_imgs || index < 0)
+		throwException("desenhaFundo_Index()", "Não há fundo correspondente ao índice", index_out_of_range_exception);
+
+	PutPic(win, pics[IMG_FUNDO].imgs[index], 0, 0, pics[IMG_FUNDO].width, pics[IMG_FUNDO].height, 0, 0);
+}
+
+void desenhaFundo(WINDOW *win){
+	desenhaFundo_Index(win, 0);
 }
 
 int main(){
 	double a, b;
 	Sprite spr = {0, 0}; vet2D vet = {0, 256};
-	winsInit();
-	picsInit();
+	grafInit();
 	desenhaSpriteEm(showingWindow, spr, vet);
 	while(1){
 		scanf("%lf %lf", &a, &b);
