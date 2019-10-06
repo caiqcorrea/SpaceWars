@@ -23,7 +23,7 @@ void picsInit(WINDOW *win){
 	int i, j, sizex_aux, sizey_aux, n_imgs;
 	char filename[MAX_NOME_SPR_FILE];
 	FILE* spr_file;
-	for(i=0 ; i<1 ; i++){
+	for(i=0 ; i<NUM_SPR ; i++){
 		snprintf(filename, sizeof(filename), "pics/%d/size", i);
 		spr_file = fopen(filename, "r");
 		
