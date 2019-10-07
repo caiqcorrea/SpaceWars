@@ -19,6 +19,14 @@ void winsInit(){
 	workbench = NewPic(showingWindow, SIZE_X_WIN, SIZE_Y_WIN);
 }
 
+PIC ReadPicSafe(WINDOW *win, char *fname, MASK m){
+	PIC pic;
+	
+	if( (pic = ReadPic(win, fname, m)) == NULL)
+		throwException("ReadPicSafe", strcat(fname, " não encontrado"), file_not_find_exception);
+	return pic;
+}
+
 void picsInit(WINDOW *win){
 	int i, j, sizex_aux, sizey_aux, n_imgs;
 	char filename[MAX_NOME_SPR_FILE];
@@ -28,7 +36,7 @@ void picsInit(WINDOW *win){
 		spr_file = fopen(filename, "r");
 		
 		if(spr_file == NULL)
-			throwException("picsInit()", strcat(filename, " não encontrado"), file_not_find_exception);
+			throwException("picsInit", strcat(filename, " não encontrado"), file_not_find_exception);
 		
 		fscanf(spr_file, "%d %d ", &sizex_aux, &sizey_aux);
 		
@@ -44,7 +52,7 @@ void picsInit(WINDOW *win){
 		
 		for(j=0 ; j<n_imgs ; j++){
 			snprintf(filename, sizeof(filename), "pics/%d/%d.xpm", i, j);
-			pics[i].imgs[j] = ReadPic(win, filename, NULL);
+			pics[i].imgs[j] = ReadPicSafe(win, filename, NULL);
 		}
 	}
 }

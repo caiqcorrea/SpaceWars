@@ -82,6 +82,9 @@ typedef struct
 //Não é recomendado chamar esta função, para inicializar corretamente use grafInit()
 void winsInit();
 
+//ReadPic() com error handling
+PIC ReadPicSafe(WINDOW *win, char *fname, MASK m);
+
 //Carrega as imagens na matriz pics.
 //As imagens devem estar em uma pasta ./pics/i
 //, onde . indica o caminho até o executável e i indica o índice de uma imagem
