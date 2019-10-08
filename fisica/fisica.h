@@ -45,6 +45,7 @@
 
 #define RAIO_PROJS 100
 #define RAIO_NAVES 100
+#define RAIO_BOOSTER 100
 #define MAX_HP 10 //Número máximo de pontos de vida (as naves começam com este valor) (por enquanto é uma constante)
 
 #define NUM_TIPO_OBJ 4 //Número de tipos de objeto
@@ -232,6 +233,9 @@ void RemoveProj(int index);
 //Se uma nave colide com um planeta ou com outra nave, ela explode (pontos de vida vão a zero)
 void ChecaTodasColisoes();
 
+//Dado um objeto o, verifica se ele colidiu com qualquer outro objeto do cenário
+Bool ChecaColisaoComTodos(Objeto o);
+
 //Dados dois objetos, retorna TRUE se eles colidiram e FALSE caso contrário.
 Bool ChecaColisaoEntre(Objeto o1, Objeto o2);
 
@@ -251,23 +255,6 @@ Bool EstaViva(Nave n);
 //Checa se todas as naves estão vivas
 Bool TodasEstaoVivas();
 
-/* FUNÇÕES SOBRE BOOSTERS */
-//Inicializa e coloca um novo booster no array de boosters
-void criaNovoBooster();
-
-//Função que tira um booster do array caso seu tempo de tela tenha esgotado
-void mataBooster(int index);
-
-//Função chamada quando um booster é capturado por uma nave
-void capturaBooster(int index, Nave *nave);
-
-//Função que é chamada quando o tempo do booster capturado por uma nave se esgotou
-//Seu nome é reseta booster porque a nave possui um booster padrão
-//Esta função sobrescreve o booster com o qual a nave estava pelo booster padrão
-void resetaBooster(Nave *nave);
-
-//Função que, dado um booster b, transforma ele no booster padrão
-void boosterPadrao(Booster *b);
 
 /* OUTRAS FUNÇÕES */
 

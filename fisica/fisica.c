@@ -213,6 +213,15 @@ Bool ChecaColisaoEntre(Objeto o1, Objeto o2)
 	return (DistanciaEntre(o1, o2) < o1.r + o2.r);
 }
 
+Bool ChecaColisaoComTodos(Objeto o)
+{
+	int i, j;
+	Bool colidiu;
+	throwException("ChecaColisaoComTodos()",
+				   "Não implementada ainda.",
+				   function_not_implemented_exception);
+}
+
 void ChecaTodasColisoes()
 {
 	int i, j;
@@ -268,10 +277,6 @@ void ChecaTodasColisoes()
 		{
 			if (ChecaColisaoEntre(*GetObjeto(NAVE, i), *GetObjeto(PLANETA, j)))
 			{
-				printf("Nave %d colidindo com o planeta\n", i);
-				printf("Planeta:\n");
-				printf("raio = %f pos = (%f, %f) vel = (%f, %f) mass = %f\n", planetas[j].radius,
-				planetas[j].pos.x, planetas[j].pos.y, planetas[j].vel.x, planetas[j].vel.y, planetas[j].mass);
 				Destroi(&(naves[i]));
 				colidiu = TRUE;
 			}
@@ -318,8 +323,6 @@ Bool TodasEstaoVivas()
 
 void Destroi(Nave *n)
 {
-	printf("Destruindo a nave: %s\n", n->nome);
-	printf("Ela está em: (%f, %f) com velocidade (%f, %f)\n", n->pos.x, n->pos.y, n->vel.x, n->vel.y);
 	DecrementaVida(n, n->HP); //Faz a vida zerar
 }
 
@@ -339,9 +342,7 @@ Bool AtualizaJogo()
 	ChecaTodasColisoes();
 	todasNavesVivas = TodasEstaoVivas();
 
-	printf("Tempo Restante = %f\n", tRestante);
 	tRestante -= dt; //Decrementamos o tempo restante de simulação
-	printf("Naves vivas = %d", todasNavesVivas);
 
 	//E a simulação continua enquanto o tempo for positivo e não há naves mortas
 	return ((tRestante > 0.0) && todasNavesVivas);

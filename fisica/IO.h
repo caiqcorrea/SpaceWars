@@ -34,6 +34,15 @@ void lerNave(FILE *arq, Nave *n);
 void lerProjetil(FILE *arq, Projetil *p, double tempoDeVida);
 
 /* FUNÇÕES PARA BOOSTERS */
-void leitura();
+//Método que lê todos os booster do arquivo booster.cfg
+//e define os tipos de boosters possíveis no jogo
+void leituraBoosters();
+
+//Método deve ser chamado após o aparecimento de um [ e 
+//lê booster.cfg até achar um ]
+//Ela recebe um índice que se refere a onde o booster sendo atualmente criado
+//será colocado no aray de boosters possíveis
+Bool leBooster(int index);
+
 
 #endif

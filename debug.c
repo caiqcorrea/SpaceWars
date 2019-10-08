@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 {
     tot_obj[BOOSTER] = 0;
 
-    testeFisicaBasica();
+    leituraBoosters();
     printf("Fim\n");
     freeAll();
     return 0;
@@ -81,7 +81,7 @@ void lerArquivo(FILE **f)
     scanf("%s", nomeArq);
     *f = fopen(nomeArq, "r");
     if (*f == NULL) //Verificando se o usuário deu o nome correto
-        throwException("lerInputs", "Não foi possivel abrir o arquivo.", file_not_find_exception);
+        throwException("lerInputs", "Não foi possivel abrir o arquivo.", file_not_found_exception);
     freeSafe(nomeArq);
 }
 
