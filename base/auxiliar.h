@@ -45,8 +45,17 @@ typedef enum {
 
 	/* Este erro é retornando quando se tenta abrir um arquivo e não consegue.
 	 */
-	file_not_find_exception = 3
+	file_not_found_exception = 3,
+
+	/* Este erro é retornado quando um arquivo que se está lendo não está
+	 * no formato correto. 
+	 */
+	file_format_exception = 4,
 	
+	/* Este erro é retornado quando uma função está declarada, mas não 
+	 * foi ainda implementada.
+	 */
+	function_not_implemented_exception = 5,
 } errorCode;
 
 /* F U N Ç Õ E S */
@@ -65,5 +74,9 @@ void throwException(string nomeFunc, string mensagem, errorCode e);
 //
 //A função pausa o programa até o usuário dar clicar ENTER
 void pause();
+
+//Função que gera um número randômico entre min e max inclusos
+//A função supõe que o rng já foi inicializado
+int geraRandomicoEntre(int min, int max);
 
 #endif

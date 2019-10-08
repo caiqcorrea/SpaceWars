@@ -35,11 +35,19 @@ void throwException(string nomeFunc, string mensagem, errorCode e)
  */
 void pause()
 {
-    char ch;
+	char ch;
 
-    printf("Digite ENTER para continuar. ");
-    do
-    {
-        scanf("%c", &ch);
-    } while (ch != '\n'); //ENTER
-} 
+	printf("Digite ENTER para continuar. ");
+	do
+	{
+		scanf("%c", &ch);
+	} while (ch != '\n'); //ENTER
+}
+
+int geraRandomicoEntre(int min, int max)
+{
+	int num;
+	num = rand() % (max-min+1); //0 <= num <= (max-min)
+	num += min; //min <= num <= max
+	return num;
+}
