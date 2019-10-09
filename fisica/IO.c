@@ -21,10 +21,9 @@
 /* P R O T O T I P O   D E   F U N Ç Õ E S   L O C A I S */
 
 static void verificaIgualApos(string nome);
-static void leVerificaIgualAtribuiFloat(float *f, string nomeVar);
+static void leVerificaIgualAtribuiDouble(double *f, string nomeVar);
 static void leVerificaIgualAtribuiInt(int *i, string nomeVar);
 static void leVerificaIgualAtribuiVet2D(vet2D *v, string nomeVar);
-
 
 /* I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S */
 
@@ -76,7 +75,7 @@ void leituraBoosters(){
 
 	initLeitor(BOOSTERCFG_PATH);
 
-	while (proxLeitura() != EOF)
+	while (proxLeitura()[0] != EOF)
 	{
 		if (strigual("maxVel"))
 			leVerificaIgualAtribuiVet2D(&maxVel, "maxVel");
@@ -261,7 +260,7 @@ static void verificaIgualApos(string nome){
 		throwException("leituraBoosters()", msgErro, file_format_exception);
 }
 
-static void leVerificaIgualAtribuiFloat(float *f, string nomeVar){
+static void leVerificaIgualAtribuiDouble(double *f, string nomeVar){
 	proxLeitura();
 	verificaIgualApos(nomeVar);
 	*f = atof(proxLeitura());

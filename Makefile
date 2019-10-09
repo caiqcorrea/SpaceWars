@@ -34,7 +34,8 @@ fisica.o : fisica.c fisica.h vetores.h auxiliar.h
 leitor.o : leitor.c leitor.h auxiliar.h
 	${CC} -c $< ${CFLAGS} -o $@
 
-gerenciadorBooster.o : gerenciadorBooster.c gerenciadorBooster.h fisica.h
+gerenciadorBooster.o : gerenciadorBooster.c gerenciadorBooster.h fisica.h auxiliar.h vetores.h
+	${CC} -c $< ${CFLAGS} -o $@
 
 move_o :
 	mkdir $(OBJ_PATH) 2>/dev/null; mv -f *.o $(OBJ_PATH) 2>/dev/null; true

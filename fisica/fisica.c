@@ -215,11 +215,10 @@ Bool ChecaColisaoEntre(Objeto o1, Objeto o2)
 
 Bool ChecaColisaoComTodos(Objeto o)
 {
-	int i, j;
-	Bool colidiu;
 	throwException("ChecaColisaoComTodos()",
 				   "Não implementada ainda.",
 				   function_not_implemented_exception);
+	return FALSE;
 }
 
 void ChecaTodasColisoes()

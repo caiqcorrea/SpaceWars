@@ -35,7 +35,7 @@
 
 #define G 6.67e-11 //Constante gravitacional
 
-#define SIZE_X_FIS 1e100					 //Tamanho da horizontal da tela
+#define SIZE_X_FIS 1e25						 //Tamanho da horizontal da tela
 #define SIZE_Y_FIS (SIZE_X_FIS * SIZE_RATIO) //Tamanho da vertical da tela
 
 #define MAX_PROJ 100	//Número máximo de projéteis
@@ -49,7 +49,10 @@
 #define MAX_HP 10 //Número máximo de pontos de vida (as naves começam com este valor) (por enquanto é uma constante)
 
 #define NUM_TIPO_OBJ 4 //Número de tipos de objeto
-#define MAX_OBJ { MAX_NAVES, MAX_PLANETAS, MAX_PROJ, MAX_BOOSTERS } 
+#define MAX_OBJ                                         \
+	{                                                   \
+		MAX_NAVES, MAX_PLANETAS, MAX_PROJ, MAX_BOOSTERS \
+	}
 //Array contendo o número máximo de cada tipo de objeto
 //MAX_OBJ[NAVE] := MAX_NAVES e assim por diante
 
@@ -97,7 +100,7 @@ typedef struct
  */
 typedef struct
 {
-	string nome;			//Nome do booster
+	string nome; //Nome do booster
 	Objeto o;
 	int tempoRestanteTela; //Tempo restante do booster na tela, ao chegar em 0, removemos ele do array
 	int tempoRestanteNave; //Tempo restante do booster após a nave pegá-lo
@@ -111,7 +114,7 @@ typedef struct
  */
 typedef struct
 {
-	string nome;		  //Nome da nave
+	string nome; //Nome da nave
 	Objeto o;
 	int HP;				  //Pontos de vida
 	Booster boosterAtual; //Booster atual da nave (por padrão é o booster padrão)
@@ -254,7 +257,6 @@ Bool EstaViva(Nave n);
 
 //Checa se todas as naves estão vivas
 Bool TodasEstaoVivas();
-
 
 /* OUTRAS FUNÇÕES */
 

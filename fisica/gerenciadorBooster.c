@@ -2,6 +2,10 @@
  */
 
 #include "gerenciadorBooster.h"
+#include "../base/auxiliar.h"
+#include "string.h"
+#include "fisica.h"
+#include "../base/vetores.h"
 
 Booster *boostersPreCriados;
 
