@@ -35,7 +35,7 @@
 
 #define G 6.67e-11 //Constante gravitacional
 
-#define SIZE_X_FIS 1e25						 //Tamanho da horizontal da tela
+#define SIZE_X_FIS 1e10						 //Tamanho da horizontal da tela
 #define SIZE_Y_FIS (SIZE_X_FIS * SIZE_RATIO) //Tamanho da vertical da tela
 
 #define MAX_PROJ 100	//Número máximo de projéteis
@@ -202,6 +202,12 @@ Objeto *GetObjeto(TipoObj tipo, int indice);
 //a função sobrescreve o array no índice i com o objeto o.
 //A função verifica se o índice está dentro dos limites
 void SetObjeto(TipoObj tipo, int indice, Objeto o);
+
+//Função booleana que diz se um objeto o1 e um o2 são o mesmo (i.e., se estão alocados na mesma memória)
+Bool ObjetoDuplicado(Objeto o1, Objeto o2);
+
+//Função booleana que diz se dois objetos possuem as mesmas caracteristicas
+Bool ObjetoIgual(Objeto o1, Objeto o2);
 
 /* FUNÇÕES QUE ITERAM SOBRE TODOS OS OBJETOS EM JOGO */
 

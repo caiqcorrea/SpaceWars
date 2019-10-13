@@ -44,10 +44,10 @@ void pause()
 	} while (ch != '\n'); //ENTER
 }
 
-int geraRandomicoEntre(int min, int max)
+long geraRandomicoEntre(long min, long max)
 {
-	int num;
-	num = rand() % (max-min+1); //0 <= num <= (max-min)
-	num += min; //min <= num <= max
+	long num;
+	num = rand() % (max - min + 1); //0 <= num <= (max-min)
+	num += min;						//min <= num <= max
 	return num;
 }

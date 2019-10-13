@@ -69,7 +69,8 @@ void lerProjetil(FILE *arq, Projetil *p, double tempoDeVida)
 /* FUNÇÕES PARA BOOSTERS */
 
 //Função que lê o arquivo booster.cfg
-void leituraBoosters(){
+void leituraBoosters()
+{
 	totalBoostersPreCriados = 0;
 	int indiceProx = 1;
 
@@ -82,17 +83,17 @@ void leituraBoosters(){
 		else if (strigual("minVel"))
 			leVerificaIgualAtribuiVet2D(&minVel, "minVel");
 		else if (strigual("maxMass"))
-			leVerificaIgualAtribuiFloat(&maxMass, "maxMass");
+			leVerificaIgualAtribuiDouble(&maxMass, "maxMass");
 		else if (strigual("minMass"))
-			leVerificaIgualAtribuiFloat(&minMass, "minMass");
+			leVerificaIgualAtribuiDouble(&minMass, "minMass");
 		else if (strigual("maxTempoRestanteTela"))
-			leVerificaIgualAtribuiFloat(&maxTempoRestanteTela, "maxTempoRestanteTela");
+			leVerificaIgualAtribuiDouble(&maxTempoRestanteTela, "maxTempoRestanteTela");
 		else if (strigual("minTempoRestanteTela"))
-			leVerificaIgualAtribuiFloat(&minTempoRestanteTela, "minTempoRestanteTela");
+			leVerificaIgualAtribuiDouble(&minTempoRestanteTela, "minTempoRestanteTela");
 		else if (strigual("maxTempoRestanteNave"))
-			leVerificaIgualAtribuiFloat(&maxTempoRestanteNave, "maxTempoRestanteNave");
+			leVerificaIgualAtribuiDouble(&maxTempoRestanteNave, "maxTempoRestanteNave");
 		else if (strigual("minTempoRestanteNave"))
-			leVerificaIgualAtribuiFloat(&minTempoRestanteNave, "minTempoRestanteNave");
+			leVerificaIgualAtribuiDouble(&minTempoRestanteNave, "minTempoRestanteNave");
 		else if (strigual("totalBoosters"))
 		{
 			leVerificaIgualAtribuiInt(&totalBoostersPreCriados, "totalBoosters");
@@ -104,7 +105,7 @@ void leituraBoosters(){
 		else if (strigual("["))
 		{
 			if (totalBoostersPreCriados == 0)
-				throwException("leituraBoosters()",
+				throwException("leituraBoosters",
 							   "O array de booster não foi alocado ainda\n"
 							   "Há um erro de formatação no arquivo boosters.cfg\n"
 							   "Deve haver um 'totalBoosters' antes do primeiro booster",
@@ -117,13 +118,24 @@ void leituraBoosters(){
 			if (leBooster(indiceProx++))
 				indiceProx--;
 		}
+		else 
+		{
+			char errorMsg[100];
+			strcpy(errorMsg, "Houve uma leitura errada no arquivo booster.cfg!\n");
+			strcat(errorMsg, "'");
+			strcat(errorMsg, getLeitura());
+			strcat(errorMsg, "' é a leitura.\n");
+			throwException("leituraBoosters",
+							errorMsg, file_format_exception);
+		}
 	}
 
 	disposeLeitor();
 }
 
-Bool leBooster(int index){
-	string nome = "";
+Bool leBooster(int index)
+{
+	char nome[50];
 	int i;
 	int dano, cadencia, vidaAdicional;
 	double tempoProj, massProj;
@@ -135,18 +147,20 @@ Bool leBooster(int index){
 	//strcmp é TRUE se as strings são diferentes (não sei porque, mas é assim)
 	while (strcmp(proxLeitura(), "]"))
 	{
+		printf("atual = '%s'\n", getLeitura());
 		if (strigual("nome"))
 		{
 			proxLeitura();
 			verificaIgualApos("nome");
+			proxLeitura();
 			ehPadrao = strigual("PADRAO");
-			strcat(nome, getLeitura());
+			strcpy(nome, getLeitura());
 		}
 		else if (strigual("vidaAdicional"))
 		{
 			proxLeitura();
 			//Se ao invés de igual é - e o booster padrão já foi setado
-			if (strigual("-") && strcmp("NULL", BoosterPadrao.nome) == 0)
+			if (strigual("-") && strcmp("NULL", BoosterPadrao.nome) != 0)
 				vidaAdicional = BoosterPadrao.vidaAdicional;
 			else
 			{
@@ -154,11 +168,11 @@ Bool leBooster(int index){
 				vidaAdicional = atoi(proxLeitura());
 			}
 		}
-		else if ("cadencia")
+		else if (strigual("cadencia"))
 		{
 			proxLeitura();
 			//Se ao invés de igual é - e o booster padrão já foi setado
-			if (strigual("-") && strcmp("NULL", BoosterPadrao.nome) == 0)
+			if (strigual("-") && strcmp("NULL", BoosterPadrao.nome) != 0)
 				cadencia = BoosterPadrao.cadencia;
 			else
 			{
@@ -166,11 +180,12 @@ Bool leBooster(int index){
 				cadencia = atoi(proxLeitura());
 			}
 		}
-		else if ("dano")
+		else if (strigual("dano"))
 		{
 			proxLeitura();
+			printf("Li '%s'\n", getLeitura());
 			//Se ao invés de igual é - e o booster padrão já foi setado
-			if (strigual("-") && strcmp("NULL", BoosterPadrao.nome) == 0)
+			if (strigual("-") && strcmp("NULL", BoosterPadrao.nome) != 0)
 				dano = BoosterPadrao.proj.dano;
 			else
 			{
@@ -178,35 +193,41 @@ Bool leBooster(int index){
 				dano = atoi(proxLeitura());
 			}
 		}
-		else if ("tempoProj")
+		else if (strigual("tempoProj"))
 		{
 			proxLeitura();
 			//Se ao invés de igual é - e o booster padrão já foi setado
-			if (strigual("-") && strcmp("NULL", BoosterPadrao.nome) == 0)
+			if (strigual("-") && strcmp("NULL", BoosterPadrao.nome) != 0)
 				tempoProj = BoosterPadrao.proj.tempoRestante;
 			else
 			{
 				verificaIgualApos("tempoProj");
-				tempoProj = atoi(proxLeitura());
+				tempoProj = atof(proxLeitura());
 			}
 		}
-		else if ("massProj")
+		else if (strigual("massProj"))
 		{
 			proxLeitura();
 			//Se ao invés de igual é - e o booster padrão já foi setado
-			if (strigual("-") && strcmp("NULL", BoosterPadrao.nome) == 0)
+			if (strigual("-") && strcmp("NULL", BoosterPadrao.nome) != 0)
 				massProj = BoosterPadrao.proj.mass;
 			else
 			{
 				verificaIgualApos("massProj");
-				massProj = atoi(proxLeitura());
+				massProj = atof(proxLeitura());
 			}
 		}
 		else
-			throwException("leBooster()",
+			throwException("leBooster",
 						   "Parece que há alguma variável entre [ e ] que não está definida.\n"
 						   "Verifique se o arquivo booster.cfg está correto.",
 						   file_format_exception);
+
+		printf("Estado atual:\n");
+		printf("\tNome = '%s'\n\tvida = %d\n\tcadencia = %d\n\tdano = %d\n\t"
+			   "tempoProj = %f\n\tmassProj = %f\n",
+			   nome, vidaAdicional, cadencia,
+			   dano, tempoProj, massProj);
 	}
 
 	//Após ler, vamos instanciar o booster e colocá-lo em seu lugar do array
@@ -215,7 +236,7 @@ Bool leBooster(int index){
 	if (dano == -1 || cadencia == -1 || vidaAdicional == -1 ||
 		tempoProj == -1 || massProj == -1 || strcmp(nome, "") == 0)
 	{
-		throwException("leBooster()",
+		throwException("leBooster",
 					   "Há algum booster em booster.cfg que não teve todos seus campos definidos!",
 					   file_format_exception);
 	}
@@ -223,7 +244,7 @@ Bool leBooster(int index){
 	Booster novo;
 	novo.nome = mallocSafe(sizeof(char) * strlen(nome));
 	for (i = 0; (novo.nome[i] = nome[i]) != '\0'; i++)
-		; //Garante que o '\0' estará no b sem ter que fazer um caso separado
+		; //Garante que o '\0' estará no nome sem ter que fazer um caso separado
 	novo.cadencia = cadencia;
 	novo.vidaAdicional = vidaAdicional;
 	novo.proj.tempoRestante = tempoProj;
@@ -251,30 +272,37 @@ Bool leBooster(int index){
 	return ehPadrao;
 }
 
-static void verificaIgualApos(string nome){
-	string msgErro = "É preciso e um sinal de igual após a palavra ";
+static void verificaIgualApos(string nome)
+{
+	char msgErro[100];
+	strcpy(msgErro, "É preciso e um sinal de igual após a palavra ");
 	strcat(msgErro, nome);
 	strcat(msgErro, "!");
 
 	if (!strigual("="))
-		throwException("leituraBoosters()", msgErro, file_format_exception);
+		throwException("leituraBoosters", msgErro, file_format_exception);
 }
 
-static void leVerificaIgualAtribuiDouble(double *f, string nomeVar){
+static void leVerificaIgualAtribuiDouble(double *f, string nomeVar)
+{
 	proxLeitura();
 	verificaIgualApos(nomeVar);
 	*f = atof(proxLeitura());
 }
 
-static void leVerificaIgualAtribuiInt(int *i, string nomeVar){
+static void leVerificaIgualAtribuiInt(int *i, string nomeVar)
+{
 	proxLeitura();
 	verificaIgualApos(nomeVar);
 	*i = atof(proxLeitura());
 }
 
-static void leVerificaIgualAtribuiVet2D(vet2D *v, string nomeVar){
-	proxLeitura();
+static void leVerificaIgualAtribuiVet2D(vet2D *v, string nomeVar)
+{
+	proxLeitura(); //deve ser um '='
 	verificaIgualApos(nomeVar);
+
 	v->x = atof(proxLeitura());
+	proxLeitura(); //Jogar a vírgula fora
 	v->y = atof(proxLeitura());
 }

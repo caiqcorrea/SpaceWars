@@ -5,9 +5,9 @@
 #ifndef _AUXILIAR_H
 #define _AUXILIAR_H
 
-#define SIZE_RATIO 9/16
+#define SIZE_RATIO 9 / 16
 
-typedef char* string;
+typedef char *string;
 
 /* E S T R U T U R A S */
 
@@ -22,7 +22,8 @@ typedef enum
  * sobre possíveis erros que ele encontra e que já foram tratados pelos arquivos 
  * do projeto.
  */
-typedef enum {
+typedef enum
+{
 	/* Este erro é retornado quando se tenta acessar índices de um array ou matriz
 	 * que não deveriam ser acessados pelo usuário.
 	 */
@@ -40,7 +41,7 @@ typedef enum {
 
 	/* Este erro é retornado quando o usuário especifica um tipo de variável errado
 	 * para uma função.
-	 */ 
+	 */
 	var_type_undefined_exception = 2,
 
 	/* Este erro é retornando quando se tenta abrir um arquivo e não consegue.
@@ -51,7 +52,7 @@ typedef enum {
 	 * no formato correto. 
 	 */
 	file_format_exception = 4,
-	
+
 	/* Este erro é retornado quando uma função está declarada, mas não 
 	 * foi ainda implementada.
 	 */
@@ -77,6 +78,6 @@ void pause();
 
 //Função que gera um número randômico entre min e max inclusos
 //A função supõe que o rng já foi inicializado
-int geraRandomicoEntre(int min, int max);
+long geraRandomicoEntre(long min, long max);
 
 #endif

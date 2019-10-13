@@ -13,7 +13,7 @@ OBJ_PATH = ./obj
 
 default : debug move_o
 
-debug : debug.o IO.o auxiliar.o vetores.o fisica.o
+debug : debug.o IO.o auxiliar.o vetores.o fisica.o leitor.o gerenciadorBooster.o
 	${CC} $^ ${CFLAGS} -o $@
 
 debug.o : debug.c IO.h

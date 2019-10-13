@@ -20,7 +20,7 @@ void initLeitor(string nome){
 
 void disposeLeitor(){
     fclose(arq);
-    free(leituraAtual);
+    freeSafe(leituraAtual);
 }
 
 void imprimeAtual(){

@@ -112,6 +112,21 @@ void SetObjeto(TipoObj tipo, int indice, Objeto o)
 		}
 }
 
+Bool ObjetoDuplicado(Objeto o1, Objeto o2)
+{
+	return &o1 == &o2; //Se seus endereços são o mesmo, são o mesmo objeto
+}
+
+Bool ObjetoIgual(Objeto o1, Objeto o2)
+{
+	return (o1.m == o2.m &&
+			o1.p.x == o2.p.x &&
+			o1.p.y == o2.p.y &&
+			o1.r == o2.r &&
+			o1.v.x == o2.v.x &&
+			o1.v.y == o2.v.y);
+}
+
 vet2D Forca(Objeto o1, Objeto o2)
 {
 	vet2D aux = sub(o1.p, o2.p);
@@ -210,15 +225,31 @@ void RemoveProj(int index)
 
 Bool ChecaColisaoEntre(Objeto o1, Objeto o2)
 {
+	if (ObjetoDuplicado(o1, o2))
+		return FALSE;
+	if (ObjetoIgual(o1, o2))
+		return FALSE; //Isso pode gerar erros, mas a chance é dx
 	return (DistanciaEntre(o1, o2) < o1.r + o2.r);
 }
 
 Bool ChecaColisaoComTodos(Objeto o)
 {
-	throwException("ChecaColisaoComTodos()",
-				   "Não implementada ainda.",
-				   function_not_implemented_exception);
-	return FALSE;
+	int i;
+	Bool colidiu = FALSE;
+
+	for (i = 0; i < tot_obj[PROJETIL] && !colidiu; i++) //PROJÉTEIS
+		colidiu = ChecaColisaoEntre(o, *GetObjeto(PROJETIL, i));
+
+	for (i = 0; i < tot_obj[NAVE] && !colidiu; i++)
+		colidiu = ChecaColisaoEntre(o, *GetObjeto(NAVE, i));
+
+	for (i = 0; i < tot_obj[PLANETA] && !colidiu; i++)
+		colidiu = ChecaColisaoEntre(o, *GetObjeto(PLANETA, i));
+
+	for (i = 0; i < tot_obj[BOOSTER]; i++)
+		colidiu = ChecaColisaoEntre(o, *GetObjeto(BOOSTER, i));
+
+	return colidiu;
 }
 
 void ChecaTodasColisoes()
@@ -232,16 +263,14 @@ void ChecaTodasColisoes()
 
 		//com PLANETAS
 		for (j = 0; !colidiu && j < tot_obj[PLANETA]; j++)
-		{
 			if (ChecaColisaoEntre(*GetObjeto(PROJETIL, i), *GetObjeto(PLANETA, j)))
 			{
 				RemoveProj(i);
 				colidiu = TRUE;
 			}
-		}
+
 		//com outro PROJÉTIL
 		for (j = i + 1; !colidiu && j < tot_obj[PROJETIL]; j++)
-		{
 			//Note que começamos de i + 1 pois assumimos todos os i-1 projéteis anteriores não colidiram com ninguém
 			//e i não colide consigo mesmo.
 			//Conclusão: se i colide com um j, então j > i
@@ -251,21 +280,19 @@ void ChecaTodasColisoes()
 				RemoveProj(i); //que colidiu. Se fosse o contrário (remover i primeiro) seria o (j-1)-ésimo quem colidiu com o i-ésimo
 				colidiu = TRUE;
 			}
-		}
+
 		//com NAVES
 		for (j = 0; !colidiu && j < tot_obj[NAVE]; j++)
-		{
 			if (ChecaColisaoEntre(*GetObjeto(PROJETIL, i), *GetObjeto(NAVE, j)))
 			{
 				RemoveProj(i);
 				DecrementaVida(&(naves[j]), projs[i].dano);
 				colidiu = TRUE;
 			}
-		}
 
 		if (colidiu)
 			i--; //Removemos o i-ésimo, então o próximo a ser visto é quem virou o i-ésimo
-				//Note que se o projétil colide com um planeta (a primeira verificação) a função não entra nos outros for's
+				 //Note que se o projétil colide com um planeta (a primeira verificação) a função não entra nos outros for's
 	}
 	//NAVES
 	for (i = 0; i < tot_obj[NAVE]; i++)
@@ -273,16 +300,14 @@ void ChecaTodasColisoes()
 		colidiu = FALSE;
 		//com PLANETAS
 		for (j = 0; !colidiu && j < tot_obj[PLANETA]; j++)
-		{
 			if (ChecaColisaoEntre(*GetObjeto(NAVE, i), *GetObjeto(PLANETA, j)))
 			{
 				Destroi(&(naves[i]));
 				colidiu = TRUE;
 			}
-		}
+
 		//com outras NAVES
 		for (j = i + 1; !colidiu && j < tot_obj[NAVE]; j++)
-		{
 			//Começamos de i+1 pois as i-1 primeiras naves não colidiram com outras naves e naves[i] não colide com si própria
 			if (ChecaColisaoEntre(*GetObjeto(NAVE, i), *GetObjeto(NAVE, j)))
 			{
@@ -290,7 +315,7 @@ void ChecaTodasColisoes()
 				Destroi(&(naves[i]));
 				colidiu = TRUE;
 			}
-		}
+
 		if (colidiu)
 			break; //Se colidiu, paramos por aqui. O jogo terminou.
 	}
