@@ -6,6 +6,8 @@
 #include "fisica/IO.h"
 #include "fisica/fisica.h"
 
+#include "fisica/gerenciadorBooster.h" //temp
+
 #include <stdio.h>
 
 //Método que faz um teste básico da parte física gravitacional do jogo
@@ -24,6 +26,9 @@ void imprimeProjetil(Projetil p);
 //Imprime as propriedades de um planeta
 void imprimePlaneta(Planeta p);
 
+//Imprime as propriedade de um booster
+void imprimeBooster(Booster b);
+
 //Imprime todas as naves
 void imprimeNaves();
 
@@ -41,9 +46,14 @@ int main(int argc, char *argv[])
     tot_obj[BOOSTER] = 0;
 
     leituraBoosters();
+
+    for(int i = 0; i < totalBoostersPreCriados; i++)
+        imprimeBooster(boostersPreCriados[i]);
+
     printf("Fim\n");
     freeAll();
     return 0;
+    
 }
 
 void testeFisicaBasica()
@@ -55,7 +65,6 @@ void testeFisicaBasica()
     lerInputs(arq);      //Lemos os inputs (a função fecha o arquivo para nós)
     imprimeTudo();       //e jogamos tudo o que foi lido na tela
     setbuf(stdin, NULL); //(apenas para evitar possíveis erros)
-
 
     //Enquanto a simulação não terminar...
     while (AtualizaJogo() == TRUE)
@@ -100,8 +109,17 @@ void imprimeProjetil(Projetil p)
 
 void imprimePlaneta(Planeta p)
 {
-    fprintf(stdout, "Planeta:\tMassa = %3.2lf\tPos = (%3.2lf , %3.2lf)\tVel = (%3.2lf , %3.2lf)\tR = %3.2lf\n",
+    fprintf(stdout, "Planeta: \tMassa = %3.2lf\tPos = (%3.2lf , %3.2lf)\tVel = (%3.2lf , %3.2lf)\tR = %3.2lf\n",
             p.mass, p.pos.x, p.pos.y, p.vel.x, p.vel.y, p.radius);
+}
+
+void imprimeBooster(Booster b)
+{
+    fprintf(stdout, "Booster %s: ", b.nome);
+    fprintf(stdout, "\tvida = %d\tcadencia = %d\tdano = %d\ttempoEmNave = %3.3lf\ttempoEmTela = %3.3lf\n",
+            b.vidaAdicional, b.cadencia, b.proj.dano, b.tempoRestanteNave, b.tempoRestanteTela);
+    fprintf(stdout, "\ttempoVidaProj = %3.3lf\tmassProj = %3.3lf\tposProj = (%3.3lf, %3.3lf)\tvelProj = (%3.3lf, %3.3lf)\n",
+            b.proj.tempoRestante, b.proj.mass, b.proj.pos.x, b.proj.pos.y, b.proj.vel.x, b.proj.vel.y);
 }
 
 void imprimeNaves()

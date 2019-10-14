@@ -76,7 +76,7 @@ void leituraBoosters()
 
 	initLeitor(BOOSTERCFG_PATH);
 
-	while (proxLeitura()[0] != EOF)
+	while (proxLeitura() != EOF)
 	{
 		if (strigual("maxVel"))
 			leVerificaIgualAtribuiVet2D(&maxVel, "maxVel");
@@ -125,8 +125,7 @@ void leituraBoosters()
 			strcat(errorMsg, "'");
 			strcat(errorMsg, getLeitura());
 			strcat(errorMsg, "' é a leitura.\n");
-			throwException("leituraBoosters",
-							errorMsg, file_format_exception);
+			throwException("leituraBoosters", errorMsg, file_format_exception);
 		}
 	}
 
@@ -147,7 +146,6 @@ Bool leBooster(int index)
 	//strcmp é TRUE se as strings são diferentes (não sei porque, mas é assim)
 	while (strcmp(proxLeitura(), "]"))
 	{
-		printf("atual = '%s'\n", getLeitura());
 		if (strigual("nome"))
 		{
 			proxLeitura();
@@ -183,7 +181,6 @@ Bool leBooster(int index)
 		else if (strigual("dano"))
 		{
 			proxLeitura();
-			printf("Li '%s'\n", getLeitura());
 			//Se ao invés de igual é - e o booster padrão já foi setado
 			if (strigual("-") && strcmp("NULL", BoosterPadrao.nome) != 0)
 				dano = BoosterPadrao.proj.dano;
@@ -223,11 +220,7 @@ Bool leBooster(int index)
 						   "Verifique se o arquivo booster.cfg está correto.",
 						   file_format_exception);
 
-		printf("Estado atual:\n");
-		printf("\tNome = '%s'\n\tvida = %d\n\tcadencia = %d\n\tdano = %d\n\t"
-			   "tempoProj = %f\n\tmassProj = %f\n",
-			   nome, vidaAdicional, cadencia,
-			   dano, tempoProj, massProj);
+		
 	}
 
 	//Após ler, vamos instanciar o booster e colocá-lo em seu lugar do array

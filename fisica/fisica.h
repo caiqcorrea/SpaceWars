@@ -102,8 +102,8 @@ typedef struct
 {
 	string nome; //Nome do booster
 	Objeto o;
-	int tempoRestanteTela; //Tempo restante do booster na tela, ao chegar em 0, removemos ele do array
-	int tempoRestanteNave; //Tempo restante do booster após a nave pegá-lo
+	double tempoRestanteTela; //Tempo restante do booster na tela, ao chegar em 0, removemos ele do array
+	double tempoRestanteNave; //Tempo restante do booster após a nave pegá-lo
 	int vidaAdicional;
 	int cadencia;
 	Projetil proj;
