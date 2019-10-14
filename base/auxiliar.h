@@ -5,12 +5,12 @@
 #ifndef _AUXILIAR_H
 #define _AUXILIAR_H
 
-#define SIZE_RATIO 9/16
+#define SIZE_RATIO 9 / 16
 
 #define MIN(x, y) (x<y?x:y)
 #define MAX(x, y) (x>y?x:y)
 
-typedef char* string;
+typedef char *string;
 
 /* E S T R U T U R A S */
 
@@ -25,7 +25,8 @@ typedef enum
  * sobre possíveis erros que ele encontra e que já foram tratados pelos arquivos 
  * do projeto.
  */
-typedef enum {
+typedef enum
+{
 	/* Este erro é retornado quando se tenta acessar índices de um array ou matriz
 	 * que não deveriam ser acessados pelo usuário.
 	 */
@@ -43,13 +44,22 @@ typedef enum {
 
 	/* Este erro é retornado quando o usuário especifica um tipo de variável errado
 	 * para uma função.
-	 */ 
+	 */
 	var_type_undefined_exception = 2,
 
 	/* Este erro é retornando quando se tenta abrir um arquivo e não consegue.
 	 */
-	file_not_find_exception = 3
-	
+	file_not_found_exception = 3,
+
+	/* Este erro é retornado quando um arquivo que se está lendo não está
+	 * no formato correto. 
+	 */
+	file_format_exception = 4,
+
+	/* Este erro é retornado quando uma função está declarada, mas não 
+	 * foi ainda implementada.
+	 */
+	function_not_implemented_exception = 5,
 } errorCode;
 
 /* F U N Ç Õ E S */
@@ -68,5 +78,9 @@ void throwException(string nomeFunc, string mensagem, errorCode e);
 //
 //A função pausa o programa até o usuário dar clicar ENTER
 void pause();
+
+//Função que gera um número randômico entre min e max inclusos
+//A função supõe que o rng já foi inicializado
+long geraRandomicoEntre(long min, long max);
 
 #endif

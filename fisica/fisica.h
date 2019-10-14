@@ -33,27 +33,32 @@
 
 /*--------------- M A C R O S ---------------*/
 
-#define G 6.67e-11		  //Constante gravitacional
+#define G 6.67e-11 //Constante gravitacional
 
-#define SIZE_X_FIS 1e100	  //Tamanho da horizontal da tela
-#define SIZE_Y_FIS (SIZE_X_FIS*SIZE_RATIO)	  //Tamanho da vertical da tela
+#define SIZE_X_FIS 1e10						 //Tamanho da horizontal da tela
+#define SIZE_Y_FIS (SIZE_X_FIS * SIZE_RATIO) //Tamanho da vertical da tela
 
-#define MAX_PROJ 100	  //Número máximo de projéteis
-#define MAX_NAVES 2		  //Número de naves
-#define MAX_PLANETAS 1	//Número de planetas
-#define MAX_BOOSTER 10 //Número máximo de boosters
+#define MAX_PROJ 100	//Número máximo de projéteis
+#define MAX_NAVES 2		//Número de naves
+#define MAX_PLANETAS 1  //Número de planetas
+#define MAX_BOOSTERS 10 //Número máximo de boosters
 
-#define RAIO_NAVES 100	//Raio padrão das naves (por enquanto é uma constante)
-#define RAIO_PROJS 20	//Raio padrão dos projéteis (por enquanto é uma constante)
-#define MAX_HP 10		//Número máximo de pontos de vida (as naves começam com este valor) (por enquanto é uma constante)
+#define RAIO_PROJS 100
+#define RAIO_NAVES 100
+#define RAIO_BOOSTER 100
+#define MAX_HP 10 //Número máximo de pontos de vida (as naves começam com este valor) (por enquanto é uma constante)
 
 #define NUM_TIPO_OBJ 4 //Número de tipos de objeto
-#define MAX_OBJ { MAX_NAVES, MAX_PLANETAS, MAX_PROJ } //Array contendo o número máximo de cada tipo de objeto
+#define MAX_OBJ                                         \
+	{                                                   \
+		MAX_NAVES, MAX_PLANETAS, MAX_PROJ, MAX_BOOSTERS \
+	}
+//Array contendo o número máximo de cada tipo de objeto
 //MAX_OBJ[NAVE] := MAX_NAVES e assim por diante
 
 /*--------------- E S T R U T U R A S ---------------*/
 
-/* Struct Objeto possui uma massa, posição e velocidade. 
+/* Struct Objeto possui uma massa, posição, velocidade e raio. 
  * Ele é um objeto genérico que deve estar dentro de outros structs importantes
  * do programa, como as naves, projetéis e planetas.
  */
@@ -65,16 +70,6 @@ typedef struct
 	vet2D v;  //velocidade
 } Objeto;
 
-/* Struct Nave contém um objeto próprio e um nome que é o nome da nave.
- *
- */
-typedef struct
-{
-	Objeto o;
-	string nome;
-	int HP; //Pontos de vida
-} Nave;
-
 /* Struct Projetil possui um objeto e um tempoRestante na tela.
  * A cada quadro, o tempo retante é decrementado de dt e ao chegar em zero,
  * devemos exclui-lo do array de projéteis.
@@ -82,9 +77,48 @@ typedef struct
 typedef struct
 {
 	Objeto o;
-	double tempoRestante;	//O tempo de vida restante do projétil (ele some quando o tempo vai a zero)
-	int dano;				//A quantidade de pontos de vida que o projétil tira se acertar
+	double tempoRestante; //O tempo de vida restante do projétil (ele some quando o tempo vai a zero)
+	int dano;			  //A quantidade de pontos de vida que o projétil tira se acertar
 } Projetil;
+
+/* Struct Booster.
+ * Esta struct é "dupla", pois ao mesmo tempo que ela é um objeto na tela (antes de uma nave colidir com o
+ * booster), também é uma propriedade de cada nave.
+ * 
+ * Boosters aparecem aleatoriamente na tela e podem ser "pegados" pelas naves para adicionar algum
+ * efeito adicional à jogatina, como tiros mais rápidos, escudo, etc.
+ * 
+ * Ao mesmo tempo, a nave possui uma struct boosterAtual que é utilizada para saber qual é o estado atual
+ * da nave. Ou seja: como serão seus tiros? qual a cadência deles? são a vida atual da nave? entre outras
+ * várias perguntas.
+ * 
+ * Atualmente, um booster conta com as seguintes propriedades:
+ * 		Vida adicional: quando a nave toma um tiro, perde o que tem na vida adicional (se ela não for 0)
+ * 		Cadência: a cadência de tiros da nave é determinada por este valor
+ * 		Projetil: o booster tem um projétil dentro de si, determinando o dano da nave
+ * 		
+ */
+typedef struct
+{
+	string nome; //Nome do booster
+	Objeto o;
+	double tempoRestanteTela; //Tempo restante do booster na tela, ao chegar em 0, removemos ele do array
+	double tempoRestanteNave; //Tempo restante do booster após a nave pegá-lo
+	int vidaAdicional;
+	int cadencia;
+	Projetil proj;
+} Booster;
+
+/* Struct Nave contém um objeto próprio e um nome que é o nome da nave.
+ *
+ */
+typedef struct
+{
+	string nome; //Nome da nave
+	Objeto o;
+	int HP;				  //Pontos de vida
+	Booster boosterAtual; //Booster atual da nave (por padrão é o booster padrão)
+} Nave;
 
 /* Struct Planeta, por enquanto, possui apenas um objeto
  */
@@ -98,11 +132,10 @@ typedef struct
  * Os defines funcionam também caso tenhamos um ponteiro para um struct.
  * Basta fazer ponteiro->vel
  */
-#define vel o.v  // Macro para a velocidade de um objeto
-#define mass o.m // Macro para a massa de um objeto
-#define pos o.p  // Macro para a posição de um objeto
+#define vel o.v	// Macro para a velocidade de um objeto
+#define mass o.m   // Macro para a massa de um objeto
+#define pos o.p	// Macro para a posição de um objeto
 #define radius o.r //Macro para o raio de um objeto
-#define img o.s  //Macro para o sprite de um objeto
 
 /* Um enum com os tipos de objetos possíveis.
  * Serve para fazermos referência a qual dos três arrays estamos falando.
@@ -113,7 +146,8 @@ typedef enum
 {
 	NAVE,
 	PLANETA,
-	PROJETIL
+	PROJETIL,
+	BOOSTER
 } TipoObj;
 
 /*--------------- V A R I Á V E I S   G L O B A I S ---------------*/
@@ -127,7 +161,8 @@ extern int tot_obj[NUM_TIPO_OBJ]; //O número de objetos de cada tipo
  */
 extern Nave naves[MAX_NAVES];		   //O array que contém as duas naves dos jogadores
 extern Planeta planetas[MAX_PLANETAS]; //O array que contém o planeta central
-extern Projetil projs[MAX_PROJ];	   //O que array que contém os projéteis que estão atualmente na tela
+extern Projetil projs[MAX_PROJ];	   //O array que contém os projéteis que estão atualmente na tela
+extern Booster boosters[MAX_BOOSTERS]; //O array que contém os booster que estão atualmente na tela
 
 #define TERRA planetas[0] //Como só há um planeta, vamos chamá-lo de TERRA
 
@@ -138,6 +173,9 @@ extern double dt;
 extern double tRestante;
 
 /*--------------- F U N Ç Õ E S ---------------*/
+
+//Função que inicializa a biblioteca
+void inicializaFisica();
 
 /* FUNÇÕES QUE UTILIZAM APENAS OBJETOS */
 
@@ -165,6 +203,12 @@ Objeto *GetObjeto(TipoObj tipo, int indice);
 //A função verifica se o índice está dentro dos limites
 void SetObjeto(TipoObj tipo, int indice, Objeto o);
 
+//Função booleana que diz se um objeto o1 e um o2 são o mesmo (i.e., se estão alocados na mesma memória)
+Bool ObjetoDuplicado(Objeto o1, Objeto o2);
+
+//Função booleana que diz se dois objetos possuem as mesmas caracteristicas
+Bool ObjetoIgual(Objeto o1, Objeto o2);
+
 /* FUNÇÕES QUE ITERAM SOBRE TODOS OS OBJETOS EM JOGO */
 
 //Recebe um objeto e calcula a força gerada sobre ele pelos outros objetos.
@@ -191,21 +235,24 @@ Bool VerificaSeProjMorreu(Projetil p);
 //a função remove este projétil.
 void RemoveProj(int index);
 
-/* FUNÇÕES SOBRE COLISÃO */ 
+/* FUNÇÕES SOBRE COLISÃO */
 //Função responsável por checar todas as possíveis colisões entre todos os objetos em jogo
 //Se um projétil colide com um planeta ou outro projétil, ele apenas desaparece
 //Se um projétil colide com uma nave, a nave deve perder pontos de vida
 //Se uma nave colide com um planeta ou com outra nave, ela explode (pontos de vida vão a zero)
 void ChecaTodasColisoes();
 
+//Dado um objeto o, verifica se ele colidiu com qualquer outro objeto do cenário
+Bool ChecaColisaoComTodos(Objeto o);
+
 //Dados dois objetos, retorna TRUE se eles colidiram e FALSE caso contrário.
 Bool ChecaColisaoEntre(Objeto o1, Objeto o2);
 
 /* FUNÇÕES PARA VIDA DAS NAVES */
-//Dados uma nave n e um valor de pontos de vida, decrementa a vida de n em valor 
+//Dados uma nave n e um valor de pontos de vida, decrementa a vida de n em valor
 void DecrementaVida(Nave *n, int valor);
 
-//Dados uma nave n e um valor de pontos de vida, incrementa a vida de n em valor 
+//Dados uma nave n e um valor de pontos de vida, incrementa a vida de n em valor
 void IncrementaVida(Nave *n, int valor);
 
 //Dada uma nave n, a função reduz seus pontos de vida a 0
@@ -217,7 +264,7 @@ Bool EstaViva(Nave n);
 //Checa se todas as naves estão vivas
 Bool TodasEstaoVivas();
 
-/* OUTRAS FUNÇÕES 	*/
+/* OUTRAS FUNÇÕES */
 
 //Atualiza o estado atual do jogo
 //Este método deve:
