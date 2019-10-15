@@ -76,7 +76,7 @@ void leituraBoosters()
 
 	initLeitor(BOOSTERCFG_PATH);
 
-	while (proxLeitura() != EOF)
+	while (proxLeitura() != NULL)
 	{
 		if (strigual("maxVel"))
 			leVerificaIgualAtribuiVet2D(&maxVel, "maxVel");

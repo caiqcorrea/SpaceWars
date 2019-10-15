@@ -34,7 +34,7 @@ string proxLeitura()
 {
     int c;
     c = fscanf(arq, " %s", leituraAtual);
-    if(c == -1) return EOF;
+    if(c == -1) return NULL;
     return getLeitura();
 }
 

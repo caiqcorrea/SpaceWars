@@ -99,18 +99,3 @@ void workbenchFlush(){
 	PutPic(showingWindow, workbench, 0, 0, SIZE_X_WIN, SIZE_Y_WIN, 0, 0);
 	WFlush();
 }
-
-int main(){
-	double a, b;
-	Sprite spr = {0, 0}; vet2D vet = {0, 256};
-	grafInit();
-	desenhaSpriteEm(workbench, spr, vet);
-	pause();
-	workbenchFlush();
-	
-	while(1){
-		scanf("%lf %lf", &a, &b);
-		printf("%d", (int) round(a/b));
-	}
-	
-}
