@@ -9,6 +9,9 @@
 #include "fisica/gerenciadorBooster.h" //temp
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 //Método que faz um teste básico da parte física gravitacional do jogo
 //A primeira parte inteira do projeto é testada aqui
@@ -38,28 +41,36 @@ void imprimeProjeteis();
 //Imprime todos os planetas
 void imprimePlanetas();
 
+//Imprime todos os booster
+void imprimeBoosters();
+
+//Imprime todos os boostersPreCriados
+void imprimeBoosterPreCriados();
+
 //Imprime todos os tipos de objetos
 void imprimeTudo();
 
 int main(int argc, char *argv[])
 {
     tot_obj[BOOSTER] = 0;
+    srand(time(NULL));
 
     leituraBoosters();
-
-    for(int i = 0; i < totalBoostersPreCriados; i++)
-        imprimeBooster(boostersPreCriados[i]);
+    testeFisicaBasica();
 
     printf("Fim\n");
     freeAll();
+
     return 0;
-    
 }
 
 void testeFisicaBasica()
 {
     FILE *arq;
     double tempo = 0;
+    //Variáveis para o teste de colisão com boosters
+    Bool umaVez = FALSE;
+    Bool outraVez = FALSE;
 
     lerArquivo(&arq);    //Abrimos o arquivo
     lerInputs(arq);      //Lemos os inputs (a função fecha o arquivo para nós)
@@ -71,11 +82,28 @@ void testeFisicaBasica()
     {
         printf("Tempo: %.3lf\n", tempo);
         tempo += dt;
-        //Imprimimos as naves e os projéteis
+
+        if (tempo > 1 && tot_obj[BOOSTER] > 0 && !umaVez)
+        {
+            boosters[0].pos.x = naves[0].pos.x + 1000;
+            boosters[0].pos.y = naves[0].pos.y;
+            boosters[0].vel.x = -100;
+            boosters[0].vel.y = 0;
+            umaVez = TRUE;
+        }
+
+        if (strcmp(naves[0].boosterAtual.nome, "PADRAO") != 0 && !outraVez)
+        {
+            umaVez = FALSE;
+            outraVez = TRUE;
+        }
+
+        //Imprimimos as naves, os projéteis e os boosters
         imprimeNaves();
         imprimeProjeteis();
+        imprimeBoosters();
         //Imprimir o planeta toda hora é desnecessário, mas caso queira, apenas tire o //
-        imprimePlanetas();
+        //imprimePlanetas();
         printf("\n\n");
         pause(); //E pausamos até o usuário digitar ENTER
     }
@@ -97,8 +125,8 @@ void lerArquivo(FILE **f)
 void imprimeNave(Nave n)
 {
     fprintf(stdout, "Nave %s: ", n.nome);
-    fprintf(stdout, "\tMassa = %.3lf\tPos = (%.4lf , %.7lf)\tVel = (%.5lf , %.7lf)\n",
-            n.mass, n.pos.x, n.pos.y, n.vel.x, n.vel.y);
+    fprintf(stdout, "\tMassa = %.3lf\tPos = (%.4lf , %.4lf)\tVel = (%.4lf , %.4lf)\tBooster = %s\n",
+            n.mass, n.pos.x, n.pos.y, n.vel.x, n.vel.y, n.boosterAtual.nome);
 }
 
 void imprimeProjetil(Projetil p)
@@ -115,11 +143,13 @@ void imprimePlaneta(Planeta p)
 
 void imprimeBooster(Booster b)
 {
-    fprintf(stdout, "Booster %s: ", b.nome);
+    fprintf(stdout, "%s: \n", b.nome);
     fprintf(stdout, "\tvida = %d\tcadencia = %d\tdano = %d\ttempoEmNave = %3.3lf\ttempoEmTela = %3.3lf\n",
             b.vidaAdicional, b.cadencia, b.proj.dano, b.tempoRestanteNave, b.tempoRestanteTela);
     fprintf(stdout, "\ttempoVidaProj = %3.3lf\tmassProj = %3.3lf\tposProj = (%3.3lf, %3.3lf)\tvelProj = (%3.3lf, %3.3lf)\n",
             b.proj.tempoRestante, b.proj.mass, b.proj.pos.x, b.proj.pos.y, b.proj.vel.x, b.proj.vel.y);
+    fprintf(stdout, "\tpos = (%3.3lf, %3.3lf)\tvel = (%3.3lf, %3.3lf)\n",
+            b.pos.x, b.pos.y, b.vel.x, b.vel.y);
 }
 
 void imprimeNaves()
@@ -143,11 +173,26 @@ void imprimePlanetas()
         imprimePlaneta(planetas[i]);
 }
 
+void imprimeBoosters()
+{
+    int i;
+    for (i = 0; i < tot_obj[BOOSTER]; i++)
+        imprimeBooster(boosters[i]);
+}
+
+void imprimeBoosterPreCriados()
+{
+    int i;
+    for (i = 0; i < totalBoostersPreCriados; i++)
+        imprimeBooster(boostersPreCriados[i]);
+}
+
 void imprimeTudo()
 {
     imprimePlanetas();
     imprimeNaves();
     imprimeProjeteis();
+    imprimeBoosters();
 }
 
 #endif

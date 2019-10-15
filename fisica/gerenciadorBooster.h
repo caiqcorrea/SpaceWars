@@ -6,6 +6,9 @@
  * (afinal, ele é um objeto como Nave, Projétil e Planeta).
  * Esta biblioteca apenas é um gerenciador para este objeto, por ele ter muitas
  * peculiaridades próprias.
+ * 
+ * ATENÇÃO: para usar a maioria dos métodos dessa biblioteca é preciso, primeiro,
+ * ler o arquivo booster.cfg e atribuir valores às variáveis e arrays desse cabeçalho.
  */
 
 #ifndef _BOOSTER_MANAGER_H
@@ -35,15 +38,19 @@ extern double maxMass, minMass;
 extern double maxTempoRestanteTela, minTempoRestanteTela;
 extern double maxTempoRestanteNave, minTempoRestanteNave;
 
+//Probabilidade de um booster aparecer na tela em um tick do jogo
+extern double propBooster;
+
 /* FUNÇÕES */
 
 //Inicializa e coloca um novo booster no array de boosters
 void criaNovoBooster();
 
 //Função que tira um booster do array caso seu tempo de tela tenha esgotado
-void mataBooster(int index);
+void removeBoosterDaTela(int index);
 
-//Função chamada quando um booster é capturado por uma nave
+//Função chamada quando um booster é capturado por uma nave (quando ela e ele colidem)
+//O parâmetro index se refere ao índice do booster capturado pela nave no array de boosters
 void capturaBooster(int index, Nave *nave);
 
 //Função que é chamada quando o tempo do booster capturado por uma nave se esgotou
@@ -56,5 +63,22 @@ void viraBoosterPadrao(Booster *b);
 
 //Atribui ao primeiro booster as qualidades do segundo (a referência)
 void defineBoosterComo(Booster *b, Booster ref);
+
+//Função que diz se um booster irá aparecer na tela em um dado tick do jogo
+Bool boosterVaiSpawnar();
+
+//Checa se alguma nave capturou algum booster e, se sim, coloca o booster dentro dela
+void ChecaColisaoComBoosters();
+
+//Atualiza os tempos dos boosters (não padrões) dentro das naves
+//Se o tempo esgotou, voltamos a nave para o padrão
+void AtualizaBoostersEmNaves();
+
+//Atualiza o tempo dos booster na tela.
+//Se o tempo esgotou, tiramos ele da tela.
+void AtualizaBoostersEmTela();
+
+//Faz todas as atualizações necessárias dos boosters de um tick de jogo
+void AtualizaBoosters();
 
 #endif

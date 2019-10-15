@@ -29,6 +29,7 @@
 
 #include "../base/vetores.h"
 #include "../base/auxiliar.h"
+#include "gerenciadorBooster.h"
 
 #include <math.h>
 #include <stddef.h>
@@ -187,10 +188,9 @@ void AtualizaObjetos()
 {
 	int i;
 	TipoObj tipo;
-	//Planetas não precisam ser atualizados (pelo menos na versão atual)
-
+	
 	for (tipo = 0; tipo < NUM_TIPO_OBJ; tipo++)
-		if (tipo != PLANETA)
+		if (tipo != PLANETA) //Planetas não precisam ser atualizados (pelo menos na versão atual)
 			for (i = 0; i < tot_obj[tipo]; i++)
 				AtualizaObjeto(GetObjeto(tipo, i));
 }
@@ -362,6 +362,10 @@ Bool AtualizaJogo()
 	for (i = 0; i < tot_obj[PROJETIL]; i++)
 		if (VerificaSeProjMorreu(projs[i])) //Se o projétil morreu
 			RemoveProj(i);					//Removemos o projétil de índice i
+
+
+	//Fazemos todas as atualizações relacionadas com boosters
+	AtualizaBoosters();
 
 	ChecaTodasColisoes();
 	todasNavesVivas = TodasEstaoVivas();
