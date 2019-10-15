@@ -56,6 +56,7 @@ void lerNave(FILE *arq, Nave *n)
 	fscanf(arq, "%s %lf %lf %lf %lf %lf", n->nome, &(n->mass), &(n->pos.x), &(n->pos.y), &(n->vel.x), &(n->vel.y));
 	n->HP = MAX_HP;
 	n->radius = RAIO_NAVES;
+	defineBoosterComo(&(n->boosterAtual), BoosterPadrao);
 }
 
 void lerProjetil(FILE *arq, Projetil *p, double tempoDeVida)
@@ -76,6 +77,8 @@ void leituraBoosters()
 
 	initLeitor(BOOSTERCFG_PATH);
 
+	//A ideia é que cada iteração do while leia uma linha inteira
+	//Se isso não aconteceu é porque, provavelmente, algum erro aconteceu
 	while (proxLeitura() != NULL)
 	{
 		if (strigual("maxVel"))
@@ -94,6 +97,8 @@ void leituraBoosters()
 			leVerificaIgualAtribuiDouble(&maxTempoRestanteNave, "maxTempoRestanteNave");
 		else if (strigual("minTempoRestanteNave"))
 			leVerificaIgualAtribuiDouble(&minTempoRestanteNave, "minTempoRestanteNave");
+		else if (strigual("propBooster"))
+			leVerificaIgualAtribuiDouble(&propBooster, "propBooster");
 		else if (strigual("totalBoosters"))
 		{
 			leVerificaIgualAtribuiInt(&totalBoostersPreCriados, "totalBoosters");
@@ -118,7 +123,7 @@ void leituraBoosters()
 			if (leBooster(indiceProx++))
 				indiceProx--;
 		}
-		else 
+		else
 		{
 			char errorMsg[100];
 			strcpy(errorMsg, "Houve uma leitura errada no arquivo booster.cfg!\n");
@@ -140,7 +145,7 @@ Bool leBooster(int index)
 	double tempoProj, massProj;
 	Bool ehPadrao = FALSE;
 	dano = cadencia = vidaAdicional =
-		tempoProj = massProj = -1; //Inidica que o campo não foi definido
+		tempoProj = massProj = -1; //Inidica que os campos não foram definidos
 
 	//Deve ser chamada assim que um [ foi lido e termina sua operação ao ler um ]
 	//strcmp é TRUE se as strings são diferentes (não sei porque, mas é assim)
@@ -219,8 +224,6 @@ Bool leBooster(int index)
 						   "Parece que há alguma variável entre [ e ] que não está definida.\n"
 						   "Verifique se o arquivo booster.cfg está correto.",
 						   file_format_exception);
-
-		
 	}
 
 	//Após ler, vamos instanciar o booster e colocá-lo em seu lugar do array
