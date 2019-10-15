@@ -124,4 +124,7 @@ void desenhaFundo(WINDOW *win);
 //Esta atualiza showingWindow com o conteúdo de workbench, sobrescrevendo o que havia lá
 void workbenchFlush();
 
+//Desaloca toda a memória alocada. DEVE ser chamada antes do fim do programa
+void grafFree();
+
 #endif

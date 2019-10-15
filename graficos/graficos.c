@@ -23,7 +23,7 @@ PIC ReadPicSafe(WINDOW *win, char *fname, MASK m){
 	PIC pic;
 	
 	if( (pic = ReadPic(win, fname, m)) == NULL)
-		throwException("ReadPicSafe", strcat(fname, " não encontrado"), file_not_find_exception);
+		throwException("ReadPicSafe", strcat(fname, " não encontrado"), file_not_found_exception);
 	return pic;
 }
 
@@ -36,7 +36,7 @@ void picsInit(WINDOW *win){
 		spr_file = fopen(filename, "r");
 		
 		if(spr_file == NULL)
-			throwException("picsInit", strcat(filename, " não encontrado"), file_not_find_exception);
+			throwException("picsInit", strcat(filename, " não encontrado"), file_not_found_exception);
 		
 		fscanf(spr_file, "%d %d ", &sizex_aux, &sizey_aux);
 		
@@ -55,6 +55,8 @@ void picsInit(WINDOW *win){
 			pics[i].imgs[j] = ReadPicSafe(win, filename, NULL);
 		}
 	}
+	
+	fclose(spr_file);
 }
 
 void grafInit(){
@@ -98,4 +100,18 @@ void desenhaFundo(WINDOW *win){
 void workbenchFlush(){
 	PutPic(showingWindow, workbench, 0, 0, SIZE_X_WIN, SIZE_Y_WIN, 0, 0);
 	WFlush();
+}
+
+void grafFree(){
+	int i, j;
+
+	for(i=0 ; i<NUM_SPR ; i++){
+		for(j=0 ; j<pics[i].n_imgs ; j++){
+			FreePic(pics[i].imgs[j]);
+		}
+		freeSafe(pics[i].imgs);
+	}
+	
+	FreePic(showingWindow);
+	FreePic(workbench);
 }
