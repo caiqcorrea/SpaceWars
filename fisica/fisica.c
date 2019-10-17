@@ -376,7 +376,7 @@ Bool AtualizaJogo()
 	return ((tRestante > 0.0) && todasNavesVivas);
 }
 
-void freeAll()
+void freeFisica()
 {
 	int i;
 	for (i = 0; i < tot_obj[NAVE]; i++)
