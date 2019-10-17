@@ -50,9 +50,10 @@ static void boosterRandom(Booster *b)
 
 void removeBoosterDaTela(int index)
 {
+    int i;
     //Apenas removemos o booster do array. Assim ele para de ser exibido na tela
-    for (; index < tot_obj[BOOSTER] - 1; index++)
-        boosters[index] = boosters[index + 1];
+    for (i = index; i < tot_obj[BOOSTER] - 1; i++)
+        boosters[i] = boosters[i + 1];
     tot_obj[BOOSTER]--;
 }
 
@@ -74,7 +75,7 @@ void resetaBooster(Nave *nave)
 
 void viraBoosterPadrao(Booster *b)
 {
-    defineBoosterComo(b, BoosterPadrao);
+    defineBoosterComo(b, *BoosterPadrao());
 }
 
 void defineBoosterComo(Booster *b, Booster ref)
@@ -98,6 +99,8 @@ void defineBoosterComo(Booster *b, Booster ref)
     b->vel = ref.vel;
     b->tempoRestanteNave = ref.tempoRestanteNave;
     b->tempoRestanteTela = ref.tempoRestanteTela;
+    b->spr.angle = ref.spr.angle;
+	b->spr.img = ref.spr.img;
 }
 
 Bool boosterVaiSpawnar()
@@ -145,4 +148,9 @@ void AtualizaBoosters()
     AtualizaBoostersEmTela();
     if(boosterVaiSpawnar())
         criaNovoBooster();
+}
+
+Booster *BoosterPadrao()
+{
+    return &(boostersPreCriados[0]);
 }

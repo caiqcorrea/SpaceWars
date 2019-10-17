@@ -48,6 +48,8 @@ void lerTerra(FILE *arq)
 {
 	TERRA.pos = NULL_VET;
 	fscanf(arq, "%lf %lf %lf", &(TERRA.radius), &(TERRA.mass), &tRestante);
+	TERRA.spr.angle = 0;
+	TERRA.spr.img = IMG_PLANETA1;
 }
 
 void lerNave(FILE *arq, Nave *n)
@@ -56,7 +58,9 @@ void lerNave(FILE *arq, Nave *n)
 	fscanf(arq, "%s %lf %lf %lf %lf %lf", n->nome, &(n->mass), &(n->pos.x), &(n->pos.y), &(n->vel.x), &(n->vel.y));
 	n->HP = MAX_HP;
 	n->radius = RAIO_NAVES;
-	defineBoosterComo(&(n->boosterAtual), BoosterPadrao);
+	defineBoosterComo(&(n->boosterAtual), *BoosterPadrao());
+	n->spr.angle = 0;
+	n->spr.img = IMG_NAVE1;
 }
 
 void lerProjetil(FILE *arq, Projetil *p, double tempoDeVida)
@@ -65,6 +69,8 @@ void lerProjetil(FILE *arq, Projetil *p, double tempoDeVida)
 	p->tempoRestante = tempoDeVida;
 	p->radius = RAIO_PROJS;
 	p->dano = 1;
+	p->spr.angle = 0;
+	p->spr.img = IMG_PROJ_PADRAO;
 }
 
 /* FUNÇÕES PARA BOOSTERS */
@@ -105,7 +111,7 @@ void leituraBoosters()
 			boostersPreCriados = malloc(sizeof(Booster) * totalBoostersPreCriados);
 
 			//Fazemos isto para indicar que ainda não há um booster padrão
-			BoosterPadrao.nome = "NULL";
+			BoosterPadrao()->nome = "NULL";
 		}
 		else if (strigual("["))
 		{
@@ -163,8 +169,8 @@ Bool leBooster(int index)
 		{
 			proxLeitura();
 			//Se ao invés de igual é - e o booster padrão já foi setado
-			if (strigual("-") && strcmp("NULL", BoosterPadrao.nome) != 0)
-				vidaAdicional = BoosterPadrao.vidaAdicional;
+			if (strigual("-") && strcmp("NULL", BoosterPadrao()->nome) != 0)
+				vidaAdicional = BoosterPadrao()->vidaAdicional;
 			else
 			{
 				verificaIgualApos("vidaAdicional");
@@ -175,8 +181,8 @@ Bool leBooster(int index)
 		{
 			proxLeitura();
 			//Se ao invés de igual é - e o booster padrão já foi setado
-			if (strigual("-") && strcmp("NULL", BoosterPadrao.nome) != 0)
-				cadencia = BoosterPadrao.cadencia;
+			if (strigual("-") && strcmp("NULL", BoosterPadrao()->nome) != 0)
+				cadencia = BoosterPadrao()->cadencia;
 			else
 			{
 				verificaIgualApos("cadencia");
@@ -187,8 +193,8 @@ Bool leBooster(int index)
 		{
 			proxLeitura();
 			//Se ao invés de igual é - e o booster padrão já foi setado
-			if (strigual("-") && strcmp("NULL", BoosterPadrao.nome) != 0)
-				dano = BoosterPadrao.proj.dano;
+			if (strigual("-") && strcmp("NULL", BoosterPadrao()->nome) != 0)
+				dano = BoosterPadrao()->proj.dano;
 			else
 			{
 				verificaIgualApos("dano");
@@ -199,8 +205,8 @@ Bool leBooster(int index)
 		{
 			proxLeitura();
 			//Se ao invés de igual é - e o booster padrão já foi setado
-			if (strigual("-") && strcmp("NULL", BoosterPadrao.nome) != 0)
-				tempoProj = BoosterPadrao.proj.tempoRestante;
+			if (strigual("-") && strcmp("NULL", BoosterPadrao()->nome) != 0)
+				tempoProj = BoosterPadrao()->proj.tempoRestante;
 			else
 			{
 				verificaIgualApos("tempoProj");
@@ -211,8 +217,8 @@ Bool leBooster(int index)
 		{
 			proxLeitura();
 			//Se ao invés de igual é - e o booster padrão já foi setado
-			if (strigual("-") && strcmp("NULL", BoosterPadrao.nome) != 0)
-				massProj = BoosterPadrao.proj.mass;
+			if (strigual("-") && strcmp("NULL", BoosterPadrao()->nome) != 0)
+				massProj = BoosterPadrao()->proj.mass;
 			else
 			{
 				verificaIgualApos("massProj");
@@ -259,9 +265,11 @@ Bool leBooster(int index)
 	novo.vel.y = geraRandomicoEntre(minVel.y, minVel.y);
 	novo.tempoRestanteNave = geraRandomicoEntre(minTempoRestanteNave, maxTempoRestanteNave);
 	novo.tempoRestanteTela = geraRandomicoEntre(minTempoRestanteTela, maxTempoRestanteTela);
+	novo.spr.angle = 0;
+	novo.spr.img = IMG_BOOSTER_CARLINHOS;
 
 	if (ehPadrao)
-		defineBoosterComo(&(BoosterPadrao), novo);
+		defineBoosterComo(BoosterPadrao(), novo);
 	else
 		defineBoosterComo(&(boostersPreCriados[index]), novo);
 

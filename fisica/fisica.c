@@ -218,7 +218,7 @@ Bool VerificaSeProjMorreu(Projetil p)
 void RemoveProj(int index)
 {
 	int i;
-	for (i = index; i < tot_obj[PROJETIL]; i++)
+	for (i = index; i < tot_obj[PROJETIL] - 1; i++)
 		projs[i] = projs[i + 1];
 	tot_obj[PROJETIL]--;
 }
@@ -371,6 +371,8 @@ Bool AtualizaJogo()
 	todasNavesVivas = TodasEstaoVivas();
 
 	tRestante -= dt; //Decrementamos o tempo restante de simulação
+
+	//printf("tRestante = %lf todasNavesVivas = %d", tRestante, todasNavesVivas);
 
 	//E a simulação continua enquanto o tempo for positivo e não há naves mortas
 	return ((tRestante > 0.0) && todasNavesVivas);

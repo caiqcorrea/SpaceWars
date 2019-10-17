@@ -21,7 +21,20 @@ static WINDOW *workbench;
 //ao mudar de quadro, damos um workbenchFlush() para atualizar a showingWindow.
 static WINDOW *showingWindow;
 
-struct Pics pics[NUM_SPR];
+//Estrutura que contém um array de PICs, junto com o número de elementos do array
+//e o tamanho dos PICs
+
+//Array que contém todas as imagens do jogo
+//Cada índice possui um struct Pics, que é uma struct com uma imagem e todas suas rotações.
+//Além disso, essa estrutura possui, para auxílio, o número de rotações e
+//o comprimento e altura da imagem
+
+static struct
+{
+	PIC *imgs;		   //Array de imagens
+	int n_imgs;		   //Número de imagens
+	int height, width; //Tamanho em pixels
+} pics[NUM_SPR];
 
 void winsInit()
 {
@@ -44,7 +57,7 @@ void picsInit(WINDOW *win)
 	FILE *spr_file;
 	for (i = 0; i < NUM_SPR; i++)
 	{
-		snprintf(filename, sizeof(filename), "pics/%d/size", i);
+		snprintf(filename, sizeof(filename), "./graficos/pics/%d/size", i);
 		spr_file = fopen(filename, "r");
 
 		if (spr_file == NULL)
@@ -64,7 +77,7 @@ void picsInit(WINDOW *win)
 
 		for (j = 0; j < n_imgs; j++)
 		{
-			snprintf(filename, sizeof(filename), "pics/%d/%d.xpm", i, j);
+			snprintf(filename, sizeof(filename), "./graficos/pics/%d/%d.xpm", i, j);
 			pics[i].imgs[j] = ReadPicSafe(win, filename, NULL);
 		}
 	}
@@ -86,6 +99,20 @@ PIC getImg(Sprite spr)
 	return pics[spr.img].imgs[((int)round((pics[spr.img].n_imgs * spr.angle) / (2 * M_PI))) % pics[spr.img].n_imgs];
 }
 
+Sprite getSpriteFromPic(NOME_SPR nome, int i)
+{
+	Sprite spr;
+
+	if (i > pics[nome].n_imgs)
+		throwException("getImgFromPics",
+					   "O número passado é maior que o número de rotações",
+					   index_out_of_range_exception);
+
+	spr.img = nome;
+	spr.angle = (double)i * (2 * M_PI) / pics[nome].n_imgs;
+	return spr;
+}
+
 void rotateSprite(Sprite *spr, double ang)
 {
 	spr->angle += ang;
@@ -100,10 +127,17 @@ void setSpriteAng(Sprite *spr, double ang)
 		spr->angle -= 2 * M_PI;
 }
 
-void desenhaSpriteEm(WINDOW *win, Sprite spr, vet2D pos)
+void desenhaSpriteEm(WINDOW *win, Sprite spr, vet2D p)
 {
+	if (spr.img > NUM_SPR)
+		throwException("desenhaSpriteEm", "mensagem", index_out_of_range_exception);
 	PutPic(win, getImg(spr), 0, 0, pics[spr.img].width, pics[spr.img].height,
-		   ((int)pos.x) - (pics[spr.img].width / 2), ((int)pos.y) - (pics[spr.img].height / 2));
+		   ((int)round(p.x)) - (pics[spr.img].width / 2), ((int)round(p.y)) - (pics[spr.img].height / 2));
+}
+
+void desenhaSprite(Sprite spr, vet2D p)
+{
+	desenhaSpriteEm(workbench, spr, p);
 }
 
 void desenhaFundo_Index(WINDOW *win, int index)
@@ -116,7 +150,8 @@ void desenhaFundo_Index(WINDOW *win, int index)
 
 void desenhaFundo(WINDOW *win)
 {
-	desenhaFundo_Index(win, 0);
+	//desenhaFundo_Index(workbench, 0);
+	WFillRect(workbench, 0, 0, SIZE_X_WIN, SIZE_Y_WIN, WNamedColor("white"));
 }
 
 void workbenchFlush()

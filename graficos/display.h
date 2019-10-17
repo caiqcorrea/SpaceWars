@@ -5,13 +5,8 @@
 #ifndef _DISPLAY_H
 #define _DISPLAY_H
 
-#include "graficos.h"
+#include "../base/vetores.h"
 #include "../fisica/fisica.h"
-
-extern Sprite SprNaves[MAX_NAVES];
-extern Sprite SprPlanetas[MAX_PLANETAS];
-extern Sprite SprProjs[MAX_PROJ];
-extern Sprite SprBooster[];
 
 //Função que, dada uma posição utilizada pela biblioteca física, converte para
 //uma posição para ser utilizada pela biblioteca gráfica.

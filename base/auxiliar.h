@@ -5,7 +5,7 @@
 #ifndef _AUXILIAR_H
 #define _AUXILIAR_H
 
-#define SIZE_RATIO 9 / 16
+#define SIZE_RATIO 9.0/16
 
 #define MIN(x, y) (x<y?x:y)
 #define MAX(x, y) (x>y?x:y)
