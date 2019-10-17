@@ -5,8 +5,8 @@
 
 #include "fisica/IO.h"
 #include "fisica/fisica.h"
-
-#include "fisica/gerenciadorBooster.h" //temp
+#include "graficos/graficos.h"
+#include "fisica/gerenciadorBooster.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,6 +49,9 @@ void imprimeBoosterPreCriados();
 
 //Imprime todos os tipos de objetos
 void imprimeTudo();
+
+//Método chamado ao fim do programa para desalocar tudo de todas as bibliotecas
+void freeAll();
 
 int main(int argc, char *argv[])
 {
@@ -195,4 +198,9 @@ void imprimeTudo()
     imprimeBoosters();
 }
 
+void freeAll()
+{
+	freeFisica();
+	grafFree();
+}
 #endif

@@ -22,18 +22,7 @@
 
 /* ---- ESTRUTURAS E VARIÁVEIS GLOBAIS ---- */
 
-//Esta janela deve ser utilizada para servir receber todas as atualizações
-//de tela antes de passarmos para a tela principal que está sendo exibida para o usuário.
-//Após colocarmos tudo o que deve ser exibido em um quadro, damos um workbenchFlush()
-//para jogar essa janela na janela principal.
-extern WINDOW *workbench;
-
-//Esta é a janela que é exibida ao usuário durante todo o jogo.
-//IMPORTANTE: não atualize esta janela diretamente.
-//Todas as modificações feitas entre um frame e outro devem ser feitas no workbench e,
-//ao mudar de quadro, damos um workbenchFlush() para atualizar a showingWindow.
-extern WINDOW *showingWindow;
-
+//O enum com o nome de todas as imagens na pasta /pics
 typedef enum 
 {
 	IMG_NAVE1,
@@ -65,8 +54,10 @@ struct Pics
 	int height, width; //Tamanho em pixels
 };
 
-//Matriz com todas as imagens usadas ao longo do programa.
-//Cada linha possui uma imagem e, por padrão, suas 11 rotações
+//Array que contém todas as imagens do jogo
+//Cada índice possui um struct Pics, que é uma struct com uma imagem e todas suas rotações.
+//Além disso, essa estrutura possui, para auxílio, o número de rotações e
+//o comprimento e altura da imagem
 extern struct Pics pics[NUM_SPR];
 
 typedef struct
@@ -105,23 +96,22 @@ PIC getImg(Sprite spr);
 //Dada uma sprite e um ângulo ang, incrementa o ângulo da imagem em ang
 void rotateSprite(Sprite *spr, double ang);
 
-//Dada uma sprite e um ângulo ang, seta o angulo da imagem para ang
-void setAngSprite(Sprite *spr, double ang);
+//Dada uma sprite e um ângulo ang, define o ângulo da imagem para ang
+void setSpriteAng(Sprite *spr, double ang);
 
 //Dado uma sprite, uma posição e uma janela, a função deseja a imagem atual
 //da sprite na posição (em pixels) da janela.
-void desenhaSpriteEm(WINDOW *win, Sprite spr, vet2D pos);
+void desenhaSpriteEm(WINDOW *win, Sprite spr, vet2D p);
 
-//Desenha o fundo index na tela *win
-//Podem haver vários fundos. Caso index seja maior que o
-//número de funda, acontece um erro
+//Desenha o fundo index na tela *win. Podem haver mais de um fundo.
+//Caso index seja maior que o número de fundos, acontece um erro.
 void desenhaFundo_Index(WINDOW *win, int index);
 
 //Desenha o fundo 0 na tela *win
 //Note que ao desenhar o fundo, todos os conteúdos da janela são sobrescritos
 void desenhaFundo(WINDOW *win);
 
-//Esta atualiza showingWindow com o conteúdo de workbench, sobrescrevendo o que havia lá
+//Esta função atualiza showingWindow com o conteúdo de workbench, sobrescrevendo o que havia lá
 void workbenchFlush();
 
 //Desaloca toda a memória alocada. DEVE ser chamada antes do fim do programa

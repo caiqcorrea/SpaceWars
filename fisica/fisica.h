@@ -135,7 +135,7 @@ typedef struct
 #define vel o.v	// Macro para a velocidade de um objeto
 #define mass o.m   // Macro para a massa de um objeto
 #define pos o.p	// Macro para a posição de um objeto
-#define radius o.r //Macro para o raio de um objeto
+#define radius o.r // Macro para o raio de um objeto
 
 /* Um enum com os tipos de objetos possíveis.
  * Serve para fazermos referência a qual dos três arrays estamos falando.
@@ -278,7 +278,7 @@ Bool TodasEstaoVivas();
 //(Pode ser que mudemos o retorno no futuro)
 Bool AtualizaJogo();
 
-//Esta função dá free em todas as alocações de memória relacionadas aos três arrays da biblioteca física
-void freeAll();
+//Esta função dá free em todas as alocações de memória relacionadas aos quatro arrays da biblioteca física
+void freeFisica();
 
 #endif

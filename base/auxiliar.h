@@ -64,7 +64,11 @@ typedef enum
 
 /* F U N Ç Õ E S */
 
+//Malloca e verifica se a função malloc não devolveu NULL
+//Se devolveu, retornamos uma exception
 void *mallocSafe(int size);
+
+//Dá free e atribui NULL ao ponteiro
 void freeSafe(void *pnt);
 
 //Função que envia uma exception ao strerr com o nome da função que retornou erro e uma mensagem ao usuário

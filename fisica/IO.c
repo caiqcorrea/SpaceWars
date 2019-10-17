@@ -11,7 +11,7 @@
 #include "../fisica/fisica.h"
 #include "../base/vetores.h"
 #include "../base/auxiliar.h"
-#include "leitor.h"
+#include "../base/leitor.h"
 #include "gerenciadorBooster.h"
 
 #include <stdio.h>
