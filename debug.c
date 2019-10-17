@@ -6,6 +6,7 @@
 #include "fisica/IO.h"
 #include "fisica/fisica.h"
 #include "graficos/graficos.h"
+#include "graficos/display.h"
 #include "fisica/gerenciadorBooster.h"
 
 #include <stdio.h>
@@ -74,19 +75,22 @@ void testeFisicaBasica()
     //Variáveis para o teste de colisão com boosters
     Bool umaVez = FALSE;
     Bool outraVez = FALSE;
+    PIC x;
 
     lerArquivo(&arq);    //Abrimos o arquivo
     lerInputs(arq);      //Lemos os inputs (a função fecha o arquivo para nós)
     imprimeTudo();       //e jogamos tudo o que foi lido na tela
     setbuf(stdin, NULL); //(apenas para evitar possíveis erros)
 
+    grafInit();
+
     //Enquanto a simulação não terminar...
     while (AtualizaJogo() == TRUE)
     {
-        printf("Tempo: %.3lf\n", tempo);
-        tempo += dt;
+        //printf("Tempo: %.3lf\n", tempo);
+        //tempo += dt;
 
-        if (tempo > 1 && tot_obj[BOOSTER] > 0 && !umaVez)
+        /*if (tempo > 1 && tot_obj[BOOSTER] > 0 && !umaVez)
         {
             boosters[0].pos.x = naves[0].pos.x + 1000;
             boosters[0].pos.y = naves[0].pos.y;
@@ -99,16 +103,21 @@ void testeFisicaBasica()
         {
             umaVez = FALSE;
             outraVez = TRUE;
-        }
+        }*/
 
         //Imprimimos as naves, os projéteis e os boosters
-        imprimeNaves();
-        imprimeProjeteis();
-        imprimeBoosters();
+        //imprimeNaves();
+        //imprimeProjeteis();
+        //imprimeBoosters();
         //Imprimir o planeta toda hora é desnecessário, mas caso queira, apenas tire o //
         //imprimePlanetas();
-        printf("\n\n");
-        pause(); //E pausamos até o usuário digitar ENTER
+        //printf("\n\n");
+	
+        desenhaFundo(x);
+        desenhaTodos();
+        workbenchFlush();
+        //E pausamos até o usuário digitar ENTER
+        //pause();
     }
 }
 

@@ -30,12 +30,13 @@
 
 #include "../base/vetores.h"
 #include "../base/auxiliar.h"
+#include "../graficos/graficos.h"
 
 /*--------------- M A C R O S ---------------*/
 
 #define G 6.67e-11 //Constante gravitacional
 
-#define SIZE_X_FIS 1e10						 //Tamanho da horizontal da tela
+#define SIZE_X_FIS 1e5						 //Tamanho da horizontal da tela
 #define SIZE_Y_FIS (SIZE_X_FIS * SIZE_RATIO) //Tamanho da vertical da tela
 
 #define MAX_PROJ 100	//Número máximo de projéteis
@@ -48,7 +49,6 @@
 #define RAIO_BOOSTER 100
 #define MAX_HP 10 //Número máximo de pontos de vida (as naves começam com este valor) (por enquanto é uma constante)
 
-#define NUM_TIPO_OBJ 4 //Número de tipos de objeto
 #define MAX_OBJ                                         \
 	{                                                   \
 		MAX_NAVES, MAX_PLANETAS, MAX_PROJ, MAX_BOOSTERS \
@@ -68,6 +68,7 @@ typedef struct
 	double r; //raio
 	vet2D p;  //posição
 	vet2D v;  //velocidade
+	Sprite s; //sprite
 } Objeto;
 
 /* Struct Projetil possui um objeto e um tempoRestante na tela.
@@ -136,6 +137,7 @@ typedef struct
 #define mass o.m   // Macro para a massa de um objeto
 #define pos o.p	// Macro para a posição de um objeto
 #define radius o.r // Macro para o raio de um objeto
+#define spr o.s // Macro para o sprite de um objeto
 
 /* Um enum com os tipos de objetos possíveis.
  * Serve para fazermos referência a qual dos três arrays estamos falando.
@@ -147,7 +149,8 @@ typedef enum
 	NAVE,
 	PLANETA,
 	PROJETIL,
-	BOOSTER
+	BOOSTER,
+	NUM_TIPO_OBJ
 } TipoObj;
 
 /*--------------- V A R I Á V E I S   G L O B A I S ---------------*/

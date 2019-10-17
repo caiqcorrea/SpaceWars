@@ -29,8 +29,6 @@ extern Booster *boostersPreCriados;
 //Número de elementos do array acima
 extern int totalBoostersPreCriados;
 
-#define BoosterPadrao boostersPreCriados[0]
-
 //Na hora de criar aleatoriamente um booster para ir para a tela, ele terá algumas propriedades
 //aleatórias que vamos decidir com base nas variáveis que seguem:
 extern vet2D maxVel, minVel;
@@ -81,4 +79,6 @@ void AtualizaBoostersEmTela();
 //Faz todas as atualizações necessárias dos boosters de um tick de jogo
 void AtualizaBoosters();
 
+//Retorna o booster padrão
+Booster *BoosterPadrao();
 #endif

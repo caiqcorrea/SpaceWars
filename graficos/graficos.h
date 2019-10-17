@@ -14,7 +14,7 @@
 #include "xwc.h"
 
 #define SIZE_X_WIN 1280
-#define SIZE_Y_WIN (SIZE_X_WIN * SIZE_RATIO)
+#define SIZE_Y_WIN (int)(SIZE_X_WIN * SIZE_RATIO)
 
 #define NUM_ROTACOES 12
 
@@ -44,21 +44,6 @@ typedef enum
 	IMG_FUNDO,
 	NUM_SPR //SEMPRE POR ÚLTIMO, ESTE É APENAS O NÚMERO DE ELEMENTOS DO ENUM
 } NOME_SPR;
-
-//Estrutura que contém um array de PICs, junto com o número de elementos do array
-//e o tamanho dos PICs
-struct Pics
-{
-	PIC *imgs;		//Array de imagens
-	int n_imgs;	//Número de imagens
-	int height, width; //Tamanho em pixels
-};
-
-//Array que contém todas as imagens do jogo
-//Cada índice possui um struct Pics, que é uma struct com uma imagem e todas suas rotações.
-//Além disso, essa estrutura possui, para auxílio, o número de rotações e
-//o comprimento e altura da imagem
-extern struct Pics pics[NUM_SPR];
 
 typedef struct
 {
@@ -93,6 +78,10 @@ void grafInit();
 //Dada uma sprite, retorna a imamgem atual da sprite de acordo com o ângulo atual dela
 PIC getImg(Sprite spr);
 
+Sprite getSpriteFromPic(NOME_SPR spr, int i);
+
+void desenhaImgPic(NOME_SPR spr, int i, vet2D pos);
+
 //Dada uma sprite e um ângulo ang, incrementa o ângulo da imagem em ang
 void rotateSprite(Sprite *spr, double ang);
 
@@ -102,6 +91,9 @@ void setSpriteAng(Sprite *spr, double ang);
 //Dado uma sprite, uma posição e uma janela, a função deseja a imagem atual
 //da sprite na posição (em pixels) da janela.
 void desenhaSpriteEm(WINDOW *win, Sprite spr, vet2D p);
+
+//Chama desenhaSpriteEm em workbench
+void desenhaSprite(Sprite spr, vet2D p);
 
 //Desenha o fundo index na tela *win. Podem haver mais de um fundo.
 //Caso index seja maior que o número de fundos, acontece um erro.
