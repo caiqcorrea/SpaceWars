@@ -5,7 +5,7 @@
 VPATH = ./base:./fisica:./graficos:./obj
 
 CC = gcc
-CFLAGS = -Wall -O3 -Wno-unused-result --pedantic -lm
+CFLAGS = -Wall -O3 -Wno-unused-result --pedantic -lm -lX11 -lXpm
 
 OBJ_PATH = ./obj
 
@@ -13,7 +13,7 @@ OBJ_PATH = ./obj
 
 default : debug move_o
 
-debug : debug.o IO.o auxiliar.o vetores.o fisica.o leitor.o gerenciadorBooster.o graficos.o
+debug : debug.o IO.o auxiliar.o vetores.o fisica.o leitor.o gerenciadorBooster.o graficos.o xwc.o
 	${CC} $^ ${CFLAGS} -o $@
 
 debug.o : debug.c IO.h
@@ -34,7 +34,10 @@ fisica.o : fisica.c fisica.h vetores.h auxiliar.h
 leitor.o : leitor.c leitor.h auxiliar.h
 	${CC} -c $< ${CFLAGS} -o $@
 
-graficos.o : graficos.c graficos.h
+graficos.o : graficos.c graficos.h vetores.h auxiliar.h xwc.h
+	${CC} -c $< ${CFLAGS} -o $@
+
+xwc.o : xwc.c xwc.h
 	${CC} -c $< ${CFLAGS} -o $@
 
 gerenciadorBooster.o : gerenciadorBooster.c gerenciadorBooster.h fisica.h auxiliar.h vetores.h
