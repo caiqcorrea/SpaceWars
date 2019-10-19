@@ -30,7 +30,7 @@
 #include "../base/vetores.h"
 #include "../base/auxiliar.h"
 #include "gerenciadorBooster.h"
-#include "../graficos/display.h"
+#include "../graficos/graficos.h"
 
 #include <math.h>
 #include <stddef.h>
@@ -183,7 +183,7 @@ void AtualizaObjeto(Objeto *o)
 {
 	IncVel(CalculaForcaSobre(*o), o);
 	IncPos(o);
-	giraObjeto(o);
+	giraObjetoVel(o);
 }
 
 void AtualizaObjetos()
@@ -196,6 +196,12 @@ void AtualizaObjetos()
 			for (i = 0; i < tot_obj[tipo]; i++)
 				AtualizaObjeto(GetObjeto(tipo, i));
 }
+
+void giraObjetoVel(Objeto *o)
+{
+	setSpriteAng(&(o->s), anguloY(o->v));
+}
+
 
 void ReduzTempoProj(Projetil *p)
 {

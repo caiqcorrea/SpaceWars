@@ -223,6 +223,9 @@ void AtualizaObjeto(Objeto *o);
 //Atualiza todos os objetos (Naves, Projéteis e Planetas)
 void AtualizaObjetos();
 
+//Rotaciona o sprite de um objeto baseado em sua velocidade
+void giraObjetoVel(Objeto *o);
+
 /* FUNÇÕES QUE ITERAM SOBRE OS PROJÉTEIS*/
 
 //Dado um projétil, reduz seu tempo de vida de acordo com dt

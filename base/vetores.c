@@ -63,12 +63,12 @@ void normaliza(vet2D *v)
 
 double anguloX(vet2D v)
 {
-	return acos((escalar(v, i_vet()) / (norma(v))));
+	return asin(vetorial(v, I_VET) / norma(v));
 }
 
 double anguloY(vet2D v)
 {
-	return acos((escalar(v, j_vet()) / (norma(v))));
+	return asin(vetorial(v, J_VET) / norma(v));
 }
 
 vet2D null_vet()
