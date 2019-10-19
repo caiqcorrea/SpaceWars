@@ -33,8 +33,3 @@ void desenhaFrameExplosao(int frame, vet2D p)
 {
     desenhaSprite(getSpriteFromPic(IMG_EXPLOSAO, frame), p);
 }
-
-void giraObjeto(Objeto *o)
-{
-    setSpriteAng(&(o->s), anguloX(o->v));
-}

@@ -41,7 +41,4 @@ void desenhaExplosao(vet2D p);
 //Desenha um booster na posição p
 void desenhaBooster(vet2D p);
 
-//Rotaciona um objeto de acordo com sua velocidade
-void giraObjeto(Objeto *o);
-
 #endif
