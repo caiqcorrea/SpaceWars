@@ -199,7 +199,7 @@ void AtualizaObjetos()
 
 void giraObjetoVel(Objeto *o)
 {
-	setSpriteAng(&(o->s), anguloY(o->v));
+	setSpriteAng(&(o->s), anguloX(o->v));
 }
 
 

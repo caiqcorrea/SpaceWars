@@ -25,7 +25,7 @@ void desenhaTodosDoTipo(TipoObj tipo){
 void desenhaTodos()
 {
     int i;
-    for(i=0 ; i<NUM_TIPO_OBJ ; i++)
+    for(i=0 ; i<NUM_TIPO_OBJ ; i++)        
         desenhaTodosDoTipo(i);
 }
 
