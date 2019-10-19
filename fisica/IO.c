@@ -68,7 +68,7 @@ void lerProjetil(FILE *arq, Projetil *p, double tempoDeVida)
 	fscanf(arq, "%lf %lf %lf %lf %lf", &(p->mass), &(p->pos.x), &(p->pos.y), &(p->vel.x), &(p->vel.y));
 	p->tempoRestante = tempoDeVida;
 	p->radius = RAIO_PROJS;
-	p->dano = 1;
+	p->dano = 100;
 	p->spr.angle = 0;
 	p->spr.img = IMG_PROJ_PADRAO;
 }
