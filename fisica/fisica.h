@@ -44,9 +44,9 @@
 #define MAX_PLANETAS 1  //Número de planetas
 #define MAX_BOOSTERS 10 //Número máximo de boosters
 
-#define RAIO_PROJS 100
-#define RAIO_NAVES 100
-#define RAIO_BOOSTER 100
+#define RAIO_PROJS 1000
+#define RAIO_NAVES 1000
+#define RAIO_BOOSTER 1000
 #define MAX_HP 10 //Número máximo de pontos de vida (as naves começam com este valor) (por enquanto é uma constante)
 
 #define MAX_OBJ                                         \

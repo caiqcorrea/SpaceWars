@@ -38,7 +38,7 @@ static struct
 
 void winsInit()
 {
-	showingWindow = InitGraph(SIZE_X_WIN, SIZE_Y_WIN, "showingWIndow");
+	showingWindow = InitGraph(SIZE_X_WIN, SIZE_Y_WIN, "showingWindow");
 	workbench = NewPic(showingWindow, SIZE_X_WIN, SIZE_Y_WIN);
 }
 

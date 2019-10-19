@@ -56,6 +56,12 @@ double vetorial(vet2D v, vet2D w);
 //Metodo que normaliza o vetor v
 void normaliza(vet2D *v); 
 
+//Método que retorna o ângulo que o vetor v faz com o eixo x
+double anguloX(vet2D v);
+
+//Método que retorna o ângulo que o vetor v faz com o eixo y
+double anguloY(vet2D v);
+
 //Cria e retorna um vetor nulo
 vet2D null_vet(); 
 
