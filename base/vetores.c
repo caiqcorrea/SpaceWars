@@ -61,6 +61,16 @@ void normaliza(vet2D *v)
 	*v = versor(*v);
 }
 
+double anguloX(vet2D v)
+{
+	return acos((escalar(v, i_vet()) / (norma(v))));
+}
+
+double anguloY(vet2D v)
+{
+	return acos((escalar(v, j_vet()) / (norma(v))));
+}
+
 vet2D null_vet()
 {
 	vet2D nulo = {0, 0};

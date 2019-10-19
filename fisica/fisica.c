@@ -30,6 +30,7 @@
 #include "../base/vetores.h"
 #include "../base/auxiliar.h"
 #include "gerenciadorBooster.h"
+#include "../graficos/display.h"
 
 #include <math.h>
 #include <stddef.h>
@@ -182,6 +183,7 @@ void AtualizaObjeto(Objeto *o)
 {
 	IncVel(CalculaForcaSobre(*o), o);
 	IncPos(o);
+	giraObjeto(o);
 }
 
 void AtualizaObjetos()
