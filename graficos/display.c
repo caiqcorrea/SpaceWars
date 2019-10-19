@@ -25,16 +25,11 @@ void desenhaTodosDoTipo(TipoObj tipo){
 void desenhaTodos()
 {
     int i;
-    for(i=0 ; i<NUM_TIPO_OBJ ; i++)
+    for(i=0 ; i<NUM_TIPO_OBJ ; i++)        
         desenhaTodosDoTipo(i);
 }
 
 void desenhaFrameExplosao(int frame, vet2D p)
 {
     desenhaSprite(getSpriteFromPic(IMG_EXPLOSAO, frame), p);
-}
-
-void giraObjeto(Objeto *o)
-{
-    setSpriteAng(&(o->s), anguloX(o->v));
 }

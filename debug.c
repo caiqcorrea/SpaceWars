@@ -112,7 +112,8 @@ void testeFisicaBasica()
         //Imprimir o planeta toda hora é desnecessário, mas caso queira, apenas tire o //
         //imprimePlanetas();
         //printf("\n\n");
-	
+
+
         desenhaFundo(x);
         desenhaTodos();
         workbenchFlush();
