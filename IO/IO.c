@@ -9,10 +9,10 @@
 #include "IO.h"
 
 #include "../fisica/fisica.h"
+#include "../fisica/gerenciadorBooster.h"
 #include "../base/vetores.h"
 #include "../base/auxiliar.h"
 #include "../base/leitor.h"
-#include "gerenciadorBooster.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,7 +33,6 @@ void lerInputs(FILE *arq)
 	int i;
 	double tempoDeVida;
 
-	dt = 0.3;				   //Inicializamos o dt como 0.001 (este valor pode ser alterado)
 	lerTerra(arq);			   //Lê a primeira linha e atribui valores ao planeta
 	lerNave(arq, &(naves[0])); //Lê a segunda linha e atribui valores à primeira nave
 	lerNave(arq, &(naves[1])); //Lê a segunda linha e atribui valores à segunda nave
@@ -298,7 +297,7 @@ static void leVerificaIgualAtribuiInt(int *i, string nomeVar)
 {
 	proxLeitura();
 	verificaIgualApos(nomeVar);
-	*i = atof(proxLeitura());
+	*i = atoi(proxLeitura());
 }
 
 static void leVerificaIgualAtribuiVet2D(vet2D *v, string nomeVar)

@@ -3,7 +3,7 @@
 #ifndef _DEBUG
 #define _DEBUG
 
-#include "fisica/IO.h"
+#include "IO/IO.h"
 #include "fisica/fisica.h"
 #include "graficos/graficos.h"
 #include "graficos/display.h"
@@ -57,7 +57,10 @@ void freeAll();
 int main(int argc, char *argv[])
 {
     tot_obj[BOOSTER] = 0;
+	dt = 0.3;				   //Este valor pode ser alterado
     srand(time(NULL));
+    //Mais para frente, será feita uma função de inicialização
+    //para que se configure as principais variáveis no início do código
 
     leituraBoosters();
     testeFisicaBasica();

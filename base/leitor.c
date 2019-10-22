@@ -45,6 +45,5 @@ string getLeitura()
 
 Bool strigual(string s1)
 {
-    //Este método é feito especialmente para desfazer essa coisa estranha da string.h
     return !(strcmp(s1, leituraAtual));
 }
