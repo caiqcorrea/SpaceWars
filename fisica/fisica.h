@@ -49,6 +49,8 @@
 #define RAIO_BOOSTER 1000
 #define MAX_HP 10 //Número máximo de pontos de vida (as naves começam com este valor) (por enquanto é uma constante)
 
+#define TAM_MAX_NOMES 100
+
 #define MAX_OBJ                                         \
 	{                                                   \
 		MAX_NAVES, MAX_PLANETAS, MAX_PROJ, MAX_BOOSTERS \
@@ -169,7 +171,7 @@ extern Booster boosters[MAX_BOOSTERS]; //O array que contém os booster que est�
 
 #define TERRA planetas[0] //Como só há um planeta, vamos chamá-lo de TERRA
 
-//Intervalo de tempo da simulacao, lido no arquivo principal. Por padrão, é 0.001
+//Intervalo de tempo da simulacao, lido no arquivo principal.
 extern double dt;
 
 //Tempo restante de simulação;
@@ -177,8 +179,16 @@ extern double tRestante;
 
 /*--------------- F U N Ç Õ E S ---------------*/
 
-//Função que inicializa a biblioteca
-void inicializaFisica();
+/* FUNÇÕES QUE RETORNAM OS OBJETOS PADRÃO */
+
+//Função que retorna uma nave padrão
+void getNavePadrao(Nave *n);
+
+//Função que retorna um planeta padrão
+void getPlanetaPadrao(Planeta *n);
+
+//Função que retorna um projétil padrão
+void getProjetilPadrao(Projetil *p);
 
 /* FUNÇÕES QUE UTILIZAM APENAS OBJETOS */
 
@@ -197,7 +207,8 @@ double DistanciaEntre(Objeto o1, Objeto o2);
 
 /* FUNÇÕES DE INTERFACE ENTRE NAVES, PLANETAS E PROJETEIS E SEUS OBJETOS */
 
-//Dados um tipo de objeto e um índice do vetor onde esse objeto se encontra a função retorna um apontador para este.
+//Dados um tipo de objeto e um índice do vetor onde esse objeto se encontra 
+//a função retorna um apontador para este.
 //A função verifica se o índice está dentro dos limites
 Objeto *GetObjeto(TipoObj tipo, int indice);
 
@@ -206,7 +217,8 @@ Objeto *GetObjeto(TipoObj tipo, int indice);
 //A função verifica se o índice está dentro dos limites
 void SetObjeto(TipoObj tipo, int indice, Objeto o);
 
-//Função booleana que diz se um objeto o1 e um o2 são o mesmo (i.e., se estão alocados na mesma memória)
+//Função booleana que diz se um objeto o1 e um o2 são o mesmo 
+//(i.e., se estão alocados na mesma memória)
 Bool ObjetoDuplicado(Objeto o1, Objeto o2);
 
 //Função booleana que diz se dois objetos possuem as mesmas caracteristicas
@@ -284,7 +296,8 @@ Bool TodasEstaoVivas();
 //(Pode ser que mudemos o retorno no futuro)
 Bool AtualizaJogo();
 
-//Esta função dá free em todas as alocações de memória relacionadas aos quatro arrays da biblioteca física
+//Esta função dá free em todas as alocações de memória relacionadas aos
+//quatro arrays da biblioteca física
 void freeFisica();
 
 #endif
