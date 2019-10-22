@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     //Mais para frente, será feita uma função de inicialização
     //para que se configure as principais variáveis no início do código
 
-    leituraBoosters();
+    lerBoosters();
     testeFisicaBasica();
 
     printf("Fim\n");
