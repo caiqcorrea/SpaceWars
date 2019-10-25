@@ -58,7 +58,6 @@ int main(int argc, char *argv[])
 {
     tot_obj[BOOSTER] = 0;
     tot_obj[PROJETIL] = 0;
-    dt = 0.3; //Este valor pode ser alterado
     tRestante = 1e7;
     srand(time(NULL));
     //Mais para frente, será feita uma função de inicialização
@@ -99,7 +98,6 @@ void testeFisicaBasica()
     //Enquanto a simulação não terminar...
     while (AtualizaJogo() == TRUE)
     {
-        printf("\nCILCO\n");
         //printf("Tempo: %.3lf\n", tempo);
         //tempo += dt;
 
@@ -119,19 +117,18 @@ void testeFisicaBasica()
         }*/
 
         //Imprimimos as naves, os projéteis e os boosters
-        imprimeNaves();
-        imprimeProjeteis();
-        imprimeBoosters();
+        //imprimeNaves();
+        //imprimeProjeteis();
+        //imprimeBoosters();
         //Imprimir o planeta toda hora é desnecessário, mas caso queira, apenas tire o //
-        imprimePlanetas();
-        printf("\n\n");
+        //imprimePlanetas();
+        //printf("\n\n");
 
         desenhaFundo(x);
         desenhaTodos();
         workbenchFlush();
         //E pausamos até o usuário digitar ENTER
-        if (tot_obj[BOOSTER])
-            pause();
+        //pause();
     }
 }
 
