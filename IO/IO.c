@@ -29,20 +29,6 @@ static void leVerificaIgualAtribuiString(string s, string nomeVar);
 /* I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S */
 
 /* FUNÇÕES DE INICIALIZAÇÃO DA PARTE FÍSICA */
-/*void lerInputs(FILE *arq)
-{
-	int i;
-	double tempoDeVida;
-
-	lerTerra(arq);			   //Lê a primeira linha e atribui valores ao planeta
-	lerNave(arq, &(naves[0])); //Lê a segunda linha e atribui valores à primeira nave
-	lerNave(arq, &(naves[1])); //Lê a segunda linha e atribui valores à segunda nave
-	fscanf(arq, "%d %lf", &tot_obj[PROJETIL], &tempoDeVida);
-	for (i = 0; i < tot_obj[PROJETIL]; i++)
-		lerProjetil(arq, &(projs[i]), tempoDeVida);
-	printf("O arquivo foi lido com sucesso.\n");
-	fclose(arq);
-}*/
 
 void lerInputs(string nome)
 {
@@ -58,13 +44,15 @@ void lerInputs(string nome)
 			leVerificaIgualAtribuiDouble(&dt, "dt");
 		else if (strigual("planeta"))
 		{
-			verificaIgualApos("nave");
+			proxLeitura();
+			verificaIgualApos("planeta");
 			lerPlaneta(indicePlaneta);
 			indicePlaneta++;
 		}
 		else if (strigual("nave"))
 		{
-			verificaIgualApos("planeta");
+			proxLeitura();
+			verificaIgualApos("nave");
 			lerNave(indiceNave);
 			indiceNave++;
 		}
@@ -140,7 +128,7 @@ void lerNave(int index)
 		else if (strigual("spr"))
 			leVerificaIgualAtribuiInt((int *)&(nova.spr.img), "spr");
 		else
-			throwException("lerPlaneta",
+			throwException("lerNave",
 						   "Parece que há alguma variável entre [ e ] que não está definida.\n"
 						   "Verifique se o arquivo de inputs está correto.",
 						   file_format_exception);
@@ -148,35 +136,6 @@ void lerNave(int index)
 
 	naves[index] = nova;
 }
-
-/*void lerTerra(FILE *arq)
-{
-	TERRA.pos = NULL_VET;
-	fscanf(arq, "%lf %lf %lf", &(TERRA.radius), &(TERRA.mass), &tRestante);
-	TERRA.spr.angle = 0;
-	TERRA.spr.img = IMG_PLANETA1;
-}
-
-void lerNave(FILE *arq, Nave *n)
-{
-	n->nome = mallocSafe(sizeof(string) * 50);
-	fscanf(arq, "%s %lf %lf %lf %lf %lf", n->nome, &(n->mass), &(n->pos.x), &(n->pos.y), &(n->vel.x), &(n->vel.y));
-	n->HP = MAX_HP;
-	n->radius = RAIO_NAVES;
-	defineBoosterComo(&(n->boosterAtual), *BoosterPadrao());
-	n->spr.angle = 0;
-	n->spr.img = IMG_NAVE1;
-}
-
-void lerProjetil(FILE *arq, Projetil *p, double tempoDeVida)
-{
-	fscanf(arq, "%lf %lf %lf %lf %lf", &(p->mass), &(p->pos.x), &(p->pos.y), &(p->vel.x), &(p->vel.y));
-	p->tempoRestante = tempoDeVida;
-	p->radius = RAIO_PROJS;
-	p->dano = 1;
-	p->spr.angle = 0;
-	p->spr.img = IMG_PROJ_PADRAO;
-}*/
 
 /* FUNÇÕES PARA BOOSTERS */
 
@@ -212,6 +171,7 @@ void lerBoosters()
 		else if (strigual("totalBoosters"))
 		{
 			leVerificaIgualAtribuiInt(&totalBoostersPreCriados, "totalBoosters");
+			totalBoostersPreCriados++; //Um a mais para o padrão (que vai na posição 0)
 			boostersPreCriados = malloc(sizeof(Booster) * totalBoostersPreCriados);
 
 			defineBoosterPadrao();
@@ -229,7 +189,6 @@ void lerBoosters()
 		}
 	}
 
-	printf("Antes de dar dispose no leitor\n");
 	disposeLeitor();
 }
 
@@ -237,15 +196,17 @@ void lerBooster(int index)
 {
 	Booster novo;
 	getBoosterPadrao(&novo);
-	printf("Nome do novo = '%s'\n", novo.nome);
 
 	//Deve ser chamada assim que um [ foi lido e termina sua operação ao ler um ]
 	//strcmp é TRUE se as strings são diferentes
 	while (strcmp(proxLeitura(), "]"))
 	{
-		printf("Atual = %s\n", getLeitura());
 		if (strigual("nome"))
+		{
 			leVerificaIgualAtribuiString(novo.nome, "nome");
+			printf("Nome do booster lido\n");
+			printf("novo.nome = '%s'\n", novo.nome);
+		}
 		else if (strigual("vidaAdicional"))
 			leVerificaIgualAtribuiInt(&(novo.vidaAdicional), "vidaAdicional");
 		else if (strigual("cadencia"))
@@ -256,6 +217,8 @@ void lerBooster(int index)
 			leVerificaIgualAtribuiDouble(&(novo.proj.tempoRestante), "tempoProj");
 		else if (strigual("massProj"))
 			leVerificaIgualAtribuiDouble(&(novo.proj.mass), "massProj");
+		else if (strigual("raio"))
+			leVerificaIgualAtribuiDouble(&(novo.radius), "raio");
 		else if (strigual("spr"))
 			leVerificaIgualAtribuiInt((int *)&(novo.spr.img), "spr");
 		else
@@ -264,6 +227,8 @@ void lerBooster(int index)
 						   "Verifique se o arquivo booster.cfg está correto.",
 						   file_format_exception);
 	}
+
+	imprimeBoosterPreCriados();
 	boostersPreCriados[index] = novo;
 }
 
@@ -275,7 +240,7 @@ static void verificaIgualApos(string nome)
 	strcat(msgErro, "!");
 
 	if (!strigual("="))
-		throwException("leituraBoosters", msgErro, file_format_exception);
+		throwException("verificaIgualApos", msgErro, file_format_exception);
 }
 
 static void leVerificaIgualAtribuiDouble(double *f, string nomeVar)
@@ -306,7 +271,7 @@ static void leVerificaIgualAtribuiString(string s, string nomeVar)
 {
 	proxLeitura(); //deve ser um '='
 	verificaIgualApos(nomeVar);
-	printf("s = %s\n", s);
+
+	//Assume que s é uma string já mallocada!
 	strcpy(s, proxLeitura());
-	printf("sdps = %s\n", s);
 }

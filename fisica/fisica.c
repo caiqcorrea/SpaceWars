@@ -395,6 +395,7 @@ Bool AtualizaJogo()
 {
 	int i;
 	Bool todasNavesVivas;
+
 	//Primeiro atualizamos a posição e velocidade de todos os objetos
 	AtualizaObjetos();
 	//Depois, devemos reduzir o tempo de todos os projéteis
@@ -406,13 +407,14 @@ Bool AtualizaJogo()
 
 	//Fazemos todas as atualizações relacionadas com boosters
 	AtualizaBoosters();
+	printf("Cheguei dps\n");
 
 	ChecaTodasColisoes();
 	todasNavesVivas = TodasEstaoVivas();
 
 	tRestante -= dt; //Decrementamos o tempo restante de simulação
 
-	//printf("tRestante = %lf todasNavesVivas = %d", tRestante, todasNavesVivas);
+	printf("tRestante = %lf todasNavesVivas = %d", tRestante, todasNavesVivas);
 
 	//E a simulação continua enquanto o tempo for positivo e não há naves mortas
 	return ((tRestante > 0.0) && todasNavesVivas);

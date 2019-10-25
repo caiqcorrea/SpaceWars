@@ -130,9 +130,13 @@ void setSpriteAng(Sprite *spr, double ang)
 void desenhaSpriteEm(WINDOW *win, Sprite spr, vet2D p)
 {
 	if (spr.img > NUM_SPR)
-		throwException("desenhaSpriteEm", "mensagem", index_out_of_range_exception);
+	{
+		printf("spr.img = %d NUM_SPR = %d\n", spr.img, NUM_SPR);
+		throwException("desenhaSpriteEm", "msg", index_out_of_range_exception);
+	}
 	PutPic(win, getImg(spr), 0, 0, pics[spr.img].width, pics[spr.img].height,
-		   ((int)round(p.x)) - (pics[spr.img].width / 2), ((int)round(p.y)) - (pics[spr.img].height / 2));
+		   ((int)round(p.x)) - (pics[spr.img].width / 2),
+		   ((int)round(p.y)) - (pics[spr.img].height / 2));
 }
 
 void desenhaSprite(Sprite spr, vet2D p)

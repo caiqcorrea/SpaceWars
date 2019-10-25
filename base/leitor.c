@@ -21,9 +21,8 @@ void initLeitor(string nome)
 
 void disposeLeitor()
 {
-    printf("No dispose\n");
-    fclose(arq);
-    printf("Consegui fechar\n");
+    //fclose(arq);
+    arq = NULL;
     freeSafe(leituraAtual);
 }
 
@@ -36,7 +35,9 @@ string proxLeitura()
 {
     int c;
     c = fscanf(arq, " %s", leituraAtual);
-    if(c == -1) return NULL;
+    if (c == -1)
+        return NULL;
+
     return getLeitura();
 }
 

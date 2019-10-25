@@ -139,7 +139,7 @@ typedef struct
 #define mass o.m   // Macro para a massa de um objeto
 #define pos o.p	// Macro para a posição de um objeto
 #define radius o.r // Macro para o raio de um objeto
-#define spr o.s // Macro para o sprite de um objeto
+#define spr o.s	// Macro para o sprite de um objeto
 
 /* Um enum com os tipos de objetos possíveis.
  * Serve para fazermos referência a qual dos três arrays estamos falando.
@@ -207,7 +207,7 @@ double DistanciaEntre(Objeto o1, Objeto o2);
 
 /* FUNÇÕES DE INTERFACE ENTRE NAVES, PLANETAS E PROJETEIS E SEUS OBJETOS */
 
-//Dados um tipo de objeto e um índice do vetor onde esse objeto se encontra 
+//Dados um tipo de objeto e um índice do vetor onde esse objeto se encontra
 //a função retorna um apontador para este.
 //A função verifica se o índice está dentro dos limites
 Objeto *GetObjeto(TipoObj tipo, int indice);
@@ -217,7 +217,7 @@ Objeto *GetObjeto(TipoObj tipo, int indice);
 //A função verifica se o índice está dentro dos limites
 void SetObjeto(TipoObj tipo, int indice, Objeto o);
 
-//Função booleana que diz se um objeto o1 e um o2 são o mesmo 
+//Função booleana que diz se um objeto o1 e um o2 são o mesmo
 //(i.e., se estão alocados na mesma memória)
 Bool ObjetoDuplicado(Objeto o1, Objeto o2);
 

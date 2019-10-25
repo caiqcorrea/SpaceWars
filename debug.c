@@ -57,14 +57,14 @@ void freeAll();
 int main(int argc, char *argv[])
 {
     tot_obj[BOOSTER] = 0;
+    tot_obj[PROJETIL] = 0;
     dt = 0.3; //Este valor pode ser alterado
+    tRestante = 1e7;
     srand(time(NULL));
     //Mais para frente, será feita uma função de inicialização
     //para que se configure as principais variáveis no início do código
 
     lerBoosters();
-
-    printf("Li todos os boosters\n");
 
     testeFisicaBasica();
 
@@ -91,7 +91,7 @@ void testeFisicaBasica()
     lerInputs(nomeArq); //Lemos os inputs (a função fecha o arquivo para nós)
     freeSafe(nomeArq);
 
-    imprimeTudo();       //e jogamos tudo o que foi lido na tela
+    //imprimeTudo();       //e jogamos tudo o que foi lido na tela
     setbuf(stdin, NULL); //(apenas para evitar possíveis erros)
 
     grafInit();
@@ -99,6 +99,7 @@ void testeFisicaBasica()
     //Enquanto a simulação não terminar...
     while (AtualizaJogo() == TRUE)
     {
+        printf("\nCILCO\n");
         //printf("Tempo: %.3lf\n", tempo);
         //tempo += dt;
 
@@ -118,18 +119,19 @@ void testeFisicaBasica()
         }*/
 
         //Imprimimos as naves, os projéteis e os boosters
-        //imprimeNaves();
-        //imprimeProjeteis();
-        //imprimeBoosters();
+        imprimeNaves();
+        imprimeProjeteis();
+        imprimeBoosters();
         //Imprimir o planeta toda hora é desnecessário, mas caso queira, apenas tire o //
-        //imprimePlanetas();
-        //printf("\n\n");
+        imprimePlanetas();
+        printf("\n\n");
 
         desenhaFundo(x);
         desenhaTodos();
         workbenchFlush();
         //E pausamos até o usuário digitar ENTER
-        //pause();
+        if (tot_obj[BOOSTER])
+            pause();
     }
 }
 
@@ -155,11 +157,11 @@ void imprimePlaneta(Planeta p)
 void imprimeBooster(Booster b)
 {
     fprintf(stdout, "%s: \n", b.nome);
-    fprintf(stdout, "\tvida = %d\tcadencia = %d\tdano = %d\ttempoEmNave = %3.3lf\ttempoEmTela = %3.3lf\n",
+    fprintf(stdout, "\tvida = %d\tcadencia = %d\tdano = %d\ttempoEmNave = %.3lf\ttempoEmTela = %.3lf\n",
             b.vidaAdicional, b.cadencia, b.proj.dano, b.tempoRestanteNave, b.tempoRestanteTela);
-    fprintf(stdout, "\ttempoVidaProj = %3.3lf\tmassProj = %3.3lf\tposProj = (%3.3lf, %3.3lf)\tvelProj = (%3.3lf, %3.3lf)\n",
+    fprintf(stdout, "\ttempoVidaProj = %.3lf\tmassProj = %.3lf\tposProj = (%.3lf, %.3lf)\tvelProj = (%.3lf, %.3lf)\n",
             b.proj.tempoRestante, b.proj.mass, b.proj.pos.x, b.proj.pos.y, b.proj.vel.x, b.proj.vel.y);
-    fprintf(stdout, "\tpos = (%3.3lf, %3.3lf)\tvel = (%3.3lf, %3.3lf)\n",
+    fprintf(stdout, "\tpos = (%.3lf, %.3lf)\tvel = (%.3lf, %.3lf)\n",
             b.pos.x, b.pos.y, b.vel.x, b.vel.y);
 }
 
