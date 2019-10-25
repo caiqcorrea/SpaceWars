@@ -21,7 +21,9 @@ void initLeitor(string nome)
 
 void disposeLeitor()
 {
+    printf("No dispose\n");
     fclose(arq);
+    printf("Consegui fechar\n");
     freeSafe(leituraAtual);
 }
 
@@ -45,6 +47,5 @@ string getLeitura()
 
 Bool strigual(string s1)
 {
-    //Este método é feito especialmente para desfazer essa coisa estranha da string.h
     return !(strcmp(s1, leituraAtual));
 }

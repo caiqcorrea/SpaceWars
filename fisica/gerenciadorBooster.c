@@ -21,6 +21,34 @@ double propBooster;
 
 static void boosterRandom(Booster *b);
 
+void defineBoosterPadrao()
+{
+    BoosterPadrao()->nome = "PADRAO";
+    BoosterPadrao()->vidaAdicional = 0;
+    BoosterPadrao()->cadencia = 1;
+    BoosterPadrao()->proj.dano = 1;
+    BoosterPadrao()->proj.tempoRestante = 1000;
+    BoosterPadrao()->proj.mass = 100;
+    BoosterPadrao()->proj.radius = 1000;
+    BoosterPadrao()->proj.spr.img = IMG_PROJ_PADRAO;
+    BoosterPadrao()->proj.spr.angle = 0;
+    //As variáveis abaixo são indiferentes para o booster padrão
+    BoosterPadrao()->proj.tempoRestante = 0;
+    BoosterPadrao()->mass = 0;
+    BoosterPadrao()->pos.x = 0;
+    BoosterPadrao()->pos.y = 0;
+    BoosterPadrao()->vel.x = 0;
+    BoosterPadrao()->vel.y = 0;
+    BoosterPadrao()->radius = 0;
+    BoosterPadrao()->spr.img = -1;
+    BoosterPadrao()->spr.angle = 0;
+    BoosterPadrao()->proj.pos.x = 0;
+    BoosterPadrao()->proj.pos.y = 0;
+    BoosterPadrao()->proj.vel.x = 0;
+    BoosterPadrao()->proj.vel.y = 0;
+    BoosterPadrao()->tempoRestanteTela = 0;
+}
+
 void criaNovoBooster()
 {
     if (tot_obj[BOOSTER] == MAX_BOOSTERS)
@@ -100,7 +128,7 @@ void defineBoosterComo(Booster *b, Booster ref)
     b->tempoRestanteNave = ref.tempoRestanteNave;
     b->tempoRestanteTela = ref.tempoRestanteTela;
     b->spr.angle = ref.spr.angle;
-	b->spr.img = ref.spr.img;
+    b->spr.img = ref.spr.img;
 }
 
 Bool boosterVaiSpawnar()
@@ -146,11 +174,16 @@ void AtualizaBoosters()
     ChecaColisaoComBoosters();
     AtualizaBoostersEmNaves();
     AtualizaBoostersEmTela();
-    if(boosterVaiSpawnar())
+    if (boosterVaiSpawnar())
         criaNovoBooster();
 }
 
 Booster *BoosterPadrao()
 {
     return &(boostersPreCriados[0]);
+}
+
+void getBoosterPadrao(Booster *b)
+{
+    defineBoosterComo(b, *BoosterPadrao());
 }
