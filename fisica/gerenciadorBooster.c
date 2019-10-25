@@ -21,6 +21,34 @@ double propBooster;
 
 static void boosterRandom(Booster *b);
 
+void defineBoosterPadrao()
+{
+    BoosterPadrao()->nome = mallocSafe(sizeof(char) * TAM_MAX_NOMES);
+	strcpy(BoosterPadrao()->nome, "PADRÃO");
+    BoosterPadrao()->vidaAdicional = 0;
+    BoosterPadrao()->cadencia = 1;
+    BoosterPadrao()->proj.dano = 1;
+    BoosterPadrao()->proj.tempoRestante = 1000;
+    BoosterPadrao()->proj.mass = 100;
+    BoosterPadrao()->proj.radius = 1000;
+    BoosterPadrao()->proj.spr.img = IMG_PROJ_PADRAO;
+    BoosterPadrao()->proj.spr.angle = 0;
+    //As variáveis abaixo são indiferentes para o booster padrão
+    BoosterPadrao()->mass = 0;
+    BoosterPadrao()->pos.x = 0;
+    BoosterPadrao()->pos.y = 0;
+    BoosterPadrao()->vel.x = 0;
+    BoosterPadrao()->vel.y = 0;
+    BoosterPadrao()->radius = 0;
+    BoosterPadrao()->spr.img = 0;
+    BoosterPadrao()->spr.angle = 0;
+    BoosterPadrao()->proj.pos.x = 0;
+    BoosterPadrao()->proj.pos.y = 0;
+    BoosterPadrao()->proj.vel.x = 0;
+    BoosterPadrao()->proj.vel.y = 0;
+    BoosterPadrao()->tempoRestanteTela = 0;
+}
+
 void criaNovoBooster()
 {
     if (tot_obj[BOOSTER] == MAX_BOOSTERS)
@@ -46,6 +74,20 @@ static void boosterRandom(Booster *b)
 
     //Aqui temos que 0 < i < totalBoosterPreCriados (pois boostersPreCriados[0] é o booster padrão)
     defineBoosterComo(b, boostersPreCriados[i]);
+
+    //Cada booster que nasce, tem sua posição, velocidade e tempos restantes randomizados
+    //Só não pode nascer colidindo com algo (especialmente com uma nave)
+    b->mass = geraRandomicoEntre(minMass, maxMass);
+	do
+	{
+		b->pos.x = geraRandomicoEntre(-SIZE_X_FIS, SIZE_X_FIS);
+		b->pos.y = geraRandomicoEntre(-SIZE_Y_FIS, SIZE_Y_FIS);
+	} while (ChecaColisaoComTodos(b->o));
+	b->vel.x = geraRandomicoEntre(minVel.x, maxVel.x);
+	b->vel.y = geraRandomicoEntre(minVel.y, minVel.y);
+	b->tempoRestanteNave = geraRandomicoEntre(minTempoRestanteNave, maxTempoRestanteNave);
+	b->tempoRestanteTela = geraRandomicoEntre(minTempoRestanteTela, maxTempoRestanteTela);
+
 }
 
 void removeBoosterDaTela(int index)
@@ -80,11 +122,9 @@ void viraBoosterPadrao(Booster *b)
 
 void defineBoosterComo(Booster *b, Booster ref)
 {
-    int i;
-
-    b->nome = mallocSafe(sizeof(char) * strlen(ref.nome));
-    for (i = 0; (b->nome[i] = ref.nome[i]) != '\0'; i++)
-        ; //Garante que o '\0' estará no b sem ter que fazer um caso separado
+    //Assumimos que b ainda não possui um nome mallocado!
+    b->nome = mallocSafe(sizeof(char) * TAM_MAX_NOMES);
+	strcpy(b->nome, ref.nome);
     b->cadencia = ref.cadencia;
     b->vidaAdicional = ref.vidaAdicional;
     b->proj.tempoRestante = ref.proj.tempoRestante;
@@ -100,7 +140,7 @@ void defineBoosterComo(Booster *b, Booster ref)
     b->tempoRestanteNave = ref.tempoRestanteNave;
     b->tempoRestanteTela = ref.tempoRestanteTela;
     b->spr.angle = ref.spr.angle;
-	b->spr.img = ref.spr.img;
+    b->spr.img = ref.spr.img;
 }
 
 Bool boosterVaiSpawnar()
@@ -121,6 +161,7 @@ void ChecaColisaoComBoosters()
 void AtualizaBoostersEmNaves()
 {
     int i;
+
     for (i = 0; i < tot_obj[NAVE]; i++)
         if (strcmp(naves[i].boosterAtual.nome, "PADRAO") != 0) //Se não é o booster padrão
         {
@@ -146,11 +187,16 @@ void AtualizaBoosters()
     ChecaColisaoComBoosters();
     AtualizaBoostersEmNaves();
     AtualizaBoostersEmTela();
-    if(boosterVaiSpawnar())
+    if (boosterVaiSpawnar())
         criaNovoBooster();
 }
 
 Booster *BoosterPadrao()
 {
     return &(boostersPreCriados[0]);
+}
+
+void getBoosterPadrao(Booster *b)
+{
+    defineBoosterComo(b, *BoosterPadrao());
 }

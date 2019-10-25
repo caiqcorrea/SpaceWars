@@ -2,7 +2,7 @@
 
 # ---- V A R I Á V E I S   D E   A M B I E N T E ---- #
 
-VPATH = ./base:./fisica:./graficos:./obj
+VPATH = ./base:./fisica:./graficos:./obj:./IO:
 
 CC = gcc
 CFLAGS = -Wall -g -Wno-unused-result --pedantic -lm -lX11 -lXpm

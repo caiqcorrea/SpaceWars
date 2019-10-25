@@ -41,6 +41,10 @@ extern double propBooster;
 
 /* FUNÇÕES */
 
+//Define as propriedades do booster padrão.
+//Esta função deve ser chamada pelo menos uma vez antes do início da parte gráfica
+void defineBoosterPadrao();
+
 //Inicializa e coloca um novo booster no array de boosters
 void criaNovoBooster();
 
@@ -81,4 +85,6 @@ void AtualizaBoosters();
 
 //Retorna o booster padrão
 Booster *BoosterPadrao();
+
+void getBoosterPadrao(Booster *b);
 #endif

@@ -3,7 +3,7 @@
 #ifndef _DEBUG
 #define _DEBUG
 
-#include "fisica/IO.h"
+#include "IO/IO.h"
 #include "fisica/fisica.h"
 #include "graficos/graficos.h"
 #include "graficos/display.h"
@@ -57,9 +57,14 @@ void freeAll();
 int main(int argc, char *argv[])
 {
     tot_obj[BOOSTER] = 0;
+    tot_obj[PROJETIL] = 0;
+    tRestante = 1e7;
     srand(time(NULL));
+    //Mais para frente, será feita uma função de inicialização
+    //para que se configure as principais variáveis no início do código
 
-    leituraBoosters();
+    lerBoosters();
+
     testeFisicaBasica();
 
     printf("Fim\n");
@@ -70,16 +75,22 @@ int main(int argc, char *argv[])
 
 void testeFisicaBasica()
 {
-    FILE *arq;
+    string nomeArq;
     double tempo = 0;
     //Variáveis para o teste de colisão com boosters
     Bool umaVez = FALSE;
     Bool outraVez = FALSE;
     PIC x;
 
-    lerArquivo(&arq);    //Abrimos o arquivo
-    lerInputs(arq);      //Lemos os inputs (a função fecha o arquivo para nós)
-    imprimeTudo();       //e jogamos tudo o que foi lido na tela
+    //Pedimos um arquivo e abrimos ele
+    nomeArq = mallocSafe(sizeof(*nomeArq) * 200);
+    printf("Digite o nome do seu arquivo: ");
+    scanf("%s", nomeArq);
+
+    lerInputs(nomeArq); //Lemos os inputs (a função fecha o arquivo para nós)
+    freeSafe(nomeArq);
+
+    //imprimeTudo();       //e jogamos tudo o que foi lido na tela
     setbuf(stdin, NULL); //(apenas para evitar possíveis erros)
 
     grafInit();
@@ -112,26 +123,13 @@ void testeFisicaBasica()
         //Imprimir o planeta toda hora é desnecessário, mas caso queira, apenas tire o //
         //imprimePlanetas();
         //printf("\n\n");
-	
+
         desenhaFundo(x);
         desenhaTodos();
         workbenchFlush();
         //E pausamos até o usuário digitar ENTER
         //pause();
     }
-}
-
-void lerArquivo(FILE **f)
-{
-    string nomeArq;
-    //Pedimos um arquivo e abrimos ele
-    nomeArq = mallocSafe(sizeof(*nomeArq) * 200);
-    printf("Digite o nome do seu arquivo: ");
-    scanf("%s", nomeArq);
-    *f = fopen(nomeArq, "r");
-    if (*f == NULL) //Verificando se o usuário deu o nome correto
-        throwException("lerInputs", "Não foi possivel abrir o arquivo.", file_not_found_exception);
-    freeSafe(nomeArq);
 }
 
 void imprimeNave(Nave n)
@@ -156,11 +154,11 @@ void imprimePlaneta(Planeta p)
 void imprimeBooster(Booster b)
 {
     fprintf(stdout, "%s: \n", b.nome);
-    fprintf(stdout, "\tvida = %d\tcadencia = %d\tdano = %d\ttempoEmNave = %3.3lf\ttempoEmTela = %3.3lf\n",
+    fprintf(stdout, "\tvida = %d\tcadencia = %d\tdano = %d\ttempoEmNave = %.3lf\ttempoEmTela = %.3lf\n",
             b.vidaAdicional, b.cadencia, b.proj.dano, b.tempoRestanteNave, b.tempoRestanteTela);
-    fprintf(stdout, "\ttempoVidaProj = %3.3lf\tmassProj = %3.3lf\tposProj = (%3.3lf, %3.3lf)\tvelProj = (%3.3lf, %3.3lf)\n",
+    fprintf(stdout, "\ttempoVidaProj = %.3lf\tmassProj = %.3lf\tposProj = (%.3lf, %.3lf)\tvelProj = (%.3lf, %.3lf)\n",
             b.proj.tempoRestante, b.proj.mass, b.proj.pos.x, b.proj.pos.y, b.proj.vel.x, b.proj.vel.y);
-    fprintf(stdout, "\tpos = (%3.3lf, %3.3lf)\tvel = (%3.3lf, %3.3lf)\n",
+    fprintf(stdout, "\tpos = (%.3lf, %.3lf)\tvel = (%.3lf, %.3lf)\n",
             b.pos.x, b.pos.y, b.vel.x, b.vel.y);
 }
 
@@ -209,7 +207,7 @@ void imprimeTudo()
 
 void freeAll()
 {
-	freeFisica();
-	grafFree();
+    freeFisica();
+    grafFree();
 }
 #endif

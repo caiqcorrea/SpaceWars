@@ -8,6 +8,7 @@
 #include "../base/auxiliar.h"
 
 //Esta função deve ser chamada antes de qualquer chamada de método da biblioteca
+//Devemos passar um nome de arquivo para o leitor
 void initLeitor(string nome);
 
 //Esta função deve ser chamada após a utilização da biblioteca, para limpar a memória

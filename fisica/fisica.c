@@ -30,9 +30,11 @@
 #include "../base/vetores.h"
 #include "../base/auxiliar.h"
 #include "gerenciadorBooster.h"
+#include "../graficos/graficos.h"
 
 #include <math.h>
 #include <stddef.h>
+#include <string.h>
 
 /*--------------- V A R I Á V E I S   G L O B A I S ---------------*/
 
@@ -57,6 +59,39 @@ double dt;
 double tRestante;
 
 /*--------------- I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S ---------------*/
+
+void getObjetoPadrao(Objeto *o)
+{
+	o->p.x = 0;
+	o->p.y = 0;
+	o->v.x = 0;
+	o->v.y = 0;
+	o->m = 0;
+	o->r = 1;
+	o->s.img = -1;
+	o->s.angle = 0;
+}
+
+void getNavePadrao(Nave *n)
+{
+	n->nome = mallocSafe(sizeof(char) * TAM_MAX_NOMES);
+	strcpy(n->nome, "NULL");
+	defineBoosterComo(&(n->boosterAtual), *BoosterPadrao());
+	n->HP = 0;
+	getObjetoPadrao(&(n->o));
+}
+
+void getPlanetaPadrao(Planeta *p)
+{
+	getObjetoPadrao(&(p->o));
+}
+
+void getProjetilPadrao(Projetil *p)
+{
+	p->dano = 0;
+	p->tempoRestante = 0;
+	getObjetoPadrao(&(p->o));
+}
 
 Objeto *GetObjeto(TipoObj tipo, int indice)
 {
@@ -182,17 +217,23 @@ void AtualizaObjeto(Objeto *o)
 {
 	IncVel(CalculaForcaSobre(*o), o);
 	IncPos(o);
+	giraObjetoVel(o);
 }
 
 void AtualizaObjetos()
 {
 	int i;
 	TipoObj tipo;
-	
+
 	for (tipo = 0; tipo < NUM_TIPO_OBJ; tipo++)
 		if (tipo != PLANETA) //Planetas não precisam ser atualizados (pelo menos na versão atual)
 			for (i = 0; i < tot_obj[tipo]; i++)
 				AtualizaObjeto(GetObjeto(tipo, i));
+}
+
+void giraObjetoVel(Objeto *o)
+{
+	setSpriteAng(&(o->s), anguloX(o->v));
 }
 
 void ReduzTempoProj(Projetil *p)
@@ -292,7 +333,7 @@ void ChecaTodasColisoes()
 
 		if (colidiu)
 			i--; //Removemos o i-ésimo, então o próximo a ser visto é quem virou o i-ésimo
-				 //Note que se o projétil colide com um planeta (a primeira verificação) a função não entra nos outros for's
+				//Note que se o projétil colide com um planeta (a primeira verificação) a função não entra nos outros for's
 	}
 	//NAVES
 	for (i = 0; i < tot_obj[NAVE]; i++)
@@ -354,6 +395,7 @@ Bool AtualizaJogo()
 {
 	int i;
 	Bool todasNavesVivas;
+
 	//Primeiro atualizamos a posição e velocidade de todos os objetos
 	AtualizaObjetos();
 	//Depois, devemos reduzir o tempo de todos os projéteis
@@ -362,7 +404,6 @@ Bool AtualizaJogo()
 	for (i = 0; i < tot_obj[PROJETIL]; i++)
 		if (VerificaSeProjMorreu(projs[i])) //Se o projétil morreu
 			RemoveProj(i);					//Removemos o projétil de índice i
-
 
 	//Fazemos todas as atualizações relacionadas com boosters
 	AtualizaBoosters();

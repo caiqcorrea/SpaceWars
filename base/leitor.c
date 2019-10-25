@@ -16,7 +16,7 @@ void initLeitor(string nome)
     arq = fopen(nome, "r");
 
     if (arq == NULL)
-        throwException("initLeitor()", "Arquivo não encontrado\n", file_not_found_exception);
+        throwException("initLeitor()", "Arquivo não encontrado", file_not_found_exception);
 }
 
 void disposeLeitor()
@@ -34,7 +34,9 @@ string proxLeitura()
 {
     int c;
     c = fscanf(arq, " %s", leituraAtual);
-    if(c == -1) return NULL;
+    if (c == -1)
+        return NULL;
+
     return getLeitura();
 }
 
@@ -45,6 +47,5 @@ string getLeitura()
 
 Bool strigual(string s1)
 {
-    //Este método é feito especialmente para desfazer essa coisa estranha da string.h
     return !(strcmp(s1, leituraAtual));
 }
