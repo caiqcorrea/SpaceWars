@@ -32,6 +32,7 @@ static WINDOW *showingWindow;
 static struct
 {
 	PIC *imgs;		   //Array de imagens
+	MASK *msks;		   //Array de masks associado
 	int n_imgs;		   //Número de imagens
 	int height, width; //Tamanho em pixels
 } pics[NUM_SPR];
@@ -72,13 +73,14 @@ void picsInit(WINDOW *win)
 
 		pics[i].n_imgs = n_imgs;
 		pics[i].imgs = mallocSafe(n_imgs * sizeof(PIC));
+		pics[i].msks = mallocSafe(n_imgs * sizeof(MASK));
 		pics[i].width = sizex_aux;
 		pics[i].height = sizey_aux;
 
 		for (j = 0; j < n_imgs; j++)
 		{
 			snprintf(filename, sizeof(filename), "./graficos/pics/%d/%d.xpm", i, j);
-			pics[i].imgs[j] = ReadPicSafe(win, filename, NULL);
+			pics[i].imgs[j] = ReadPicSafe(win, filename, pics[i].msks[j]);
 		}
 	}
 
@@ -97,6 +99,14 @@ PIC getImg(Sprite spr)
 		throwException("getSprite()", "Indice do Sprite inválido", index_out_of_range_exception);
 	//Retorna a img com rotação mais próxima do ângulo atual
 	return pics[spr.img].imgs[((int)round((pics[spr.img].n_imgs * spr.angle) / (2 * M_PI))) % pics[spr.img].n_imgs];
+}
+
+MASK getMsk(Sprite spr)
+{
+	if (spr.img >= NUM_SPR)
+		throwException("getSprite()", "Indice do Sprite inválido", index_out_of_range_exception);
+	//Retorna a img com rotação mais próxima do ângulo atual
+	return pics[spr.img].msks[((int)round((pics[spr.img].n_imgs * spr.angle) / (2 * M_PI))) % pics[spr.img].n_imgs];
 }
 
 Sprite getSpriteFromPic(NOME_SPR nome, int i)
@@ -131,8 +141,10 @@ void desenhaSpriteEm(WINDOW *win, Sprite spr, vet2D p)
 {
 	if (spr.img > NUM_SPR)
 		throwException("desenhaSpriteEm", "mensagem", index_out_of_range_exception);
+	SetMask(win, getMsk(spr));
 	PutPic(win, getImg(spr), 0, 0, pics[spr.img].width, pics[spr.img].height,
 		   ((int)round(p.x)) - (pics[spr.img].width / 2), ((int)round(p.y)) - (pics[spr.img].height / 2));
+	UnSetMask(win);
 }
 
 void desenhaSprite(Sprite spr, vet2D p)
