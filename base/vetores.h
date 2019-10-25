@@ -25,36 +25,36 @@ typedef struct
 typedef struct
 {
 	vet2D v1, v2; //Vetores colunas da matriz
-} mat2D; //Uma matriz 2x2
+} mat2D;		  //Uma matriz 2x2
 
 /* F U N Ç Õ E S */
 
 //Norma do vetor em 2D
-double norma(vet2D v); 
+double norma(vet2D v);
 
 //Multiplicação por escalar, retorna a*v
-vet2D mult(double a, vet2D v); 
+vet2D mult(double a, vet2D v);
 
 // Divisão por escalar, retorna v/a
-vet2D divide(double a, vet2D v); 
+vet2D divide(double a, vet2D v);
 
 //Transforma v no seu respectivo versor
-vet2D versor(vet2D v); 
+vet2D versor(vet2D v);
 
 //Soma de vetores, retorna v+w
-vet2D soma(vet2D v, vet2D w); 
+vet2D soma(vet2D v, vet2D w);
 
 //Subtração de vetores, retorna v-w
-vet2D sub(vet2D v, vet2D w); 
+vet2D sub(vet2D v, vet2D w);
 
 // Produto escalar entre vetores, retorna <v,w>
-double escalar(vet2D v, vet2D w); 
+double escalar(vet2D v, vet2D w);
 
 // Retorna || v X w ||
-double vetorial(vet2D v, vet2D w); 
+double vetorial(vet2D v, vet2D w);
 
 //Metodo que normaliza o vetor v
-void normaliza(vet2D *v); 
+void normaliza(vet2D *v);
 
 //Método que retorna o ângulo que o vetor v faz com o eixo x
 double anguloX(vet2D v);
@@ -63,13 +63,13 @@ double anguloX(vet2D v);
 double anguloY(vet2D v);
 
 //Cria e retorna um vetor nulo
-vet2D null_vet(); 
+vet2D null_vet();
 
 //Cria e retorna um vetor cartesiano (1,0)
-vet2D i_vet(); 
+vet2D i_vet();
 
 //Cria e retorna um vetor cartesiano (0,1)
-vet2D j_vet(); 
+vet2D j_vet();
 
 //Dados um vetor x e uma matriz M, faz o produto Mx
 vet2D multiplicaPorMatriz(mat2D M, vet2D x);

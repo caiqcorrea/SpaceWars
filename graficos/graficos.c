@@ -39,7 +39,7 @@ static struct
 
 void winsInit()
 {
-	showingWindow = InitGraph(SIZE_X_WIN, SIZE_Y_WIN, "showingWindow");
+	showingWindow = InitGraph(SIZE_X_WIN, SIZE_Y_WIN, "Space Wars");
 	workbench = NewPic(showingWindow, SIZE_X_WIN, SIZE_Y_WIN);
 }
 
@@ -62,7 +62,7 @@ void picsInit(WINDOW *win)
 		spr_file = fopen(filename, "r");
 
 		if (spr_file == NULL)
-			throwException("picsInit", strcat(filename, " não encontrado"), file_not_found_exception);
+			throwException("picsInit", strcat(filename, " não encontrado."), file_not_found_exception);
 
 		fscanf(spr_file, "%d %d ", &sizex_aux, &sizey_aux);
 
@@ -97,7 +97,7 @@ void grafInit()
 PIC getImg(Sprite spr)
 {
 	if (spr.img >= NUM_SPR)
-		throwException("getSprite()", "Indice do Sprite inválido", index_out_of_range_exception);
+		throwException("getSprite()", "Índice do Sprite inválido", index_out_of_range_exception);
 	//Retorna a img com rotação mais próxima do ângulo atual
 	return pics[spr.img].imgs[((int)round((pics[spr.img].n_imgs * spr.angle) / (2 * M_PI))) % pics[spr.img].n_imgs];
 }
@@ -105,7 +105,7 @@ PIC getImg(Sprite spr)
 MASK getMsk(Sprite spr)
 {
 	if (spr.img >= NUM_SPR)
-		throwException("getSprite()", "Indice do Sprite inválido", index_out_of_range_exception);
+		throwException("getSprite()", "Índice do Sprite inválido", index_out_of_range_exception);
 	//Retorna a img com rotação mais próxima do ângulo atual
 	return pics[spr.img].msks[((int)round((pics[spr.img].n_imgs * spr.angle) / (2 * M_PI))) % pics[spr.img].n_imgs];
 }
@@ -142,12 +142,16 @@ void desenhaSpriteEm(WINDOW *win, Sprite spr, vet2D p)
 {
 	if (spr.img > NUM_SPR)
 	{
-		printf("spr.img = %d NUM_SPR = %d\n", spr.img, NUM_SPR);
-		throwException("desenhaSpriteEm", "msg", index_out_of_range_exception);
+		char errmsg[100];
+		snprintf(errmsg, 100,
+				 "O número da sprite é %d, que é maior que o máximo: %d",
+				 spr.img, NUM_SPR);
+		throwException("desenhaSpriteEm", errmsg, index_out_of_range_exception);
 	}
 	SetMask(win, getMsk(spr));
 	PutPic(win, getImg(spr), 0, 0, pics[spr.img].width, pics[spr.img].height,
-		   ((int)round(p.x)) - (pics[spr.img].width / 2), ((int)round(p.y)) - (pics[spr.img].height / 2));
+		   ((int)round(p.x)) - (pics[spr.img].width / 2),
+		   ((int)round(p.y)) - (pics[spr.img].height / 2));
 	UnSetMask(win);
 }
 

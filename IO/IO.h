@@ -41,11 +41,10 @@ void lerProjetil(FILE *arq, Projetil *p, double tempoDeVida);
 //e define os tipos de boosters possíveis no jogo
 void lerBoosters();
 
-//Método deve ser chamado após o aparecimento de um [ e 
+//Método deve ser chamado após o aparecimento de um [ e
 //lê booster.cfg até achar um ]
 //Ela recebe um índice que se refere a onde o booster sendo atualmente criado
 //será colocado no aray de boosters possíveis
 void lerBooster(int index);
-
 
 #endif

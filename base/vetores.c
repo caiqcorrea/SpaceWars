@@ -67,7 +67,7 @@ double anguloX(vet2D v)
 	if (v.y >= 0)
 		return a;
 	else
-		return 2*M_PI - a;
+		return 2 * M_PI - a;
 }
 
 double anguloY(vet2D v)
@@ -76,7 +76,7 @@ double anguloY(vet2D v)
 	if (v.x >= 0)
 		return a;
 	else
-		return 2 * M_PI-a;
+		return 2 * M_PI - a;
 }
 
 vet2D null_vet()

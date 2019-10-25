@@ -16,13 +16,12 @@ void initLeitor(string nome)
     arq = fopen(nome, "r");
 
     if (arq == NULL)
-        throwException("initLeitor()", "Arquivo não encontrado\n", file_not_found_exception);
+        throwException("initLeitor()", "Arquivo não encontrado", file_not_found_exception);
 }
 
 void disposeLeitor()
 {
-    //fclose(arq);
-    arq = NULL;
+    fclose(arq);
     freeSafe(leituraAtual);
 }
 
