@@ -21,7 +21,9 @@ void initLeitor(string nome)
 
 void disposeLeitor()
 {
+    printf("No dispose\n");
     fclose(arq);
+    printf("Consegui fechar\n");
     freeSafe(leituraAtual);
 }
 

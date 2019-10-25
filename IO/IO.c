@@ -102,7 +102,7 @@ void lerPlaneta(int index)
 		else if (strigual("mass"))
 			leVerificaIgualAtribuiDouble(&(novo.mass), "mass");
 		else if (strigual("spr"))
-			leVerificaIgualAtribuiInt((int*) &(novo.spr.img), "spr");
+			leVerificaIgualAtribuiInt((int *)&(novo.spr.img), "spr");
 		else
 			throwException("lerPlaneta",
 						   "Parece que há alguma variável entre [ e ] que não está definida.\n"
@@ -138,7 +138,7 @@ void lerNave(int index)
 		else if (strigual("hp"))
 			leVerificaIgualAtribuiInt(&(nova.HP), "hp");
 		else if (strigual("spr"))
-			leVerificaIgualAtribuiInt((int *) &(nova.spr.img), "spr");
+			leVerificaIgualAtribuiInt((int *)&(nova.spr.img), "spr");
 		else
 			throwException("lerPlaneta",
 						   "Parece que há alguma variável entre [ e ] que não está definida.\n"
@@ -181,7 +181,7 @@ void lerProjetil(FILE *arq, Projetil *p, double tempoDeVida)
 /* FUNÇÕES PARA BOOSTERS */
 
 //Função que lê o arquivo booster.cfg
-void leituraBoosters()
+void lerBoosters()
 {
 	int indice = 1;
 
@@ -229,6 +229,7 @@ void leituraBoosters()
 		}
 	}
 
+	printf("Antes de dar dispose no leitor\n");
 	disposeLeitor();
 }
 
@@ -236,11 +237,13 @@ void lerBooster(int index)
 {
 	Booster novo;
 	getBoosterPadrao(&novo);
+	printf("Nome do novo = '%s'\n", novo.nome);
 
 	//Deve ser chamada assim que um [ foi lido e termina sua operação ao ler um ]
-	//strcmp é TRUE se as strings são diferentes (não sei porque, mas é assim)
+	//strcmp é TRUE se as strings são diferentes
 	while (strcmp(proxLeitura(), "]"))
 	{
+		printf("Atual = %s\n", getLeitura());
 		if (strigual("nome"))
 			leVerificaIgualAtribuiString(novo.nome, "nome");
 		else if (strigual("vidaAdicional"))
@@ -254,14 +257,13 @@ void lerBooster(int index)
 		else if (strigual("massProj"))
 			leVerificaIgualAtribuiDouble(&(novo.proj.mass), "massProj");
 		else if (strigual("spr"))
-			leVerificaIgualAtribuiInt((int*) &(novo.spr.img), "spr");
+			leVerificaIgualAtribuiInt((int *)&(novo.spr.img), "spr");
 		else
 			throwException("leBooster",
 						   "Parece que há alguma variável entre [ e ] que não está definida.\n"
 						   "Verifique se o arquivo booster.cfg está correto.",
 						   file_format_exception);
 	}
-
 	boostersPreCriados[index] = novo;
 }
 
@@ -304,5 +306,7 @@ static void leVerificaIgualAtribuiString(string s, string nomeVar)
 {
 	proxLeitura(); //deve ser um '='
 	verificaIgualApos(nomeVar);
-	strcpy(s, getLeitura());
+	printf("s = %s\n", s);
+	strcpy(s, proxLeitura());
+	printf("sdps = %s\n", s);
 }

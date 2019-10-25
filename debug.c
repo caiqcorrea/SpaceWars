@@ -57,12 +57,15 @@ void freeAll();
 int main(int argc, char *argv[])
 {
     tot_obj[BOOSTER] = 0;
-	dt = 0.3;				   //Este valor pode ser alterado
+    dt = 0.3; //Este valor pode ser alterado
     srand(time(NULL));
     //Mais para frente, será feita uma função de inicialização
     //para que se configure as principais variáveis no início do código
 
     lerBoosters();
+
+    printf("Li todos os boosters\n");
+
     testeFisicaBasica();
 
     printf("Fim\n");
@@ -73,15 +76,21 @@ int main(int argc, char *argv[])
 
 void testeFisicaBasica()
 {
-    FILE *arq;
+    string nomeArq;
     double tempo = 0;
     //Variáveis para o teste de colisão com boosters
     Bool umaVez = FALSE;
     Bool outraVez = FALSE;
     PIC x;
 
-    lerArquivo(&arq);    //Abrimos o arquivo
-    lerInputs(arq);      //Lemos os inputs (a função fecha o arquivo para nós)
+    //Pedimos um arquivo e abrimos ele
+    nomeArq = mallocSafe(sizeof(*nomeArq) * 200);
+    printf("Digite o nome do seu arquivo: ");
+    scanf("%s", nomeArq);
+
+    lerInputs(nomeArq); //Lemos os inputs (a função fecha o arquivo para nós)
+    freeSafe(nomeArq);
+
     imprimeTudo();       //e jogamos tudo o que foi lido na tela
     setbuf(stdin, NULL); //(apenas para evitar possíveis erros)
 
@@ -116,26 +125,12 @@ void testeFisicaBasica()
         //imprimePlanetas();
         //printf("\n\n");
 
-
         desenhaFundo(x);
         desenhaTodos();
         workbenchFlush();
         //E pausamos até o usuário digitar ENTER
         //pause();
     }
-}
-
-void lerArquivo(FILE **f)
-{
-    string nomeArq;
-    //Pedimos um arquivo e abrimos ele
-    nomeArq = mallocSafe(sizeof(*nomeArq) * 200);
-    printf("Digite o nome do seu arquivo: ");
-    scanf("%s", nomeArq);
-    *f = fopen(nomeArq, "r");
-    if (*f == NULL) //Verificando se o usuário deu o nome correto
-        throwException("lerInputs", "Não foi possivel abrir o arquivo.", file_not_found_exception);
-    freeSafe(nomeArq);
 }
 
 void imprimeNave(Nave n)
@@ -213,7 +208,7 @@ void imprimeTudo()
 
 void freeAll()
 {
-	freeFisica();
-	grafFree();
+    freeFisica();
+    grafFree();
 }
 #endif
