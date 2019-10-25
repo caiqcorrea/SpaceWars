@@ -202,11 +202,7 @@ void lerBooster(int index)
 	while (strcmp(proxLeitura(), "]"))
 	{
 		if (strigual("nome"))
-		{
 			leVerificaIgualAtribuiString(novo.nome, "nome");
-			printf("Nome do booster lido\n");
-			printf("novo.nome = '%s'\n", novo.nome);
-		}
 		else if (strigual("vidaAdicional"))
 			leVerificaIgualAtribuiInt(&(novo.vidaAdicional), "vidaAdicional");
 		else if (strigual("cadencia"))
@@ -228,7 +224,6 @@ void lerBooster(int index)
 						   file_format_exception);
 	}
 
-	imprimeBoosterPreCriados();
 	boostersPreCriados[index] = novo;
 }
 

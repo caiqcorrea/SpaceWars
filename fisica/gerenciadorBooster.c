@@ -77,7 +77,16 @@ static void boosterRandom(Booster *b)
 
     //Cada booster que nasce, tem sua posição, velocidade e tempos restantes randomizados
     //Só não pode nascer colidindo com algo (especialmente com uma nave)
-    
+    b->mass = geraRandomicoEntre(minMass, maxMass);
+	do
+	{
+		b->pos.x = geraRandomicoEntre(-SIZE_X_FIS, SIZE_X_FIS);
+		b->pos.y = geraRandomicoEntre(-SIZE_Y_FIS, SIZE_Y_FIS);
+	} while (ChecaColisaoComTodos(b->o));
+	b->vel.x = geraRandomicoEntre(minVel.x, maxVel.x);
+	b->vel.y = geraRandomicoEntre(minVel.y, minVel.y);
+	b->tempoRestanteNave = geraRandomicoEntre(minTempoRestanteNave, maxTempoRestanteNave);
+	b->tempoRestanteTela = geraRandomicoEntre(minTempoRestanteTela, maxTempoRestanteTela);
 
 }
 
@@ -153,9 +162,6 @@ void AtualizaBoostersEmNaves()
 {
     int i;
 
-    printf("Pouco antes\n");
-    printf("Booster 0 nome = '%s'\n", naves[0].boosterAtual.nome);
-
     for (i = 0; i < tot_obj[NAVE]; i++)
         if (strcmp(naves[i].boosterAtual.nome, "PADRAO") != 0) //Se não é o booster padrão
         {
@@ -179,7 +185,6 @@ void AtualizaBoostersEmTela()
 void AtualizaBoosters()
 {
     ChecaColisaoComBoosters();
-	printf("Cheguei\n");
     AtualizaBoostersEmNaves();
     AtualizaBoostersEmTela();
     if (boosterVaiSpawnar())
