@@ -78,6 +78,8 @@ void grafInit();
 //Dada uma sprite, retorna a imamgem atual da sprite de acordo com o ângulo atual dela
 PIC getImg(Sprite spr);
 
+MASK getMsk(Sprite spr);
+
 Sprite getSpriteFromPic(NOME_SPR spr, int i);
 
 void desenhaImgPic(NOME_SPR spr, int i, vet2D pos);
