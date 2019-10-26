@@ -7,8 +7,8 @@
 #include <stdio.h>
 #include <string.h>
 
-static string leituraAtual;
-static FILE *arq;
+static string leituraAtual = NULL;
+static FILE *arq = NULL;
 
 void initLeitor(string nome)
 {
@@ -21,21 +21,25 @@ void initLeitor(string nome)
 
 void disposeLeitor()
 {
-    fclose(arq);
     freeSafe(leituraAtual);
+    if(arq == NULL) return;
+    fclose(arq);
 }
 
 void imprimeAtual()
 {
+    if(getLeitura() == NULL) return;
     printf("''%s''", getLeitura());
 }
 
 string proxLeitura()
 {
     int c;
+
+    if(arq == NULL) return NULL;
+
     c = fscanf(arq, " %s", leituraAtual);
-    if (c == -1)
-        return NULL;
+    if (c == -1) return NULL;
 
     return getLeitura();
 }
@@ -45,7 +49,8 @@ string getLeitura()
     return leituraAtual;
 }
 
-Bool strigual(string s1)
+Bool strigual(string s)
 {
-    return !(strcmp(s1, leituraAtual));
+    if(getLeitura() == NULL) return FALSE;
+    return !(strcmp(s, getLeitura()));
 }

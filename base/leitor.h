@@ -23,7 +23,7 @@ string proxLeitura();
 //Retorna o último token lido, mas não lê o próximo
 string getLeitura();
 
-//Retorna true se duas s1 é igual ao último token lido e false caso contrário
-Bool strigual(string s1);
+//Retorna true se s é igual ao último token lido e false caso contrário
+Bool strigual(string s);
 
 #endif

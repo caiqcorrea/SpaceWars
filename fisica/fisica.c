@@ -52,7 +52,7 @@ Booster boosters[MAX_BOOSTERS]; //O array que contém os boosters que estão atu
 
 #define TERRA planetas[0] //Como só há um planeta, vamos chamá-lo de TERRA
 
-//Intervalo de tempo da simulacao, lido no arquivo principal. Por padrão, é 0.001
+//Intervalo de tempo da simulacao, lido no arquivo principal.
 double dt;
 
 //Tempo restante de simulação;
