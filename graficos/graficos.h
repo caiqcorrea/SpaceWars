@@ -13,6 +13,8 @@
 #include "../base/vetores.h"
 #include "xwc.h"
 
+
+#define SIZE_RATIO 9.0 / 16
 #define SIZE_X_WIN 1280
 #define SIZE_Y_WIN (int)(SIZE_X_WIN * SIZE_RATIO)
 
