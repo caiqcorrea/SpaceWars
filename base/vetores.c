@@ -65,18 +65,18 @@ double anguloX(vet2D v)
 {
 	double a = acos(v.x / norma(v));
 	if (v.y >= 0)
-		return a;
-	else
 		return 2 * M_PI - a;
+	else
+		return a;
 }
 
 double anguloY(vet2D v)
 {
 	double a = acos(escalar(v, J_VET) / norma(v));
 	if (v.x >= 0)
-		return a;
-	else
 		return 2 * M_PI - a;
+	else
+		return a;
 }
 
 vet2D null_vet()

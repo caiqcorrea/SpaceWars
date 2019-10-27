@@ -287,7 +287,7 @@ Bool ChecaColisaoComTodos(Objeto o)
 	for (i = 0; i < tot_obj[PLANETA] && !colidiu; i++)
 		colidiu = ChecaColisaoEntre(o, *GetObjeto(PLANETA, i));
 
-	for (i = 0; i < tot_obj[BOOSTER]; i++)
+	for (i = 0; i < tot_obj[BOOSTER] && !colidiu; i++)
 		colidiu = ChecaColisaoEntre(o, *GetObjeto(BOOSTER, i));
 
 	return colidiu;
@@ -360,6 +360,7 @@ void ChecaTodasColisoes()
 		if (colidiu)
 			break; //Se colidiu, paramos por aqui. O jogo terminou.
 	}
+
 }
 
 void DecrementaVida(Nave *n, int valor)
