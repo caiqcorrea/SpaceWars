@@ -107,6 +107,9 @@ void desenhaFundo_Index(WINDOW *win, int index);
 //Note que ao desenhar o fundo, todos os conteúdos da janela são sobrescritos
 void desenhaFundo(WINDOW *win);
 
+void desenhaFundoWorkbench_Index();
+void desenhaFundoWorkbench();
+
 //Esta função atualiza showingWindow com o conteúdo de workbench, sobrescrevendo o que havia lá
 void workbenchFlush();
 

@@ -124,12 +124,15 @@ void testeFisicaBasica()
         //imprimePlanetas();
         //printf("\n\n");
 
-        desenhaFundo(x);
+        desenhaFundoWorkbench();
         desenhaTodos();
         workbenchFlush();
+        usleep(1500);
         //E pausamos até o usuário digitar ENTER
         //pause();
     }
+    
+    grafFree();
 }
 
 void imprimeNave(Nave n)
