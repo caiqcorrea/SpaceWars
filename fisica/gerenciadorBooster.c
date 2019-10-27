@@ -3,10 +3,10 @@
 
 #include "gerenciadorBooster.h"
 #include "../base/auxiliar.h"
-#include "string.h"
 #include "fisica.h"
 #include "../base/vetores.h"
 
+#include <string.h>
 #include <stdlib.h>
 
 Booster *boostersPreCriados;
