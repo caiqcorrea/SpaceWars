@@ -22,19 +22,13 @@
 /* FUNÇÕES DE INICIALIZAÇÃO DA PARTE FÍSICA */
 //Função que lê todos os inputs de um arquivo informado pelo usuário
 // e atribui valores às variáveis globais
-//void lerInputs(FILE *arq);
 void lerInputs(string arq);
 
 //Função que lê o planeta e inicializa-o
-//void lerTerra(FILE *arq);
 void lerPlaneta(int index);
 
 //Função que lê uma nave e inicializa-a
-//void lerNave(FILE *arq, Nave *n);
 void lerNave(int index);
-
-//Função que lê um projétil e inicializa-o
-void lerProjetil(FILE *arq, Projetil *p, double tempoDeVida);
 
 /* FUNÇÕES PARA BOOSTERS */
 //Método que lê todos os booster do arquivo booster.cfg
