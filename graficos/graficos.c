@@ -164,7 +164,6 @@ void desenhaFundo_Index(WINDOW *win, int index)
 {
 	if (index >= pics[IMG_FUNDO].n_imgs || index < 0)
 		throwException("desenhaFundo_Index", "Não há fundo correspondente ao índice", index_out_of_range_exception);
-	//WClear(win);
 	PutPic(win, pics[IMG_FUNDO].imgs[index], 0, 0, pics[IMG_FUNDO].width, pics[IMG_FUNDO].height, 0, 0);
 }
 

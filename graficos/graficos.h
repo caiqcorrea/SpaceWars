@@ -80,11 +80,12 @@ void grafInit();
 //Dada uma sprite, retorna a imamgem atual da sprite de acordo com o ângulo atual dela
 PIC getImg(Sprite spr);
 
+//Dada uma sprite, retorna a mascara associada a imagem atual da sprite, de acordo com seu angulo
 MASK getMsk(Sprite spr);
 
+//Dados dois indices, retorna um sprite com a img e o angulo certo para que
+//getImg e getMsk retornem pics[spr].imgs[i] e pics[spr].msks[i], respectivamente
 Sprite getSpriteFromPic(NOME_SPR spr, int i);
-
-void desenhaImgPic(NOME_SPR spr, int i, vet2D pos);
 
 //Dada uma sprite e um ângulo ang, incrementa o ângulo da imagem em ang
 void rotateSprite(Sprite *spr, double ang);
@@ -107,6 +108,7 @@ void desenhaFundo_Index(WINDOW *win, int index);
 //Note que ao desenhar o fundo, todos os conteúdos da janela são sobrescritos
 void desenhaFundo(WINDOW *win);
 
+//Mesmo que desenhaFundo_Index e desenhaFundo, mas desenha no workbench
 void desenhaFundoWorkbench_Index();
 void desenhaFundoWorkbench();
 
