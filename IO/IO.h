@@ -33,9 +33,6 @@ void lerPlaneta(int index);
 //void lerNave(FILE *arq, Nave *n);
 void lerNave(int index);
 
-//Função que lê um projétil e inicializa-o
-void lerProjetil(FILE *arq, Projetil *p, double tempoDeVida);
-
 /* FUNÇÕES PARA BOOSTERS */
 //Método que lê todos os booster do arquivo booster.cfg
 //e define os tipos de boosters possíveis no jogo
