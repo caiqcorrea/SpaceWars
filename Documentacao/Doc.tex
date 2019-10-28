@@ -1,0 +1,358 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage[hidelinks]{hyperref}
+\usepackage{color}
+\usepackage[top=2cm, bottom=2cm, left=2.5cm, right=2.5cm]{geometry}
+
+\title{Documentação - Space Wars}
+
+\author{Lucas Paiolla | Caíque Corrêa | Eduardo Brancher}
+\date{11221911 | 11276281 | 8587409}
+
+\begin{document}
+    \maketitle
+    \newpage
+
+    \tableofcontents
+    \newpage
+
+    \section{Disposição dos diretórios e arquivos}
+
+    Os arquivos do projeto estão dispostos em quatro pastas e mais outros arquivos
+    no diretório que contém as quatro pastas. Os quatro diretórios são:
+        \begin{enumerate}
+            \item \texttt{base} - Contém bibliotecas que são completamente independentes
+            do resto do projeto. Em teoria, estas bibliotecas podem ser utilizadas
+            em qualquer outro projeto. (Mas todos os arquivos do projeto foram
+            feitos inteiramente por nós.)
+
+            \item \texttt{fisica} - Este diretório é um dos mais importantes e foi o foco
+            da primeira parte do projeto. Ela utiliza bastante o arquivo 
+            \texttt{vetores.h} da \texttt{base} para fazer os cálculos. 
+            (Entraremos em detalhes sobre o diretório mais para frente.)
+
+            \item \texttt{graficos} - Este diretório é responsável pela parte visual
+            do jogo. Ela foi foco da segunda parte do projeto e utiliza a biblioteca
+            \texttt{xwc}, disponibilizada pelo professor.
+
+            \item \texttt{IO} - Este diretório contém arquivos responsáveis por leitura
+            e escrita de arquivos. (Atualmente fazemos apenas leitura de configurações.)
+
+        \end{enumerate}
+
+        Já na raiz, existem arquivos de configurações, além do \texttt{Makefile} e o arquivo 
+        de entrada (que contém o método \texttt{main}).
+    
+    \newpage
+
+    \section{Diretório base}
+    \subsection{Arquivo auxiliar}
+        A biblioteca auxiliar possui uma série de utilidades para o projeto.
+
+        Entre elas, as declarações do tipo \texttt{string} e \texttt{Bool}, além de
+        um gerenciador de erros (\texttt{exception handling}). Para isso, 
+        há no \texttt{.h} um \texttt{enum} com uma série de códigos de erros.
+
+        Este \texttt{enum} é usado como um tipo \texttt{erroCode}. Há nesse arquivo
+        uma função chamada \texttt{throwException} que recebe o nome da função 
+        onde o erro aconteceu, uma mensagem de erro e o \texttt{erroCode}.
+
+        Dessa forma, depurar o jogo fica muito mais fácil e isto se mostrou
+        absurdamente útil para nós ao longo do desenvolvimento.
+
+        Além disso, esse arquivo conta com macros para máximo e mínimo de dois números e funções
+        \texttt{mallocSafe}, \texttt{freeSafe}, \texttt{pause} e \texttt{geraRandomicoEntre}.
+
+        A documentação detalhada de cada coisa pode ser encontrada no arquivo 
+        \texttt{auxiliar.h} e as implementações em \texttt{auxiliar.c}.
+
+    \subsection{Arquivo leitor}
+        Esta biblioteca contém um leitor de arquivos muito simples. Ele ele
+        ser inicializado pelo método \texttt{initLeitor} passando um
+        nome de arquivo a partir do executável do jogo.
+
+        Após isso, o método \texttt{proxLeitura} faz um leitura de um token
+        do arquivo (definido como uma string) e retorna-o. Já o método
+        \texttt{getLeitura} apenas retorna o último token lido sem avançar
+        a leitura.
+        A função \texttt{imprimeAtual} imprime o \texttt{getLeitura} no
+        \textit{stdout}. E a função \texttt{strigual} compara uma string 
+        com a última leitura.
+
+        Por fim, \texttt{disposeLeitor} deve ser usado quando o leitor termina 
+        seu trabalho, liberando o arquivo.
+
+    \subsection{Arquivo vetores}
+        O foco dessa biblioteca é em um struct definido por \texttt{vet2D} e tem
+        dois \texttt{double} x e y. Podemos fazer basicamente tudo o que se espera
+        de um biblioteca para vetores. Além disso, adicionamos um struct
+        para matrizes chamado \texttt{mat2D}. Ainda não adicionamos muitos métodos
+        para lidar com essa struct, apeas os dois métodos \texttt{multiplicaPorMatriz}
+        que multiplica um vetor por uma matriz e o \texttt{rotaciona},
+        que rotaciona um vetor por um ângulo utilizando uma matriz de rotação.
+
+        Talvez futuramente adicionemos operações básicas com matrizes.
+
+    \newpage
+
+    \section{Diretório fisica}
+    
+    Chegamos ao coração do jogo. Inicialmente tínhamos três tipos de "corpos"
+    que produziam ou recepiam algum efeito físico: as duas naves, os projéteis
+    e um planeta. O grupo pensou bastante em uma maneira de generalizar o conceito
+    de corpo e também de generalizar o número de corpos que podem aparecer de cada
+    tipo (como, por exemplo, ter mais de um planeta em jogo).
+
+    Após pensar bastante, surgiu o conceito de \textbf{objeto}, que se baseia
+    em Programação Orientada a Objetos. Abstraímos da seguinte maneira:
+
+    Todos os "corpos" físicos que aparecem na tela são chamados de objetos e
+    serão structs com uma outra struct mais fundamental dentro delas chamada
+    \texttt{Objeto}. Detalhes da implementação serão detalhadas em \ref{obj}.
+
+    O importante é que muitos métodos não precisam saber qual é o tipo de
+    objeto, passamos para estes métodos apenas um ponteiro para o objeto 
+    e os métodos fazem seu trabalho.
+
+    Para pegar os objetos de uma nave, projétil, planeta ou booster 
+    (estes serão falados com mais detalhes em \ref{booster}) utilizamos 
+    o método \texttt{GetObjeto}, que, dados o tipo que queremos 
+    (um desses quatro acima) e o seu índice 
+    (pois há arrays para cada tipo de objeto).
+    
+    \subsection{Arquivo fisica}
+    \label{fis}
+
+    \subsubsection{Implementação dos objetos}
+    \label{obj}
+
+    A struct de um objeto possui os seguintes campos: m, r, p, v e s. Que
+    significam respectivamente: massa, raio, posição, velocidade e sprite.
+    
+    Após isso, temos que as structs \texttt{Nave}, \texttt{Projetil},
+    \texttt{Planeta} e \texttt{Booster} possuem um campo \texttt{Objeto o}.
+    O nome \texttt{o} deve ser padronizado pois há os seguintes macros:
+    \begin{enumerate}
+        \item \texttt{vel} para \texttt{o.v}
+        \item \texttt{mass} para \texttt{o.m}
+        \item \texttt{pos} para \texttt{o.p}
+        \item \texttt{radius} para \texttt{o.r}
+        \item \texttt{spr} para \texttt{o.s}
+    \end{enumerate}
+
+    Dessa forma, se \texttt{p1} é um planeta, não precisamos escrever
+    \texttt{p1.o.r}, mas simplesmente \texttt{p1.radius}, abstraíndo o
+    struct Objeto. 
+
+    Além disso, há um tipo defindo por um enum chamado \texttt{TipoObj} que
+    contém todos os tipos de objeto em uma sequência especificada e o último
+    elemento do enum é utilizado caso queiramos sabe o número de objetos diferentes.
+
+    Depois temos quatro arrays diferentes, um para cada objeto e seus máximos são
+    definidos por constantes. Os arrays das naves e dos planetas possui um tamanho
+    constante, pois os elementos desses arrays são os mesmos do começo ao fim 
+    do jogo. Já os arrays de projéteis e boosters conterão elementos diferentes
+    ao longo do jogo, por isso seu total de objetos varia.
+
+    Por isso, existe um array que contém o total de cada array. Este array se chama
+    \texttt{tot\_obj} e tem tamanho \texttt{NUM\_TIPO\_OBJ}. A ordem dos tamanhos
+    é a mesma que a do enum \texttt{TipoObj}, assim podemos fazer 
+    \texttt{tot\_obj[NAVE]} para saber a quantidade de naves. Perceba que assim 
+    podemos alterar o máximo de naves e todo o resto do código funciona normalmente.
+
+    \subsubsection{Uso dos objetos}
+
+    A biblioteca contém os seguintes métodos que usam objetos apenas, sem ter
+    que saber que tipo de objeto é aquele:
+
+    \begin{enumerate}
+        \item \texttt{Forca} - dá a força gravitacional entre dois objetos
+        \item \texttt{incVel} - incrementa a velcidade de um objeto baseado em uma força
+        \item \texttt{IncPos} - incrementa a posição de um objeto baseado em sua velocidade
+        \item \texttt{DistanciaEntre} - dá a distância entre dois objetos
+        \item \texttt{GetObjeto} - dado um tipo e um índice, dá o objeto do vetor respectivo
+        \item \texttt{SetObjeto} - dados um tipo, um índice e um objeto, transforma
+        o índice do vetor respectivo no objeto passado
+        \item \texttt{ObjetoDuplicado} - diz se dois objetos distintos estão na mesma memória
+        \item \texttt{ObjetoIgual} - diz se todas as propriedades de dois objetos são iguais
+        \item \texttt{CalculaForcaSobre} - dado um objeto, acha a resultante gravitacional sobre ele
+        \item \texttt{AtualizaObjeto} - atualiza a posição, velocidade e sprite de um objeto
+        \item \texttt{AtualizaObjetos} - atualiza todos os objetos
+        \item \texttt{giraObjetoVel} - gira o sprite de um objeto para que aponte para sua velocidade
+    \end{enumerate}
+
+    \subsubsection{Outros usos da biblioteca}
+
+    Outros usos da biblioteca são:
+    \begin{enumerate}
+        \item Devolver padrões de cada objeto
+        \item Checagem de colisão entre objetos
+        \item Fazer o manejo da vida das naves
+        \item Fazer o manejo dos projéteis da tela
+        \item Atualizar o jogo como um todo e dizer se ele deve continuar
+    \end{enumerate}
+
+    Para um melhor entendimento, veja o arquivo \texttt{fisica.h}.
+
+    \subsection{Arquivo gerenciadorBoosters}
+    \label{booster}
+    
+    Os boosters são algo extra que o professor não pediu, mas achamos legal
+    implementar. Eles são objetos que ficam voando pela tela, sendo atraídos
+    gravitacionalmente pelos outros corpos (se quiser desativar isso, basta
+    trocar a massa dos boosters para 0). Eles são lidos de um outros arquivo
+    de configuração que deve ser nomeado como booster.cfg (ao contrário
+    do outro arquivo de input, o arquivo de boosters não é requisitado
+    ao usuário, ele é único).
+
+    Para isso, apesar de os boosters estarem definidos em \texttt{fisica.h},
+    o arquivo \texttt{gerenciadorBoosters.h} faz exatamente o que o nome diz.
+
+    Os boosters são definidos num arquivo e ficam em um array chamado 
+    \texttt{boostersPreCriados}. Quando eles vão aparecer na tela, para
+    que os jogadores possam pegá-los, é escolhido um booster aleatoriamente.
+
+    Além disso, há um booster padrão definido via código (pela função
+    \texttt{defineBoosterPadrao}). Ele é o booster que as naves possuem
+    se não estão com nenhum booster atualmente. E depois de pegar um (colidindo
+    com ele), o booster ficará na nave por um tempo. Esta e outras propriedades
+    estão definidas no arquivo de leitura.
+
+    Entre as funcionalidades dessa biblioteca, temos:
+    \begin{enumerate}
+        \item \texttt{defineBoosterPadrao} - que deve ser chamada para colocar o
+        booster padrão na posição 0 do vetor de boosters pré criados.
+
+        \item \texttt{criaNovoBooster} - que coloca um novo booster na tela.
+        
+        \item \texttt{removeBoosterDaTela} - que remove um booster cujo tempo
+        na tela se esgotou
+        \item \texttt{capturaBooster} - chamada quando uma nave colide com um booster.
+        \item \texttt{resetaBooster} - que reseta uma nave para o booster padrão.
+        \item \texttt{boosterVaiSpawnar} - que retorna se, naquele frame, algum booster 
+        deve aparecer, baseado na probabilidade de um booster aparecer.
+        \item Checagem de colisões de naves com booster
+        \item Atualização dos boosters em tela e dentro das naves
+    \end{enumerate}
+
+    \newpage
+
+    \section{Diretório gráficos}
+    Dentro deste diretório se encontram todas as sprites do jogo, a biblioteca 
+    gráfica do professor, uma abstração dessa biblioteca construída por nós 
+    (o arquivo \texttt{graficos.h}) e uma biblioteca que une esta com a parte
+    física do jogo, chamada \texttt{display.h} (os nomes, infelizmente não
+    são muito bons, mas não conseguimos achar melhores - aceitamos sujestões).
+    
+    \subsection{Arquivo graficos}
+
+    Uma das primeiras coisas que encontramos no arquivo é o tamanho da tela. Para 
+    se ter uma tela menor, basta ajustar a constante \texttt{SIZE\_X\_WIN}. E para ter uma
+    proporção de tela diferente, basta ajudar o \texttt{SIZE\_RATIO}. Pretendemos futuramente
+    jogar essas configurações para um arquivo de configurações dos gráficos.
+
+    \subsubsection{Funcionamento das sprites}
+    
+    O coração da segunda parte do projeto são as chamadas sprites: structs com dois campos:
+    \texttt{double angle} e \texttt{NOME\_SPR img}. O ângulo é simplesmente o ângulo que a
+    sprite está fazendo com o eixo x. Ele define qual rotação da imagem será exibida e, 
+    atualmente, se acha o ângulo do \textbf{vetor velocidade} com o eixo x.
+
+    Na próxima etapa, vamos mudar isso para o vetor aceleração, pois é o que se espera de um jogo
+    desse tipo.
+
+    Já o \texttt{NOME\_SPR} é um tipo enum que deve conter todos os sprites
+    existentes no jogo em uma certa ordem (e o último enum dá o número
+    de sprites que há). É importante que a ordem do enum seja a mesma
+    com que as pastas estão dispostas no diretório \texttt{pics}.
+
+    Observe que ainda há muitos sprites não implementados (como todos os
+    dos projéteis - pois as naves não atiram ainda).
+
+    Por fim, é importante observar que cada sprite possui várias pics de rotação.
+    Em cada pasta de uma sprite há essas rotações e um arquivo size que contém
+    três números: as dimensões da sprite e o número de pics.
+
+    \subsubsection{Outras funcionalidades}
+
+    De resto, esta biblioteca possui métodos para pegar PIC e Mask de uma sprite,
+    com base no ângulo atual dela, métodos para desenhar sprits em um ponto
+    da tela, métodos para mexer no ângulo e outras funcionalidades.
+
+    É importante também dizer que existem duas janelas principais, uma visível
+    pelo usuário (\texttt{showingWindow})e outra que está escondida e
+    é usada entre uma atualização e outra do jogo (\texttt{workbench}).
+
+    Entre uma atualização e outra, imprimimos tudo o que tem para imprimir no
+    \texttt{workbench} e, quando tudo foi imprimido, colamos o \texttt{workbench}
+    por cima da \texttt{showingWindow}.
+
+
+    \subsection{Arquivo display}
+
+    O arquivo display possui responsabilidade de integrar a parte gráfica
+    com a parte física. Uma funcionalidade importante dela é converter
+    as coordenadas usadas pela física em coordenadas da tela (em pixels).
+
+    Fora isso, ela possui funções para imprimir cada tipo de objeto.
+
+    \newpage
+
+    \section{Diretóro IO}
+
+    Este diretório é dedicado a arquivos de entrada e saída. Atualmente, 
+    entretanto, só estamos lendo arquivos de configuração e não escrevemos nada.
+
+    \subsection{Arquivo IO}
+
+    O arquivo IO está separado em duas partes: ler os planetas e naves de um 
+    arquivo de input digitado pelo usuário e a parte de ler as configurações dos
+    booster de um arquivo \texttt{booster.cfg}.
+    
+    Para entender como os inputs são feitos, vamos explicar como é a sintaxe
+    de um arquivo de configurações.
+
+    \subsubsection{Arquivos .cfg}
+
+    Os arquivos .cfg possuem a seguinte sintaxe:
+
+    \texttt{nome\_variavel = valor}
+    
+    Podemos definir algumas variáveis que servem para todo o jogo, 
+    (como \texttt{dt}). Ou podemos criar um novo objeto fazendo:
+
+    \texttt{tipo\_obj = [}
+
+    Declarar as variáveis desse objeto (as não declaradas ficam
+    com um valor padrão definido \texttt{hardcoded}) E
+
+    \texttt{]}
+
+    Para o arquivo dos boosters, não é preciso dizer qual o tipo do objeto,
+    basta abrir uma região de objeto.
+    $\\$
+
+    Olhe os arquivos .cfg para ter uma noção melhor.
+
+    \newpage
+
+    \section{Outros arquivos}
+    \subsection{Arquivo debug}
+
+    Por fim, o arquivo \texttt{debug} foi feito para testar o projeto
+    enquanto vamos criando-o. Ele possui também a função \texttt{main},
+    que é a abertura do programa.
+
+    \subsection{Makefile}
+
+    O \texttt{Makefile} deve ser executado pelo terminal do \texttt{bash}
+    para compilar o projeto. Se você quiser recompilar tudo, pode digitar
+
+    \texttt{make clean\_all}
+
+    E assim todos os códigos objeto serão deletados.
+
+
+\end{document}

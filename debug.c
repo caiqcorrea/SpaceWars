@@ -14,6 +14,7 @@
 #include <string.h>
 #include <time.h>
 
+
 //Método que faz um teste básico da parte física gravitacional do jogo
 //A primeira parte inteira do projeto é testada aqui
 void testeFisicaBasica();
@@ -76,11 +77,10 @@ int main(int argc, char *argv[])
 void testeFisicaBasica()
 {
     string nomeArq;
-    double tempo = 0;
+    //double tempo = 0;
     //Variáveis para o teste de colisão com boosters
-    Bool umaVez = FALSE;
-    Bool outraVez = FALSE;
-    PIC x;
+    //Bool umaVez = FALSE;
+    //Bool outraVez = FALSE;
 
     //Pedimos um arquivo e abrimos ele
     nomeArq = mallocSafe(sizeof(*nomeArq) * 200);
@@ -124,12 +124,15 @@ void testeFisicaBasica()
         //imprimePlanetas();
         //printf("\n\n");
 
-        desenhaFundo(x);
+        desenhaFundoWorkbench();
         desenhaTodos();
         workbenchFlush();
+        usleep(1500);
         //E pausamos até o usuário digitar ENTER
         //pause();
     }
+    
+    grafFree();
 }
 
 void imprimeNave(Nave n)

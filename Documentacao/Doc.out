@@ -1,0 +1,22 @@
+\BOOKMARK [1][-]{section.1}{Disposi\347\343o dos diret\363rios e arquivos}{}% 1
+\BOOKMARK [1][-]{section.2}{Diret\363rio base}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Arquivo auxiliar}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Arquivo leitor}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Arquivo vetores}{section.2}% 5
+\BOOKMARK [1][-]{section.3}{Diret\363rio fisica}{}% 6
+\BOOKMARK [2][-]{subsection.3.1}{Arquivo fisica}{section.3}% 7
+\BOOKMARK [3][-]{subsubsection.3.1.1}{Implementa\347\343o dos objetos}{subsection.3.1}% 8
+\BOOKMARK [3][-]{subsubsection.3.1.2}{Uso dos objetos}{subsection.3.1}% 9
+\BOOKMARK [3][-]{subsubsection.3.1.3}{Outros usos da biblioteca}{subsection.3.1}% 10
+\BOOKMARK [2][-]{subsection.3.2}{Arquivo gerenciadorBoosters}{section.3}% 11
+\BOOKMARK [1][-]{section.4}{Diret\363rio gr\341ficos}{}% 12
+\BOOKMARK [2][-]{subsection.4.1}{Arquivo graficos}{section.4}% 13
+\BOOKMARK [3][-]{subsubsection.4.1.1}{Funcionamento das sprites}{subsection.4.1}% 14
+\BOOKMARK [3][-]{subsubsection.4.1.2}{Outras funcionalidades}{subsection.4.1}% 15
+\BOOKMARK [2][-]{subsection.4.2}{Arquivo display}{section.4}% 16
+\BOOKMARK [1][-]{section.5}{Diret\363ro IO}{}% 17
+\BOOKMARK [2][-]{subsection.5.1}{Arquivo IO}{section.5}% 18
+\BOOKMARK [3][-]{subsubsection.5.1.1}{Arquivos .cfg}{subsection.5.1}% 19
+\BOOKMARK [1][-]{section.6}{Outros arquivos}{}% 20
+\BOOKMARK [2][-]{subsection.6.1}{Arquivo debug}{section.6}% 21
+\BOOKMARK [2][-]{subsection.6.2}{Makefile}{section.6}% 22
