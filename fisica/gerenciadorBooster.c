@@ -1,10 +1,18 @@
-/* Este é o arquivo que implementa as funções definidas em gerenciadorBooster.h
+/* Este arquivo foi criado para ser um auxilidor com os boosters
+ * Ele deve conter algumas variáveis globais, além de vários métodos
+ * para criação, destruição e modificação de boosters ao longo do jogo.
+ * 
+ * ATENÇÃO: Este módulo apenas é um gerenciador os boosters,
+ * por eles terem muitas peculiaridades próprias. Ele é um módulo da biblioteca
+ * física.h
+ * 
+ * ATENÇÃO: para usar a maioria dos métodos desse módulo é preciso, primeiro,
+ * ler o arquivo booster.cfg e atribuir valores às variáveis e arrays desse cabeçalho.
  */
 
-#include "gerenciadorBooster.h"
 #include "../base/auxiliar.h"
-#include "fisica.h"
 #include "../base/vetores.h"
+#include "fisica.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -26,7 +34,7 @@ void defineBoosterPadrao()
     BoosterPadrao()->nome = mallocSafe(sizeof(char) * TAM_MAX_NOMES);
 	strcpy(BoosterPadrao()->nome, "PADRÃO");
     BoosterPadrao()->vidaAdicional = 0;
-    BoosterPadrao()->cadencia = 1;
+    BoosterPadrao()->proj.cadencia = 1;
     BoosterPadrao()->proj.dano = 1;
     BoosterPadrao()->proj.tempoRestante = 1000;
     BoosterPadrao()->proj.mass = 100;
@@ -112,10 +120,10 @@ void capturaBooster(int index, Nave *nave)
 
 void resetaBooster(Nave *nave)
 {
-    viraBoosterPadrao(&(nave->boosterAtual));
+    getBoosterPadrao(&(nave->boosterAtual));
 }
 
-void viraBoosterPadrao(Booster *b)
+void getBoosterPadrao(Booster *b)
 {
     defineBoosterComo(b, *BoosterPadrao());
 }
@@ -125,7 +133,7 @@ void defineBoosterComo(Booster *b, Booster ref)
     //Assumimos que b ainda não possui um nome mallocado!
     b->nome = mallocSafe(sizeof(char) * TAM_MAX_NOMES);
 	strcpy(b->nome, ref.nome);
-    b->cadencia = ref.cadencia;
+    b->proj.cadencia = ref.proj.cadencia;
     b->vidaAdicional = ref.vidaAdicional;
     b->proj.tempoRestante = ref.proj.tempoRestante;
     b->proj.dano = ref.proj.dano;
@@ -194,9 +202,4 @@ void AtualizaBoosters()
 Booster *BoosterPadrao()
 {
     return &(boostersPreCriados[0]);
-}
-
-void getBoosterPadrao(Booster *b)
-{
-    defineBoosterComo(b, *BoosterPadrao());
 }

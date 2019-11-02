@@ -13,7 +13,6 @@
 #include "../base/vetores.h"
 #include "xwc.h"
 
-
 #define SIZE_RATIO 9.0 / 16
 #define SIZE_X_WIN 1280
 #define SIZE_Y_WIN (int)(SIZE_X_WIN * SIZE_RATIO)
@@ -25,7 +24,7 @@
 /* ---- ESTRUTURAS E VARIÁVEIS GLOBAIS ---- */
 
 //O enum com o nome de todas as imagens na pasta /pics
-typedef enum 
+typedef enum
 {
 	IMG_NAVE1,
 	IMG_NAVE2,
@@ -47,10 +46,26 @@ typedef enum
 	NUM_SPR //SEMPRE POR ÚLTIMO, ESTE É APENAS O NÚMERO DE ELEMENTOS DO ENUM
 } NOME_SPR;
 
+//Estrutura que contém um array de PICs, junto com o número de elementos do array
+//e o tamanho dos PICs
+
+//Array que contém todas as imagens do jogo
+//Cada índice possui um struct Pics, que é uma struct com uma imagem e todas suas rotações.
+//Além disso, essa estrutura possui, para auxílio, o número de rotações e
+//o comprimento e altura da imagem
+
+struct
+{
+	PIC *imgs;		   //Array de imagens
+	MASK *msks;		   //Array de masks associado
+	int n_imgs;		   //Número de imagens
+	int height, width; //Tamanho em pixels
+} pics[NUM_SPR];
+
 typedef struct
 {
-	NOME_SPR img;	  //Array de rotação uniforme da imagem
-	double angle;	  //Ângulo atual da sprite
+	NOME_SPR img; //Array de rotação uniforme da imagem
+	double angle; //Ângulo atual da sprite
 } Sprite;
 
 /* ---- FUNÇÕES ---- */

@@ -9,10 +9,10 @@
 #include "IO.h"
 
 #include "../fisica/fisica.h"
-#include "../fisica/gerenciadorBooster.h"
 #include "../base/vetores.h"
 #include "../base/auxiliar.h"
 #include "../base/leitor.h"
+#include "../graficos/display.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -206,7 +206,7 @@ void lerBooster(int index)
 		else if (strigual("vidaAdicional"))
 			leVerificaIgualAtribuiInt(&(novo.vidaAdicional), "vidaAdicional");
 		else if (strigual("cadencia"))
-			leVerificaIgualAtribuiInt(&(novo.cadencia), "cadencia");
+			leVerificaIgualAtribuiInt(&(novo.proj.cadencia), "cadencia");
 		else if (strigual("dano"))
 			leVerificaIgualAtribuiInt(&(novo.proj.dano), "dano");
 		else if (strigual("tempoProj"))

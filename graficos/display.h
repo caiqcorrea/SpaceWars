@@ -41,4 +41,10 @@ void desenhaExplosao(vet2D p);
 //Desenha um booster na posição p
 void desenhaBooster(vet2D p);
 
+//Dado um objeto, a função olha sua sprite para definir o raio do objeto
+void defineRaio(Objeto *o);
+
+//Define todos os raios de todos os objetos
+void defineRaios();
+
 #endif

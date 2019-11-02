@@ -12,7 +12,9 @@ void *mallocSafe(int size)
 	void *ponteiro;
 	ponteiro = malloc(size);
 	if (ponteiro == NULL)
-		throwException("mallocSafe", "Socorro! Malloc devolveu NULL!", stack_overflow_exception);
+		throwException("mallocSafe",
+					   "Socorro! Malloc devolveu NULL!",
+					   stack_overflow_exception);
 	return ponteiro;
 }
 

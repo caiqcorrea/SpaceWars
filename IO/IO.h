@@ -25,9 +25,13 @@
 void lerInputs(string arq);
 
 //Função que lê o planeta e inicializa-o
+//Recebe um índice referente a onde o planeta será
+//colocada no array de planetas
 void lerPlaneta(int index);
 
 //Função que lê uma nave e inicializa-a
+//Recebe um índice referente a onde a nave será
+//colocada no array de naves
 void lerNave(int index);
 
 /* FUNÇÕES PARA BOOSTERS */

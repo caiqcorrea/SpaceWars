@@ -21,22 +21,6 @@ static WINDOW *workbench;
 //ao mudar de quadro, damos um workbenchFlush() para atualizar a showingWindow.
 static WINDOW *showingWindow;
 
-//Estrutura que contém um array de PICs, junto com o número de elementos do array
-//e o tamanho dos PICs
-
-//Array que contém todas as imagens do jogo
-//Cada índice possui um struct Pics, que é uma struct com uma imagem e todas suas rotações.
-//Além disso, essa estrutura possui, para auxílio, o número de rotações e
-//o comprimento e altura da imagem
-
-static struct
-{
-	PIC *imgs;		   //Array de imagens
-	MASK *msks;		   //Array de masks associado
-	int n_imgs;		   //Número de imagens
-	int height, width; //Tamanho em pixels
-} pics[NUM_SPR];
-
 void winsInit()
 {
 	showingWindow = InitGraph(SIZE_X_WIN, SIZE_Y_WIN, "Space Wars");

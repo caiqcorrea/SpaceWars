@@ -44,6 +44,8 @@
 #define MAX_PLANETAS 1  //Número de planetas
 #define MAX_BOOSTERS 10 //Número máximo de boosters
 
+#define MAX_VEL 300  //Móudlo da velocidade máxima dos objetos
+
 #define TAM_MAX_NOMES 100
 
 #define MAX_OBJ                                         \
@@ -77,43 +79,51 @@ typedef struct
 	Objeto o;
 	double tempoRestante; //O tempo de vida restante do projétil (ele some quando o tempo vai a zero)
 	int dano;			  //A quantidade de pontos de vida que o projétil tira se acertar
+	int cadencia;		  //Cadencia dos tiros (mesma unidade usada por toda a fisica)
 } Projetil;
 
 /* Struct Booster.
- * Esta struct é "dupla", pois ao mesmo tempo que ela é um objeto na tela (antes de uma nave colidir com o
- * booster), também é uma propriedade de cada nave.
+ * Esta struct é "dupla", pois ao mesmo tempo que ela é um objeto na tela
+ * (antes de uma nave colidir com o booster), 
+ * também é uma propriedade de cada nave.
  * 
- * Boosters aparecem aleatoriamente na tela e podem ser "pegados" pelas naves para adicionar algum
+ * Boosters aparecem aleatoriamente na tela
+ * e podem ser "pegados" pelas naves para adicionar algum
  * efeito adicional à jogatina, como tiros mais rápidos, escudo, etc.
  * 
- * Ao mesmo tempo, a nave possui uma struct boosterAtual que é utilizada para saber qual é o estado atual
- * da nave. Ou seja: como serão seus tiros? qual a cadência deles? são a vida atual da nave? entre outras
- * várias perguntas.
+ * Ao mesmo tempo, a nave possui uma struct boosterAtual que é utilizada 
+ * para saber qual é o estado atual da nave. 
+ * Ou seja: como serão seus tiros? qual a cadência deles?
+ * são a vida atual da nave? entre outras várias perguntas.
  * 
  * Atualmente, um booster conta com as seguintes propriedades:
- * 		Vida adicional: quando a nave toma um tiro, perde o que tem na vida adicional (se ela não for 0)
+ * 		Vida adicional: quando a nave toma um tiro,
+ * 						perde o que tem na vida adicional (se ela não for 0)
  * 		Cadência: a cadência de tiros da nave é determinada por este valor
- * 		Projetil: o booster tem um projétil dentro de si, determinando o dano da nave
+ * 		Projetil: o booster tem um projétil dentro de si, 
+ * 				  determinando todas as características de projétil
+ * 				  da nave que está com esse booster no momento.
  * 		
  */
 typedef struct
 {
-	string nome; //Nome do booster
-	Objeto o;
-	double tempoRestanteTela; //Tempo restante do booster na tela, ao chegar em 0, removemos ele do array
+	string nome;			  //Nome do booster
+	Objeto o;				  //Garante que booster é um objeto físico
+	double tempoRestanteTela; //Tempo restante do booster na tela,
+							  // ao chegar em 0, removemos ele do array
 	double tempoRestanteNave; //Tempo restante do booster após a nave pegá-lo
-	int vidaAdicional;
-	int cadencia;
-	Projetil proj;
+	int vidaAdicional;		  //Vida adicional que ele dá para a nave
+	Projetil proj;			  //Projétil tem todas as características
 } Booster;
 
 /* Struct Nave contém um objeto próprio e um nome que é o nome da nave.
- *
+ * Tem também seus pontos de vida atuais que são decrementados
+ * ao tomar um tiro. 
  */
 typedef struct
 {
-	string nome; //Nome da nave
-	Objeto o;
+	string nome;		  //Nome da nave
+	Objeto o;			  //Objeto físico
 	int HP;				  //Pontos de vida
 	Booster boosterAtual; //Booster atual da nave (por padrão é o booster padrão)
 } Nave;
@@ -137,9 +147,10 @@ typedef struct
 #define spr o.s	// Macro para o sprite de um objeto
 
 /* Um enum com os tipos de objetos possíveis.
- * Serve para fazermos referência a qual dos três arrays estamos falando.
- * Por exemplo, uma função x com parâmetros um Objeto e um TipoObj. Dessa forma, com uma só função,
- * nós podemos fazer o mesmo tipo de tarefa aplicada a qualquer um dos três tipos de objeto.
+ * Serve para fazermos referência a qual dos arrays estamos falando.
+ * Por exemplo, uma função x com parâmetros um Objeto e um TipoObj.
+ * Dessa forma, com uma só função, nós podemos fazer o mesmo tipo de
+ * tarefa aplicada a qualquer um dos tipos de objeto.
  */
 typedef enum
 {
@@ -155,11 +166,11 @@ typedef enum
 extern int tot_obj[NUM_TIPO_OBJ]; //O número de objetos de cada tipo
 
 /* Armazenaremos todos os objetos na tela através de arrays globais,
- * um para cada tipo: Nave, Planeta e Projetil.
+ * um para cada tipo.
  * Os tamanhos desses arrays estão definidos no começo desse arquivo e podem ser
  * editados hard-coded (quem sabe futuramente em tempo de execução)
  */
-extern Nave naves[MAX_NAVES];		   //O array que contém as duas naves dos jogadores
+extern Nave naves[MAX_NAVES];		   //O array que contém as naves dos jogadores
 extern Planeta planetas[MAX_PLANETAS]; //O array que contém o planeta central
 extern Projetil projs[MAX_PROJ];	   //O array que contém os projéteis que estão atualmente na tela
 extern Booster boosters[MAX_BOOSTERS]; //O array que contém os booster que estão atualmente na tela
@@ -169,8 +180,29 @@ extern Booster boosters[MAX_BOOSTERS]; //O array que contém os booster que est�
 //Intervalo de tempo da simulacao, lido no arquivo principal.
 extern double dt;
 
-//Tempo restante de simulação;
-extern double tRestante;
+/* VARIAVEIS GLOBAIS DOS BOOSTERS */
+
+//Array com todos os boosters lidos de booster.cfg
+//Ele é alocado dinamicamente, pois não sabemos quantos são os boosters lidos lá
+//Na hora de criar um booster na tela, pegamos um randômico desse array
+//O booster padrão deve sempre estar na posição 0 desse array
+//Se, ao final da leitura de booster.cfg, não tivermos lido um booster padrão,
+//devemos lançar uma execeção ao usuário.
+extern Booster *boostersPreCriados;
+
+//Número de elementos do array acima
+extern int totalBoostersPreCriados;
+
+//Na hora de criar aleatoriamente um booster para ir para a tela,
+//ele terá algumas propriedades aleatórias que vamos decidir
+//com base nas variáveis que seguem:
+extern vet2D maxVel, minVel;
+extern double maxMass, minMass;
+extern double maxTempoRestanteTela, minTempoRestanteTela;
+extern double maxTempoRestanteNave, minTempoRestanteNave;
+
+//Probabilidade de um booster aparecer na tela em um tick do jogo
+extern double propBooster;
 
 /*--------------- F U N Ç Õ E S ---------------*/
 
@@ -277,6 +309,54 @@ Bool EstaViva(Nave n);
 //Checa se todas as naves estão vivas
 Bool TodasEstaoVivas();
 
+/* FUNÇÕES DO GERENCIADOR DE BOOSTERS */
+
+//Define as propriedades do booster padrão.
+//Esta função deve ser chamada pelo menos uma vez antes do início da parte gráfica
+void defineBoosterPadrao();
+
+//Inicializa e coloca um novo booster no array de boosters
+void criaNovoBooster();
+
+//Função que tira um booster do array caso seu tempo de tela tenha esgotado
+void removeBoosterDaTela(int index);
+
+//Função chamada quando um booster é capturado por uma nave (quando ela e ele colidem)
+//O parâmetro index se refere ao índice do booster capturado pela nave
+//no array de boosters
+void capturaBooster(int index, Nave *nave);
+
+//Função que é chamada quando o tempo do booster capturado por uma nave se esgotou
+//Seu nome é reseta booster porque a função sobrescreve
+//o booster da nave estava pelo booster padrão
+void resetaBooster(Nave *nave);
+
+//Função que, dado um booster b, transforma ele no booster padrão
+void getBoosterPadrao(Booster *b);
+
+//Atribui ao primeiro booster as qualidades do segundo (a referência)
+void defineBoosterComo(Booster *b, Booster ref);
+
+//Função que diz se um booster irá aparecer na tela em um dado tick do jogo
+Bool boosterVaiSpawnar();
+
+//Checa se alguma nave capturou algum booster e, se sim, coloca o booster dentro dela
+void ChecaColisaoComBoosters();
+
+//Atualiza os tempos dos boosters (não padrões) dentro das naves
+//Se o tempo esgotou, voltamos a nave para o padrão
+void AtualizaBoostersEmNaves();
+
+//Atualiza o tempo dos booster na tela.
+//Se o tempo esgotou, tiramos ele da tela.
+void AtualizaBoostersEmTela();
+
+//Faz todas as atualizações necessárias dos boosters de um tick de jogo
+void AtualizaBoosters();
+
+//Retorna o booster padrão
+Booster *BoosterPadrao();
+
 /* OUTRAS FUNÇÕES */
 
 //Atualiza o estado atual do jogo
@@ -292,7 +372,7 @@ Bool TodasEstaoVivas();
 Bool AtualizaJogo();
 
 //Esta função dá free em todas as alocações de memória relacionadas aos
-//quatro arrays da biblioteca física
+//arrays da biblioteca física
 void freeFisica();
 
 #endif

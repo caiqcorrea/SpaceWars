@@ -29,7 +29,6 @@
 
 #include "../base/vetores.h"
 #include "../base/auxiliar.h"
-#include "gerenciadorBooster.h"
 #include "../graficos/graficos.h"
 
 #include <math.h>
@@ -54,9 +53,6 @@ Booster boosters[MAX_BOOSTERS]; //O array que contém os boosters que estão atu
 
 //Intervalo de tempo da simulacao, lido no arquivo principal.
 double dt;
-
-//Tempo restante de simulação;
-double tRestante;
 
 /*--------------- I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S ---------------*/
 
@@ -166,7 +162,7 @@ Bool ObjetoIgual(Objeto o1, Objeto o2)
 vet2D Forca(Objeto o1, Objeto o2)
 {
 	vet2D aux = sub(o1.p, o2.p);
-	if (norma(aux) == 0)
+	if (norma(aux) < 1000) /* Uma distância mínima */
 		return NULL_VET;
 
 	return mult(-G * o1.m * o2.m / pow(norma(aux), 2), versor(aux));
@@ -175,6 +171,11 @@ vet2D Forca(Objeto o1, Objeto o2)
 void IncVel(vet2D F, Objeto *o)
 {
 	o->v = soma(o->v, mult((dt / (o->m)), F));
+	if (norma(o->v) > MAX_VEL)
+	{
+		normaliza(&(o->v)); //Guardamos sua direção
+		mult(MAX_VEL, o->v); //Fazemos seu módulo ser a velocidade máxima
+	}
 }
 
 void IncPos(Objeto *o)
@@ -333,7 +334,7 @@ void ChecaTodasColisoes()
 
 		if (colidiu)
 			i--; //Removemos o i-ésimo, então o próximo a ser visto é quem virou o i-ésimo
-				//Note que se o projétil colide com um planeta (a primeira verificação) a função não entra nos outros for's
+				 //Note que se o projétil colide com um planeta (a primeira verificação) a função não entra nos outros for's
 	}
 	//NAVES
 	for (i = 0; i < tot_obj[NAVE]; i++)
@@ -360,7 +361,6 @@ void ChecaTodasColisoes()
 		if (colidiu)
 			break; //Se colidiu, paramos por aqui. O jogo terminou.
 	}
-
 }
 
 void DecrementaVida(Nave *n, int valor)
@@ -412,12 +412,10 @@ Bool AtualizaJogo()
 	ChecaTodasColisoes();
 	todasNavesVivas = TodasEstaoVivas();
 
-	tRestante -= dt; //Decrementamos o tempo restante de simulação
-
-	//printf("tRestante = %lf todasNavesVivas = %d", tRestante, todasNavesVivas);
+	//printf("todasNavesVivas = %d", todasNavesVivas);
 
 	//E a simulação continua enquanto o tempo for positivo e não há naves mortas
-	return ((tRestante > 0.0) && todasNavesVivas);
+	return (todasNavesVivas);
 }
 
 void freeFisica()
