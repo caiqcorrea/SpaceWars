@@ -128,19 +128,30 @@ PIC MountPic(WINDOW *w, char **data, MASK m);
 int WritePic(PIC p, char *fname, MASK m);
 #endif
 
+/* A partir daqui o codigo foi editado, não é do xwc original */
 
 /* Inicializa a captura de eventos de teclado */
 void InitKBD(WINDOW *w);
 
 
-/* Verifica se existe alguma tecla disponível */
-int WCheckKBD(WINDOW *w);
+/* Verifica se existe alguma tecla pressionada disponível */
+int WCheckKBDPress(WINDOW *w);
 
-/* pega a próxima tecla e retorna o código X.
+/* pega a próxima tecla pressionada e retorna o código X.
  * Veja em $INC/X11/keysymdef.h */
-KeyCode WGetKey(WINDOW *w);
+KeyCode WGetKeyPress(WINDOW *w);
 
-/* Retorna o KeySym da última tecla lida */
-KeySym WLastKeySym();
+/* Retorna o KeySym da última tecla pressionada */
+KeySym WLastKeyPressSym();
+
+/* Verifica se existe alguma tecla solta disponível */
+int WCheckKBDRelease(WINDOW *w);
+
+/* pega a próxima solta tecla e retorna o código X.
+ * Veja em $INC/X11/keysymdef.h */
+KeyCode WGetKeyRelease(WINDOW *w);
+
+/* Retorna o KeySym da última tecla solta */
+KeySym WLastKeyReleaseSym();
 
 #endif

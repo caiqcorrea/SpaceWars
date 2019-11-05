@@ -305,35 +305,64 @@ PIC MountPic(WINDOW *w, char **data, MASK m)
 
 #endif
 
-void InitKBD(WINDOW *w)
+/* A partir daqui o codigo foi editado, não é do xwc original */
+
+void InitKBD(WINDOW *w) //Função editada
 {
-  /*  XSelectInput (display, w->ptr.window, KeyPressMask|KeyReleaseMask);*/
-  XSelectInput (display, w->ptr.window, KeyPressMask);
+  XSelectInput (display, w->ptr.window, KeyPressMask|KeyReleaseMask);
+  XAutoRepeatOff(display);
+  /* XSelectInput (display, w->ptr.window, KeyPressMask); */
 }
 
-KeySym key;
+KeySym keyP;
+KeySym keyR;
 
-int WCheckKBD(WINDOW *w)
+int WCheckKBDPress(WINDOW *w)
 {
   int r;
   XEvent xev;
 
-  r = XCheckWindowEvent(display,w->ptr.window, KeyPressMask|KeyReleaseMask, &xev);
+  r = XCheckWindowEvent(display,w->ptr.window, KeyPressMask, &xev);
   if (r) XPutBackEvent(display, &xev);
   return r;
 }
 
-KeyCode WGetKey(WINDOW *w)
+KeyCode WGetKeyPress(WINDOW *w)
 {
   XEvent xev;
 
-  XWindowEvent(display,w->ptr.window, KeyPressMask|KeyReleaseMask, &xev);
-  key = XkbKeycodeToKeysym(display, xev.xkey.keycode,
+  XWindowEvent(display,w->ptr.window, KeyPressMask, &xev);
+  keyP = XkbKeycodeToKeysym(display, xev.xkey.keycode,
 						   0, xev.xkey.state & ShiftMask ? 1 : 0);
   return xev.xkey.keycode;
 }
 
-KeySym WLastKeySym()
+KeySym WLastKeyPressSym()
 {
-  return key;
+  return keyP;
+}
+
+int WCheckKBDRelease(WINDOW *w)
+{
+  int r;
+  XEvent xev;
+
+  r = XCheckWindowEvent(display,w->ptr.window, KeyReleaseMask, &xev);
+  if (r) XPutBackEvent(display, &xev);
+  return r;
+}
+
+KeyCode WGetKeyRelease(WINDOW *w)
+{
+  XEvent xev;
+
+  XWindowEvent(display,w->ptr.window, KeyReleaseMask, &xev);
+  keyR = XkbKeycodeToKeysym(display, xev.xkey.keycode,
+						   0, xev.xkey.state & ShiftMask ? 1 : 0);
+  return xev.xkey.keycode;
+}
+
+KeySym WLastKeyReleaseSym()
+{
+  return keyR;
 }

@@ -43,6 +43,9 @@ xwc.o : xwc.c xwc.h
 display.o : display.c display.h graficos.h vetores.h fisica.h auxiliar.h
 	${CC} -c $< ${CFLAGS} -o $@
 
+keybord.o : keybord.c keybord.h xwc.h auxiliar.h
+	${CC} -c $< ${CFLAGS} -o $@
+
 move_o :
 	mkdir $(OBJ_PATH) 2>/dev/null; mv -f *.o $(OBJ_PATH) 2>/dev/null; true
 
