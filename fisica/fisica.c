@@ -49,8 +49,6 @@ Planeta planetas[MAX_PLANETAS]; //O array que contém o planeta central
 Projetil projs[MAX_PROJ];		//O array que contém os projéteis que estão atualmente na tela
 Booster boosters[MAX_BOOSTERS]; //O array que contém os boosters que estão atualmente na tela
 
-#define TERRA planetas[0] //Como só há um planeta, vamos chamá-lo de TERRA
-
 //Intervalo de tempo da simulacao, lido no arquivo principal.
 double dt;
 
@@ -74,6 +72,7 @@ void getNavePadrao(Nave *n)
 	strcpy(n->nome, "NULL");
 	defineBoosterComo(&(n->boosterAtual), *BoosterPadrao());
 	n->HP = 0;
+	n->cooldown = 0;
 	getObjetoPadrao(&(n->o));
 }
 
@@ -173,7 +172,7 @@ void IncVel(vet2D F, Objeto *o)
 	o->v = soma(o->v, mult((dt / (o->m)), F));
 	if (norma(o->v) > MAX_VEL)
 	{
-		normaliza(&(o->v)); //Guardamos sua direção
+		normaliza(&(o->v));  //Guardamos sua direção
 		mult(MAX_VEL, o->v); //Fazemos seu módulo ser a velocidade máxima
 	}
 }
@@ -257,27 +256,30 @@ Bool VerificaSeProjMorreu(Projetil p)
 	return p.tempoRestante <= 0;
 }
 
-void CriaProjetil(Nave *n)
-{	
-
+void CriaProjetil(Nave n)
+{
 	Projetil p;
-	
-	double distancia = p.o.r + n->o.r + 1;
-	vet2D versorNave = versor(n->o.v);
-	vet2D dist = mult(distancia, versorNave);
 
-	p.o.p = soma(dist, n->o.p);
-	p.o.v = soma(mult(p.vInicial, versor(n->o.v)), n->o.v);
-	p.o.m = n->boosterAtual.proj.o.m;
-	p.o.r = n->boosterAtual.proj.o.r;
-	p.o.s = n->boosterAtual.proj.o.s;
-	p.tempoRestante = n->boosterAtual.proj.tempoRestante;
-	p.cadencia = n->boosterAtual.proj.cadencia;
-	p.dano = n->boosterAtual.proj.dano;
+	p.radius = n.projetil.radius;
+
+	//Começa um pouco distante da nave
+	p.pos = soma(mult((n.radius + p.radius + 100), versor(n.vel)),
+				 n.pos);
+	//O 100 é uma distância de segurança para não colidirem
+
+	//Começa com velocidade vInicial e direção da velocidade da nave
+	p.vel = mult(n.projetil.vInicial, versor(n.vel));
+
+	p.mass = n.projetil.mass;
+	p.spr = n.projetil.spr;
+	p.dano = n.projetil.dano;
+	p.tempoRestante = n.projetil.tempoRestante;
+
+	//Existem outras características de um projétil que não são necessárias
+	// de se definir. (cadencia, vInicial)
 
 	projs[tot_obj[PROJETIL]] = p;
 	tot_obj[PROJETIL]++;
-
 }
 
 void RemoveProj(int index)
@@ -415,6 +417,47 @@ void Destroi(Nave *n)
 	DecrementaVida(n, n->HP); //Faz a vida zerar
 }
 
+void Atira(Nave n)
+{
+	if (n.cooldown == 0)
+	{
+		CriaProjetil(n);
+		n.cooldown = n.projetil.cadencia;
+	}
+	//Se não, nada acontece
+}
+
+void Acelera(Nave *n)
+{
+	//Adicionamos boosterAtual.aceleracao na velocidade de n
+	//  e mantemos sua direção
+	n->vel = soma(n->vel, mult(n->boosterAtual.aceleracao, versor(n->vel)));
+}
+
+void Rotaciona(Nave *n, Bool horario)
+{
+	double ang = (horario ? -1 : 1) * M_PI / 2;
+	// Pegamos um vetor ortogonal à velocidade
+	// O sentido do vetor depende do segundo parâmetro
+	vet2D vers = rotaciona(versor(n->vel), ang);
+	//Fazemos ele ficar do tamanho adequado
+	vers = mult(n->boosterAtual.aceleracao, vers);
+
+	//E adiocionamos ele à velocidade
+	n->vel = soma(n->vel, vers);
+}
+
+void AtualizaCooldown()
+{
+	int i;
+	for (i = 0; i < tot_obj[NAVE]; i++)
+	{
+		naves[i].cooldown -= dt;
+		if (naves[i].cooldown < 0) //Se já era 0 ou ficou menor que 0, voltamos para 0
+			naves[i].cooldown = 0;
+	}
+}
+
 Bool AtualizaJogo()
 {
 	int i;
@@ -431,6 +474,9 @@ Bool AtualizaJogo()
 
 	//Fazemos todas as atualizações relacionadas com boosters
 	AtualizaBoosters();
+
+	//Atualizamos o tempo de recarga das naves
+	AtualizaCooldown();
 
 	ChecaTodasColisoes();
 	todasNavesVivas = TodasEstaoVivas();
