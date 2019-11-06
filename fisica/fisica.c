@@ -173,7 +173,7 @@ void IncVel(vet2D F, Objeto *o)
 	o->v = soma(o->v, mult((dt / (o->m)), F));
 	if (norma(o->v) > MAX_VEL)
 	{
-		normaliza(&(o->v)); //Guardamos sua direção
+		normaliza(&(o->v));  //Guardamos sua direção
 		mult(MAX_VEL, o->v); //Fazemos seu módulo ser a velocidade máxima
 	}
 }
@@ -334,7 +334,7 @@ void ChecaTodasColisoes()
 
 		if (colidiu)
 			i--; //Removemos o i-ésimo, então o próximo a ser visto é quem virou o i-ésimo
-				 //Note que se o projétil colide com um planeta (a primeira verificação) a função não entra nos outros for's
+				//Note que se o projétil colide com um planeta (a primeira verificação) a função não entra nos outros for's
 	}
 	//NAVES
 	for (i = 0; i < tot_obj[NAVE]; i++)
