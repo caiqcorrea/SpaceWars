@@ -213,6 +213,10 @@ void lerBooster(int index)
 			leVerificaIgualAtribuiDouble(&(novo.proj.tempoRestante), "tempoProj");
 		else if (strigual("massProj"))
 			leVerificaIgualAtribuiDouble(&(novo.proj.mass), "massProj");
+		else if(strigual("vInicialProj"))
+			leVerificaIgualAtribuiDouble(&(novo.proj.vInicial), "vInicialProj");
+		else if(strigual("aceleracao"))
+			leVerificaIgualAtribuiDouble(&(novo.aceleracao), "aceleracao");
 		else if (strigual("raio"))
 			leVerificaIgualAtribuiDouble(&(novo.radius), "raio");
 		else if (strigual("spr"))

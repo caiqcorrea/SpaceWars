@@ -41,6 +41,8 @@ void defineBoosterPadrao()
     BoosterPadrao()->proj.radius = 1000;
     BoosterPadrao()->proj.spr.img = IMG_PROJ_PADRAO;
     BoosterPadrao()->proj.spr.angle = 0;
+    BoosterPadrao()->aceleracao = 1;
+    BoosterPadrao()->proj.vInicial = 15;
     //As variáveis abaixo são indiferentes para o booster padrão
     BoosterPadrao()->mass = 0;
     BoosterPadrao()->pos.x = 0;

@@ -44,7 +44,7 @@
 #define MAX_PLANETAS 1  //Número de planetas
 #define MAX_BOOSTERS 10 //Número máximo de boosters
 
-#define MAX_VEL 300  //Móudlo da velocidade máxima dos objetos
+#define MAX_VEL 300 //Móudlo da velocidade máxima dos objetos
 
 #define TAM_MAX_NOMES 100
 
@@ -80,6 +80,7 @@ typedef struct
 	double tempoRestante; //O tempo de vida restante do projétil (ele some quando o tempo vai a zero)
 	int dano;			  //A quantidade de pontos de vida que o projétil tira se acertar
 	int cadencia;		  //Cadencia dos tiros (mesma unidade usada por toda a fisica)
+	double vInicial;	  //Módulo da velocidade inicial do projétil
 } Projetil;
 
 /* Struct Booster.
@@ -113,6 +114,7 @@ typedef struct
 							  // ao chegar em 0, removemos ele do array
 	double tempoRestanteNave; //Tempo restante do booster após a nave pegá-lo
 	int vidaAdicional;		  //Vida adicional que ele dá para a nave
+	double aceleracao;		  //Módulo da aceleração da nave
 	Projetil proj;			  //Projétil tem todas as características
 } Booster;
 
