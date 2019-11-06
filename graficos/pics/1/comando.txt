@@ -1,0 +1,1 @@
+for i in {1..59}; do convert -background 'rgba(0,0,0,0)' -distort SRT 354 0.xpm /home/ceno/Documents/GubiSpaceWars/SpaceWars-master/graficos/pics/Nave0/59.xpm; done
