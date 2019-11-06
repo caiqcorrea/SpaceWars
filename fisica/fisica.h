@@ -127,6 +127,8 @@ typedef struct
 	string nome;		  //Nome da nave
 	Objeto o;			  //Objeto físico
 	int HP;				  //Pontos de vida
+	double cooldown;	  //Tempo até poder dar o próximo disparo
+						  //  se é 0, podemos atirar
 	Booster boosterAtual; //Booster atual da nave (por padrão é o booster padrão)
 } Nave;
 
@@ -142,11 +144,12 @@ typedef struct
  * Os defines funcionam também caso tenhamos um ponteiro para um struct.
  * Basta fazer ponteiro->vel
  */
-#define vel o.v	// Macro para a velocidade de um objeto
-#define mass o.m   // Macro para a massa de um objeto
-#define pos o.p	// Macro para a posição de um objeto
-#define radius o.r // Macro para o raio de um objeto
-#define spr o.s	// Macro para o sprite de um objeto
+#define vel o.v					   // Macro para a velocidade de um objeto
+#define mass o.m				   // Macro para a massa de um objeto
+#define pos o.p					   // Macro para a posição de um objeto
+#define radius o.r				   // Macro para o raio de um objeto
+#define spr o.s					   // Macro para o sprite de um objeto
+#define projetil boosterAtual.proj // Macro para o projetil de uma nave
 
 /* Um enum com os tipos de objetos possíveis.
  * Serve para fazermos referência a qual dos arrays estamos falando.
@@ -278,8 +281,9 @@ void ReduzTempoProjs();
 //Dados um projétil, retorna TRUE se ele está morto e FALSE caso contrário
 Bool VerificaSeProjMorreu(Projetil p);
 
-//Cria um projetil com velocidade vNave + vInicial do projetil, e com a mesma direcao da vNave, na frente da nave.
-void CriaProjetil(Nave *n);
+//Cria um projetil e coloca-o na tela
+//Esta função é chamada quando a nave n atira
+void CriaProjetil(Nave n);
 
 //Dado um índice que representa uma posição do array de projéteis
 //a função remove este projétil.
@@ -310,6 +314,18 @@ void Destroi(Nave *n);
 
 //Checa e retorna se a nave n ainda está viva
 Bool EstaViva(Nave n);
+
+//Atualiza o tempo de recarga de todas as naves
+void AtualizaCooldown();
+
+//Adiciona velocida à nave n
+//A velocidade adiciona é definida pela aceleração de seu booster atual.
+void Acelera(Nave *n);
+
+//Adiciona velocidade perpendicalar à nave no sentido horário ou antihorário
+//Se o segundo parâmetro é TRUE, então é horário. Senão, é antihorário.
+//A velocidade adiciona é definida pela aceleração de seu booster atual.
+void Rotaciona(Nave *n, Bool horario);
 
 //Checa se todas as naves estão vivas
 Bool TodasEstaoVivas();
