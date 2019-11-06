@@ -278,6 +278,9 @@ void ReduzTempoProjs();
 //Dados um projétil, retorna TRUE se ele está morto e FALSE caso contrário
 Bool VerificaSeProjMorreu(Projetil p);
 
+//Cria um projetil com velocidade vNave + vInicial do projetil, e com a mesma direcao da vNave, na frente da nave.
+void CriaProjetil(Nave *n);
+
 //Dado um índice que representa uma posição do array de projéteis
 //a função remove este projétil.
 void RemoveProj(int index);

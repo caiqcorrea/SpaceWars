@@ -257,6 +257,29 @@ Bool VerificaSeProjMorreu(Projetil p)
 	return p.tempoRestante <= 0;
 }
 
+void CriaProjetil(Nave *n)
+{	
+
+	Projetil p;
+	
+	double distancia = p.o.r + n->o.r + 1;
+	vet2D versorNave = versor(n->o.v);
+	vet2D dist = mult(distancia, versorNave);
+
+	p.o.p = soma(dist, n->o.p);
+	p.o.v = soma(mult(p.vInicial, versor(n->o.v)), n->o.v);
+	p.o.m = n->boosterAtual.proj.o.m;
+	p.o.r = n->boosterAtual.proj.o.r;
+	p.o.s = n->boosterAtual.proj.o.s;
+	p.tempoRestante = n->boosterAtual.proj.tempoRestante;
+	p.cadencia = n->boosterAtual.proj.cadencia;
+	p.dano = n->boosterAtual.proj.dano;
+
+	projs[tot_obj[PROJETIL]] = p;
+	tot_obj[PROJETIL]++;
+
+}
+
 void RemoveProj(int index)
 {
 	int i;
