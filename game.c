@@ -12,7 +12,6 @@
 #include <time.h>
 #include <unistd.h>
 
-
 //Atualiza o estado atual do jogo
 //Este método deve:
 //	Atualizar as posições de todos os objetos em tela
@@ -74,47 +73,47 @@ void freeAll();
 int main(int argc, char *argv[])
 {
     int i, j, k;
-    
+
     Bool debug_mode = FALSE, pause_mode = FALSE;
     int usleep_timer = 1500;
     unsigned int seed = time(NULL);
 
-    for(i=1; i<argc; i++)
+    for (i = 1; i < argc; i++)
     {
-        if(argv[i][0] == '-')
+        if (argv[i][0] == '-')
         {
-            for(j=1, k=0; j<strlen(argv[i]); j++)
-            switch (argv[i][j])
-            {
-            case 'd':               //Ativa ou desativa o modo de debug
-                debug_mode = TRUE;
-                break;
-            case 'D':
-                debug_mode = FALSE;
-                break;
+            for (j = 1, k = 0; j < strlen(argv[i]); j++)
+                switch (argv[i][j])
+                {
+                case 'd': //Ativa ou desativa o modo de debug
+                    debug_mode = TRUE;
+                    break;
+                case 'D':
+                    debug_mode = FALSE;
+                    break;
 
-            case 'p':               //Ativa ou desativa pausas entre frames
-                pause_mode = TRUE;
-                break;
-            case 'P':
-                pause_mode = FALSE;
-                break;
-            
-            case 't':               //Modifica o timer do usleep
-                usleep_timer = atoi(argv[i+(++k)]);
-                break;
-            
-            case 's':               //Modifica a semente do gerador randomico
-                if(strcmp(argv[i+(++k)], "timer"))
-                    seed = atoi(argv[i+k]);
-                else
-                    seed = time(NULL);
-                break;
+                case 'p': //Ativa ou desativa pausas entre frames
+                    pause_mode = TRUE;
+                    break;
+                case 'P':
+                    pause_mode = FALSE;
+                    break;
 
-            default:
-                throwException("main", "Argumento inválido", file_format_exception);
-                break;
-            }
+                case 't': //Modifica o timer do usleep
+                    usleep_timer = atoi(argv[i + (++k)]);
+                    break;
+
+                case 's': //Modifica a semente do gerador randomico
+                    if (strcmp(argv[i + (++k)], "timer"))
+                        seed = atoi(argv[i + k]);
+                    else
+                        seed = time(NULL);
+                    break;
+
+                default:
+                    throwException("main", "Argumento inválido", file_format_exception);
+                    break;
+                }
         }
     }
     srand(seed);
@@ -123,51 +122,50 @@ int main(int argc, char *argv[])
 
     lerBoosters();
 
-    if(debug_mode)
+    if (debug_mode)
         testeFisicaBasica(pause_mode, usleep_timer);
     else
         jogoJogo(pause_mode, usleep_timer);
-    
+
     printf("Fim\n");
     freeAll();
     return 0;
 }
 
-
 Bool AtualizaJogo()
 {
-	int i;
-	Bool todasNavesVivas;
+    int i;
+    Bool todasNavesVivas;
 
-	//Primeiro atualizamos a posição e velocidade de todos os objetos
-	AtualizaObjetos();
-	//Depois, devemos reduzir o tempo de todos os projéteis
-	ReduzTempoProjs();
-	//Verificamos se algum projétil sumiu e removemos-o se sim
-	for (i = 0; i < tot_obj[PROJETIL]; i++)
-		if (VerificaSeProjMorreu(projs[i])) //Se o projétil morreu
-			RemoveProj(i);					//Removemos o projétil de índice i
+    //Primeiro atualizamos a posição e velocidade de todos os objetos
+    AtualizaObjetos();
+    //Depois, devemos reduzir o tempo de todos os projéteis
+    ReduzTempoProjs();
+    //Verificamos se algum projétil sumiu e removemos-o se sim
+    for (i = 0; i < tot_obj[PROJETIL]; i++)
+        if (VerificaSeProjMorreu(projs[i])) //Se o projétil morreu
+            RemoveProj(i);                  //Removemos o projétil de índice i
 
-	//Fazemos todas as atualizações relacionadas com boosters
-	AtualizaBoosters();
+    //Fazemos todas as atualizações relacionadas com boosters
+    AtualizaBoosters();
 
-	//Atualizamos o tempo de recarga das naves
-	AtualizaCooldown();
+    //Atualizamos o tempo de recarga das naves
+    AtualizaCooldown();
 
-	ChecaTodasColisoes();
-	todasNavesVivas = TodasEstaoVivas();
+    ChecaTodasColisoes();
+    todasNavesVivas = TodasEstaoVivas();
 
-	//E a simulação continua enquanto o tempo for positivo e não há naves mortas
-	return (todasNavesVivas);
+    //E a simulação continua enquanto o tempo for positivo e não há naves mortas
+    return (todasNavesVivas);
 }
 
 void leFisica()
 {
     string nomeArq;
-    
+
     tot_obj[BOOSTER] = 0;
     tot_obj[PROJETIL] = 0;
-    
+
     //Pedimos um arquivo e abrimos ele
     nomeArq = mallocSafe(sizeof(*nomeArq) * 200);
     printf("Digite o nome do seu arquivo: ");
@@ -184,10 +182,9 @@ void testeFisicaBasica(Bool pause_teste, int usleep_timer)
     double tempo = 0;
 
     grafInit();
-    
-    leFisica();          //Lemos os parâmetros da fisica
-    imprimeTudo();       //Jogamos tudo o que foi lido na tela
 
+    leFisica();    //Lemos os parâmetros da fisica
+    imprimeTudo(); //Jogamos tudo o que foi lido na tela
 
     //Enquanto a simulação não terminar...
     while (AtualizaJogo() == TRUE)
@@ -210,7 +207,7 @@ void testeFisicaBasica(Bool pause_teste, int usleep_timer)
         workbenchFlush();
         usleep(usleep_timer);
 
-        if(pause_teste)
+        if (pause_teste)
             pause_aux();
     }
 
@@ -223,28 +220,28 @@ void jogoJogo(Bool pause_mode, int usleep_timer)
     leFisica();
     initKeybord(mainWindow());
 
-    while(AtualizaJogo() == TRUE)
+    while (AtualizaJogo() == TRUE)
     {
         atualizaKeybord(mainWindow());
-        
-        if(isPressed(NAVE1_HOR))
+
+        if (isPressed(NAVE1_HOR))
             Rotaciona(&naves[0], TRUE);
-        if(isPressed(NAVE1_ANT))
+        if (isPressed(NAVE1_ANT))
             Rotaciona(&naves[0], FALSE);
-        if(isPressed(NAVE1_ACE))
+        if (isPressed(NAVE1_ACE))
             Acelera(&naves[0]);
-        if(isPressed(NAVE1_DIS))
+        if (isPressed(NAVE1_DIS))
             Atira(&naves[0]);
 
-        if(isPressed(NAVE2_HOR))
+        if (isPressed(NAVE2_HOR))
             Rotaciona(&naves[1], TRUE);
-        if(isPressed(NAVE2_ANT))
+        if (isPressed(NAVE2_ANT))
             Rotaciona(&naves[1], FALSE);
-        if(isPressed(NAVE2_ACE))
+        if (isPressed(NAVE2_ACE))
             Acelera(&naves[1]);
-        if(isPressed(NAVE2_DIS))
+        if (isPressed(NAVE2_DIS))
             Atira(&naves[1]);
-        
+
         giraObjetoVelTipo(PROJETIL);
 
         desenhaFundoWorkbench();
@@ -252,7 +249,7 @@ void jogoJogo(Bool pause_mode, int usleep_timer)
         workbenchFlush();
         usleep(usleep_timer);
 
-        if(pause_mode)
+        if (pause_mode)
             pause_aux();
     }
 }
@@ -295,7 +292,7 @@ void imprimeBooster(Booster b)
 {
     fprintf(stdout, "%s: \n"
                     "\tvida = %d"
-                    "\tcadencia = %d"
+                    "\tcadencia = %.3lf"
                     "\tdano = %d"
                     "\ttempoEmNave = %.3lf"
                     "\ttempoEmTela = %.3lf\n"
