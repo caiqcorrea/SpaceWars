@@ -34,6 +34,7 @@
 #include <math.h>
 #include <stddef.h>
 #include <string.h>
+#include<stdio.h>
 
 /*--------------- V A R I Á V E I S   G L O B A I S ---------------*/
 
@@ -217,7 +218,6 @@ void AtualizaObjeto(Objeto *o)
 {
 	IncVel(CalculaForcaSobre(*o), o);
 	IncPos(o);
-	giraObjetoVel(o);
 }
 
 void AtualizaObjetos()
@@ -233,7 +233,19 @@ void AtualizaObjetos()
 
 void giraObjetoVel(Objeto *o)
 {
-	setSpriteAng(&(o->s), anguloX(o->v));
+	if(norma(o->v) == 0)
+		setSpriteAng(&(o->s), 0);
+	else
+		setSpriteAng(&(o->s), anguloX(o->v));
+}
+
+void giraObjetoVelTipo(TipoObj tipo)
+{
+	int i;
+	if(tipo>NUM_TIPO_OBJ)
+		throwException("giraObjetoVelTipo", "Esse tipo não existe", index_out_of_range_exception);
+	for(i=0; i<tot_obj[tipo]; i++)
+		giraObjetoVel(GetObjeto(tipo, i));
 }
 
 void ReduzTempoProj(Projetil *p)
@@ -258,27 +270,25 @@ Bool VerificaSeProjMorreu(Projetil p)
 
 void CriaProjetil(Nave n)
 {
-	Projetil p;
 
-	p.radius = n.projetil.radius;
+	projs[tot_obj[PROJETIL]].radius = n.projetil.radius;
 
 	//Começa um pouco distante da nave
-	p.pos = soma(mult((n.radius + p.radius + 100), versor(n.vel)),
+	projs[tot_obj[PROJETIL]].pos = soma(mult((n.radius + projs[tot_obj[PROJETIL]].radius + 100), rotaciona(I_VET, n.spr.angle)),
 				 n.pos);
 	//O 100 é uma distância de segurança para não colidirem
 
 	//Começa com velocidade vInicial e direção da velocidade da nave
-	p.vel = mult(n.projetil.vInicial, versor(n.vel));
+	projs[tot_obj[PROJETIL]].vel = mult(n.projetil.vInicial, rotaciona(I_VET, n.spr.angle));
 
-	p.mass = n.projetil.mass;
-	p.spr = n.projetil.spr;
-	p.dano = n.projetil.dano;
-	p.tempoRestante = n.projetil.tempoRestante;
+	projs[tot_obj[PROJETIL]].mass = n.projetil.mass;
+	projs[tot_obj[PROJETIL]].spr = n.projetil.spr;
+	projs[tot_obj[PROJETIL]].dano = n.projetil.dano;
+	projs[tot_obj[PROJETIL]].tempoRestante = n.projetil.tempoRestante;
 
 	//Existem outras características de um projétil que não são necessárias
 	// de se definir. (cadencia, vInicial)
 
-	projs[tot_obj[PROJETIL]] = p;
 	tot_obj[PROJETIL]++;
 }
 
@@ -417,12 +427,12 @@ void Destroi(Nave *n)
 	DecrementaVida(n, n->HP); //Faz a vida zerar
 }
 
-void Atira(Nave n)
+void Atira(Nave *n)
 {
-	if (n.cooldown == 0)
+	if (n->cooldown <= 0)
 	{
-		CriaProjetil(n);
-		n.cooldown = n.projetil.cadencia;
+		CriaProjetil(*n);
+		n->cooldown = (double) n->projetil.cadencia;
 	}
 	//Se não, nada acontece
 }
@@ -431,20 +441,13 @@ void Acelera(Nave *n)
 {
 	//Adicionamos boosterAtual.aceleracao na velocidade de n
 	//  e mantemos sua direção
-	n->vel = soma(n->vel, mult(n->boosterAtual.aceleracao, versor(n->vel)));
+	n->vel = soma(n->vel, mult(n->boosterAtual.aceleracao * dt, rotaciona(I_VET, n->spr.angle)));
 }
 
 void Rotaciona(Nave *n, Bool horario)
 {
-	double ang = (horario ? -1 : 1) * M_PI / 2;
-	// Pegamos um vetor ortogonal à velocidade
-	// O sentido do vetor depende do segundo parâmetro
-	vet2D vers = rotaciona(versor(n->vel), ang);
-	//Fazemos ele ficar do tamanho adequado
-	vers = mult(n->boosterAtual.aceleracao, vers);
-
-	//E adiocionamos ele à velocidade
-	n->vel = soma(n->vel, vers);
+	//Rodamos a nave um pequeno angulo
+	rotateSprite(&(n->spr), (horario?-1:1)*V_ANG*dt);
 }
 
 void AtualizaCooldown()
@@ -453,38 +456,7 @@ void AtualizaCooldown()
 	for (i = 0; i < tot_obj[NAVE]; i++)
 	{
 		naves[i].cooldown -= dt;
-		if (naves[i].cooldown < 0) //Se já era 0 ou ficou menor que 0, voltamos para 0
-			naves[i].cooldown = 0;
 	}
-}
-
-Bool AtualizaJogo()
-{
-	int i;
-	Bool todasNavesVivas;
-
-	//Primeiro atualizamos a posição e velocidade de todos os objetos
-	AtualizaObjetos();
-	//Depois, devemos reduzir o tempo de todos os projéteis
-	ReduzTempoProjs();
-	//Verificamos se algum projétil sumiu e removemos-o se sim
-	for (i = 0; i < tot_obj[PROJETIL]; i++)
-		if (VerificaSeProjMorreu(projs[i])) //Se o projétil morreu
-			RemoveProj(i);					//Removemos o projétil de índice i
-
-	//Fazemos todas as atualizações relacionadas com boosters
-	AtualizaBoosters();
-
-	//Atualizamos o tempo de recarga das naves
-	AtualizaCooldown();
-
-	ChecaTodasColisoes();
-	todasNavesVivas = TodasEstaoVivas();
-
-	//printf("todasNavesVivas = %d", todasNavesVivas);
-
-	//E a simulação continua enquanto o tempo for positivo e não há naves mortas
-	return (todasNavesVivas);
 }
 
 void freeFisica()

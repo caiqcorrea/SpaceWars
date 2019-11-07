@@ -34,15 +34,15 @@ void defineBoosterPadrao()
     BoosterPadrao()->nome = mallocSafe(sizeof(char) * TAM_MAX_NOMES);
 	strcpy(BoosterPadrao()->nome, "PADRÃO");
     BoosterPadrao()->vidaAdicional = 0;
-    BoosterPadrao()->proj.cadencia = 1;
+    BoosterPadrao()->proj.cadencia = 10;
     BoosterPadrao()->proj.dano = 1;
     BoosterPadrao()->proj.tempoRestante = 1000;
     BoosterPadrao()->proj.mass = 100;
-    BoosterPadrao()->proj.radius = 1000;
+    BoosterPadrao()->proj.radius = 10;
     BoosterPadrao()->proj.spr.img = IMG_PROJ_PADRAO;
     BoosterPadrao()->proj.spr.angle = 0;
-    BoosterPadrao()->aceleracao = 1;
-    BoosterPadrao()->proj.vInicial = 15;
+    BoosterPadrao()->aceleracao = 7e-2;
+    BoosterPadrao()->proj.vInicial = 50;
     //As variáveis abaixo são indiferentes para o booster padrão
     BoosterPadrao()->mass = 0;
     BoosterPadrao()->pos.x = 0;
@@ -137,12 +137,14 @@ void defineBoosterComo(Booster *b, Booster ref)
 	strcpy(b->nome, ref.nome);
     b->proj.cadencia = ref.proj.cadencia;
     b->vidaAdicional = ref.vidaAdicional;
+    b->proj.vInicial = ref.proj.vInicial;
     b->proj.tempoRestante = ref.proj.tempoRestante;
     b->proj.dano = ref.proj.dano;
     b->proj.pos = ref.proj.pos;
     b->proj.vel = ref.proj.vel;
     b->proj.mass = ref.proj.mass;
     b->proj.radius = ref.proj.radius;
+    b->aceleracao = ref.aceleracao;
     b->mass = ref.mass;
     b->radius = ref.radius;
     b->pos = ref.pos;

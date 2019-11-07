@@ -35,7 +35,7 @@ void throwException(string nomeFunc, string mensagem, errorCode e)
  *
  * Para a execucao do programa ate que um ENTER seja digitado.
  */
-void pause()
+void pause_aux()
 {
 	char ch;
 

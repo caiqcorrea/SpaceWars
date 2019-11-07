@@ -113,6 +113,8 @@ void rotateSprite(Sprite *spr, double ang)
 	spr->angle += ang;
 	while (spr->angle > 2 * M_PI) //Deixa o ângulo na primeira determinação positiva
 		spr->angle -= 2 * M_PI;
+	while(spr->angle < 0)
+		spr->angle += 2*M_PI;
 }
 
 void setSpriteAng(Sprite *spr, double ang)
@@ -120,6 +122,8 @@ void setSpriteAng(Sprite *spr, double ang)
 	spr->angle = ang;
 	while (spr->angle > 2 * M_PI) //Deixa o ângulo na primeira determinação positiva
 		spr->angle -= 2 * M_PI;
+	while(spr->angle < 0)
+		spr->angle += 2*M_PI;
 }
 
 void desenhaSpriteEm(WINDOW *win, Sprite spr, vet2D p)
@@ -183,4 +187,9 @@ void grafFree()
 
 	FreePic(showingWindow);
 	FreePic(workbench);
+}
+
+WINDOW *mainWindow()
+{
+	return showingWindow;
 }

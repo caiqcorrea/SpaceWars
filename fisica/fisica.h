@@ -55,6 +55,8 @@
 //Array contendo o número máximo de cada tipo de objeto
 //MAX_OBJ[NAVE] := MAX_NAVES e assim por diante
 
+#define V_ANG 1e-2	//Quando a nave roda em um frame
+
 /*--------------- E S T R U T U R A S ---------------*/
 
 /* Struct Objeto possui uma massa, posição, velocidade e raio. 
@@ -270,6 +272,9 @@ void AtualizaObjetos();
 //Rotaciona o sprite de um objeto baseado em sua velocidade
 void giraObjetoVel(Objeto *o);
 
+//Rotaciona o sprite de todos os opbjetos de um tipo baseado na velocidade
+void giraObjetoVelTipo(TipoObj tipo);
+
 /* FUNÇÕES QUE ITERAM SOBRE OS PROJÉTEIS*/
 
 //Dado um projétil, reduz seu tempo de vida de acordo com dt
@@ -284,6 +289,7 @@ Bool VerificaSeProjMorreu(Projetil p);
 //Cria um projetil e coloca-o na tela
 //Esta função é chamada quando a nave n atira
 void CriaProjetil(Nave n);
+void Atira(Nave *n);
 
 //Dado um índice que representa uma posição do array de projéteis
 //a função remove este projétil.
@@ -322,9 +328,7 @@ void AtualizaCooldown();
 //A velocidade adiciona é definida pela aceleração de seu booster atual.
 void Acelera(Nave *n);
 
-//Adiciona velocidade perpendicalar à nave no sentido horário ou antihorário
-//Se o segundo parâmetro é TRUE, então é horário. Senão, é antihorário.
-//A velocidade adiciona é definida pela aceleração de seu booster atual.
+//Roda o sprite de uma nave em um angulo pequeno no sentido indicado
 void Rotaciona(Nave *n, Bool horario);
 
 //Checa se todas as naves estão vivas
@@ -379,18 +383,6 @@ void AtualizaBoosters();
 Booster *BoosterPadrao();
 
 /* OUTRAS FUNÇÕES */
-
-//Atualiza o estado atual do jogo
-//Este método deve:
-//	Atualizar as posições de todos os objetos em tela
-//	Verificar colisão entre dois quaisquer objetos
-//		Se isso acontecer, deve tomar a ação correta dependendo do tipo de objeto que colidiu
-//	Verifica se os projéteis ainda estão com tempo de vida positivo
-//		Se isso não acontece, deve remover o projétil do array
-//
-//A função devolve TRUE se o jogo continua e FALSE se o jogo terminou por qualquer motivo
-//(Pode ser que mudemos o retorno no futuro)
-Bool AtualizaJogo();
 
 //Esta função dá free em todas as alocações de memória relacionadas aos
 //arrays da biblioteca física

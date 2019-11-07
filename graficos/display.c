@@ -51,7 +51,7 @@ void defineRaio(Objeto *o)
     o->r = diamentro / 2.0;
     
     /* O raio ainda está em pixels, devemos passar para a unidade da física */
-    o->r *= SIZE_Y_FIS / SIZE_Y_WIN;
+    o->r *= SIZE_X_FIS / SIZE_X_WIN;
 }
 
 void defineRaios()

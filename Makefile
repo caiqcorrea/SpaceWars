@@ -5,18 +5,18 @@
 VPATH = ./base:./fisica:./graficos:./obj:./IO:
 
 CC = gcc
-CFLAGS = -Wall -O3 -Wno-unused-result --pedantic -lm -lX11 -lXpm
+CFLAGS = -Wall -g -Wno-unused-result --pedantic -lm -lX11 -lXpm
 
 OBJ_PATH = ./obj
 
 # ---- R E G R A S ---- #
 
-default : debug move_o
+default : game move_o
 
-debug : debug.o IO.o auxiliar.o vetores.o fisica.o leitor.o gerenciadorBooster.o graficos.o xwc.o display.o
+game : game.o IO.o auxiliar.o vetores.o fisica.o leitor.o gerenciadorBooster.o graficos.o xwc.o display.o keybord.o
 	${CC} $^ ${CFLAGS} -o $@
 
-debug.o : debug.c IO.h fisica.h graficos.h display.h
+game.o : game.c IO.h fisica.h graficos.h display.h
 	${CC} -c $< ${CFLAGS} -o $@
 
 IO.o : IO.c IO.h vetores.h fisica.h auxiliar.h leitor.h
@@ -49,14 +49,14 @@ keybord.o : keybord.c keybord.h xwc.h auxiliar.h
 move_o :
 	mkdir $(OBJ_PATH) 2>/dev/null; mv -f *.o $(OBJ_PATH) 2>/dev/null; true
 
-.PHONY: clean_o clean_debug clean_all
+.PHONY: clean_o clean_game clean_all
 
-clean_all : clean_o clean_debug
+clean_all : clean_o clean_game
 
 clean_o :
 	rm -f *.o
 	rm -f $(OBJ_PATH)/*
 	rmdir $(OBJ_PATH)
 
-clean_debug :
-	rm -f debug
+clean_game :
+	rm -f game
