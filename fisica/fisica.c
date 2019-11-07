@@ -492,4 +492,5 @@ void freeFisica()
 	int i;
 	for (i = 0; i < tot_obj[NAVE]; i++)
 		freeSafe(naves[i].nome);
+	freeSafe(boostersPreCriados);
 }

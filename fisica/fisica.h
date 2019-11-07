@@ -79,7 +79,7 @@ typedef struct
 	Objeto o;
 	double tempoRestante; //O tempo de vida restante do projétil (ele some quando o tempo vai a zero)
 	int dano;			  //A quantidade de pontos de vida que o projétil tira se acertar
-	int cadencia;		  //Cadencia dos tiros (mesma unidade usada por toda a fisica)
+	double cadencia;	  //Cadencia dos tiros (mesma unidade usada por toda a fisica)
 	double vInicial;	  //Módulo da velocidade inicial do projétil
 } Projetil;
 

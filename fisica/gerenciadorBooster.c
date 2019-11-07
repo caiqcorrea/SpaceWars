@@ -34,7 +34,7 @@ void defineBoosterPadrao()
     BoosterPadrao()->nome = mallocSafe(sizeof(char) * TAM_MAX_NOMES);
 	strcpy(BoosterPadrao()->nome, "PADRÃO");
     BoosterPadrao()->vidaAdicional = 0;
-    BoosterPadrao()->proj.cadencia = 1;
+    BoosterPadrao()->proj.cadencia = 1000;
     BoosterPadrao()->proj.dano = 1;
     BoosterPadrao()->proj.tempoRestante = 1000;
     BoosterPadrao()->proj.mass = 100;

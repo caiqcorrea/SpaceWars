@@ -172,7 +172,7 @@ void lerBoosters()
 		{
 			leVerificaIgualAtribuiInt(&totalBoostersPreCriados, "totalBoosters");
 			totalBoostersPreCriados++; //Um a mais para o padrão (que vai na posição 0)
-			boostersPreCriados = malloc(sizeof(Booster) * totalBoostersPreCriados);
+			boostersPreCriados = mallocSafe(sizeof(Booster) * totalBoostersPreCriados);
 
 			defineBoosterPadrao();
 		}
