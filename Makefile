@@ -13,7 +13,7 @@ OBJ_PATH = ./obj
 
 default : game move_o
 
-game : game.o IO.o auxiliar.o vetores.o fisica.o leitor.o gerenciadorBooster.o graficos.o xwc.o display.o keybord.o
+game : game.o IO.o auxiliar.o vetores.o fisica.o leitor.o gerenciadorBooster.o graficos.o xwc.o display.o keybord.o gerenciadorNaves.o
 	${CC} $^ ${CFLAGS} -o $@
 
 game.o : game.c IO.h fisica.h graficos.h display.h
@@ -28,7 +28,7 @@ auxiliar.o : auxiliar.c auxiliar.h
 vetores.o : vetores.c vetores.h
 	${CC} -c $< ${CFLAGS} -o $@
 
-fisica.o : fisica.c fisica.h vetores.h auxiliar.h gerenciadorBooster.c graficos.h
+fisica.o : fisica.c fisica.h vetores.h auxiliar.h gerenciadorBooster.c graficos.h gerenciadorNaves.c
 	${CC} -c $< ${CFLAGS} -o $@
 
 leitor.o : leitor.c leitor.h auxiliar.h

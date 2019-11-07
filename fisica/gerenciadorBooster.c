@@ -32,7 +32,7 @@ static void boosterRandom(Booster *b);
 void defineBoosterPadrao()
 {
     BoosterPadrao()->nome = mallocSafe(sizeof(char) * TAM_MAX_NOMES);
-	strcpy(BoosterPadrao()->nome, "PADRÃO");
+    strcpy(BoosterPadrao()->nome, "PADRÃO");
     BoosterPadrao()->vidaAdicional = 0;
     BoosterPadrao()->proj.cadencia = 1000;
     BoosterPadrao()->proj.dano = 1;
@@ -88,16 +88,15 @@ static void boosterRandom(Booster *b)
     //Cada booster que nasce, tem sua posição, velocidade e tempos restantes randomizados
     //Só não pode nascer colidindo com algo (especialmente com uma nave)
     b->mass = geraRandomicoEntre(minMass, maxMass);
-	do
-	{
-		b->pos.x = geraRandomicoEntre(-SIZE_X_FIS, SIZE_X_FIS);
-		b->pos.y = geraRandomicoEntre(-SIZE_Y_FIS, SIZE_Y_FIS);
-	} while (ChecaColisaoComTodos(b->o));
-	b->vel.x = geraRandomicoEntre(minVel.x, maxVel.x);
-	b->vel.y = geraRandomicoEntre(minVel.y, minVel.y);
-	b->tempoRestanteNave = geraRandomicoEntre(minTempoRestanteNave, maxTempoRestanteNave);
-	b->tempoRestanteTela = geraRandomicoEntre(minTempoRestanteTela, maxTempoRestanteTela);
-
+    do
+    {
+        b->pos.x = geraRandomicoEntre(-SIZE_X_FIS, SIZE_X_FIS);
+        b->pos.y = geraRandomicoEntre(-SIZE_Y_FIS, SIZE_Y_FIS);
+    } while (ChecaColisaoComTodos(b->o));
+    b->vel.x = geraRandomicoEntre(minVel.x, maxVel.x);
+    b->vel.y = geraRandomicoEntre(minVel.y, minVel.y);
+    b->tempoRestanteNave = geraRandomicoEntre(minTempoRestanteNave, maxTempoRestanteNave);
+    b->tempoRestanteTela = geraRandomicoEntre(minTempoRestanteTela, maxTempoRestanteTela);
 }
 
 void removeBoosterDaTela(int index)
@@ -134,7 +133,7 @@ void defineBoosterComo(Booster *b, Booster ref)
 {
     //Assumimos que b ainda não possui um nome mallocado!
     b->nome = mallocSafe(sizeof(char) * TAM_MAX_NOMES);
-	strcpy(b->nome, ref.nome);
+    strcpy(b->nome, ref.nome);
     b->proj.cadencia = ref.proj.cadencia;
     b->vidaAdicional = ref.vidaAdicional;
     b->proj.vInicial = ref.proj.vInicial;
@@ -166,10 +165,22 @@ Bool boosterVaiSpawnar()
 void ChecaColisaoComBoosters()
 {
     int i, j;
+    Objeto *o1, *o2;
+
     for (i = 0; i < tot_obj[NAVE]; i++)
         for (j = 0; j < tot_obj[BOOSTER]; j++)
             if (ChecaColisaoEntre(*GetObjeto(NAVE, i), *GetObjeto(BOOSTER, j)))
                 capturaBooster(j, &(naves[i]));
+
+    /* Vamos tirar os boosters que colidem com o planeta */
+    for (i = 0; i < tot_obj[PLANETA]; i++)
+        for (j = 0; j < tot_obj[BOOSTER]; j++)
+        {
+            o1 = GetObjeto(PLANETA, i);
+            o2 = GetObjeto(BOOSTER, j);
+            if (ChecaColisaoComRaio(*o1, *o2, (o1->r + o2->r) / 5.0))
+                removeBoosterDaTela(j);
+        }
 }
 
 void AtualizaBoostersEmNaves()

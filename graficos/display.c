@@ -48,7 +48,7 @@ void defineRaio(Objeto *o)
     h = pics[o->s.img].height;
     w = pics[o->s.img].width;
     diamentro = MIN(h, w); /* O cálculo poderia ser de outra forma */ 
-    o->r = diamentro / 4.0;
+    o->r = diamentro / 3.0;
     
     /* O raio ainda está em pixels, devemos passar para a unidade da física */
     o->r *= SIZE_X_FIS / SIZE_X_WIN;

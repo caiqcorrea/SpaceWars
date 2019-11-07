@@ -9,6 +9,8 @@
 #include "../base/vetores.h"
 #include "fisica.h"
 
+#include <string.h>
+
 void getNavePadrao(Nave *n)
 {
 	n->nome = mallocSafe(sizeof(char) * TAM_MAX_NOMES);
@@ -21,7 +23,15 @@ void getNavePadrao(Nave *n)
 
 void DecrementaVida(Nave *n, int valor)
 {
-	n->HP -= valor;
+	if (n->boosterAtual.vidaAdicional > 0)
+	{
+		n->boosterAtual.vidaAdicional -= valor;
+		if(n->boosterAtual.vidaAdicional < 0)
+			//Se ela perdeu o shield, descontamos o resto da vida
+			n->HP += n->boosterAtual.vidaAdicional;
+	}
+	else
+		n->HP -= valor;
 }
 
 void IncrementaVida(Nave *n, int valor)

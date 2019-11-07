@@ -206,7 +206,7 @@ void lerBooster(int index)
 		else if (strigual("vidaAdicional"))
 			leVerificaIgualAtribuiInt(&(novo.vidaAdicional), "vidaAdicional");
 		else if (strigual("cadencia"))
-			leVerificaIgualAtribuiInt(&(novo.proj.cadencia), "cadencia");
+			leVerificaIgualAtribuiDouble(&(novo.proj.cadencia), "cadencia");
 		else if (strigual("dano"))
 			leVerificaIgualAtribuiInt(&(novo.proj.dano), "dano");
 		else if (strigual("tempoProj"))

@@ -293,11 +293,16 @@ void RemoveProj(int index)
 
 Bool ChecaColisaoEntre(Objeto o1, Objeto o2)
 {
+	return ChecaColisaoComRaio(o1, o2, o1.r + o2.r);
+}
+
+Bool ChecaColisaoComRaio(Objeto o1, Objeto o2, double raio)
+{
 	if (ObjetoDuplicado(o1, o2))
 		return FALSE;
 	if (ObjetoIgual(o1, o2))
 		return FALSE; //Isso pode gerar erros, mas a chance é dx
-	return (DistanciaEntre(o1, o2) < o1.r + o2.r);
+	return (DistanciaEntre(o1, o2) < raio);
 }
 
 Bool ChecaColisaoComTodos(Objeto o)
@@ -360,7 +365,7 @@ void ChecaTodasColisoes()
 
 		if (colidiu)
 			i--; //Removemos o i-ésimo, então o próximo a ser visto é quem virou o i-ésimo
-				 //Note que se o projétil colide com um planeta (a primeira verificação) a função não entra nos outros for's
+				//Note que se o projétil colide com um planeta (a primeira verificação) a função não entra nos outros for's
 	}
 	//NAVES
 	for (i = 0; i < tot_obj[NAVE]; i++)

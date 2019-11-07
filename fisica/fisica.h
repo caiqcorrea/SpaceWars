@@ -215,6 +215,9 @@ extern double propBooster;
 
 /* FUNÇÕES QUE RETORNAM OS OBJETOS PADRÃO */
 
+//Função que retorna um objeto padrão
+void getObjetoPadrao(Objeto *o);
+
 //Função que retorna uma nave padrão
 void getNavePadrao(Nave *n);
 
@@ -289,7 +292,6 @@ Bool VerificaSeProjMorreu(Projetil p);
 //Cria um projetil e coloca-o na tela
 //Esta função é chamada quando a nave n atira
 void CriaProjetil(Nave n);
-void Atira(Nave *n);
 
 //Dado um índice que representa uma posição do array de projéteis
 //a função remove este projétil.
@@ -308,6 +310,10 @@ Bool ChecaColisaoComTodos(Objeto o);
 //Dados dois objetos, retorna TRUE se eles colidiram e FALSE caso contrário.
 Bool ChecaColisaoEntre(Objeto o1, Objeto o2);
 
+//Dados dois objetos e um raio, retorna TRUE se a distância entre eles é
+//menor que o raio passado e FALSE caso contrário.
+Bool ChecaColisaoComRaio(Objeto o1, Objeto o2, double raio);
+
 /* FUNÇÕES PARA VIDA DAS NAVES */
 //Dados uma nave n e um valor de pontos de vida, decrementa a vida de n em valor
 void DecrementaVida(Nave *n, int valor);
@@ -323,6 +329,9 @@ Bool EstaViva(Nave n);
 
 //Atualiza o tempo de recarga de todas as naves
 void AtualizaCooldown();
+
+//Função chamada quando a nave clica o botão de atirar
+void Atira(Nave *n);
 
 //Adiciona velocida à nave n
 //A velocidade adiciona é definida pela aceleração de seu booster atual.
