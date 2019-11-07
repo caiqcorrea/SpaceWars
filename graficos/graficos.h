@@ -133,4 +133,7 @@ void workbenchFlush();
 //Desaloca toda a memória alocada. DEVE ser chamada antes do fim do programa
 void grafFree();
 
+//Retorna a janela principal
+WINDOW *mainWindow();
+
 #endif

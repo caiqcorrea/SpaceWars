@@ -79,7 +79,7 @@ void throwException(string nomeFunc, string mensagem, errorCode e);
 //ime.usp.br/~cris
 //
 //A função pausa o programa até o usuário dar clicar ENTER
-void pause();
+void pause_aux();
 
 //Função que gera um número randômico entre min e max inclusos
 //A função supõe que o rng já foi inicializado
