@@ -183,10 +183,11 @@ void testeFisicaBasica(Bool pause_teste, int usleep_timer)
 {
     double tempo = 0;
 
+    grafInit();
+    
     leFisica();          //Lemos os parâmetros da fisica
     imprimeTudo();       //Jogamos tudo o que foi lido na tela
 
-    grafInit();
 
     //Enquanto a simulação não terminar...
     while (AtualizaJogo() == TRUE)
@@ -218,8 +219,8 @@ void testeFisicaBasica(Bool pause_teste, int usleep_timer)
 
 void jogoJogo(Bool pause_mode, int usleep_timer)
 {
-    leFisica();
     grafInit();
+    leFisica();
     initKeybord(mainWindow());
 
     while(AtualizaJogo() == TRUE)

@@ -58,8 +58,8 @@ void picsInit(WINDOW *win)
 		pics[i].n_imgs = n_imgs;
 		pics[i].imgs = mallocSafe(n_imgs * sizeof(PIC));
 		pics[i].msks = mallocSafe(n_imgs * sizeof(MASK));
-		pics[i].width = sizex_aux;
 		pics[i].height = sizey_aux;
+		pics[i].width = sizex_aux;
 
 		for (j = 0; j < n_imgs; j++)
 		{

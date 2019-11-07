@@ -38,7 +38,7 @@ void defineBoosterPadrao()
     BoosterPadrao()->proj.dano = 1;
     BoosterPadrao()->proj.tempoRestante = 1000;
     BoosterPadrao()->proj.mass = 100;
-    BoosterPadrao()->proj.radius = 10;
+    BoosterPadrao()->proj.radius = 1000;
     BoosterPadrao()->proj.spr.img = IMG_PROJ_PADRAO;
     BoosterPadrao()->proj.spr.angle = 0;
     BoosterPadrao()->aceleracao = 7e-2;

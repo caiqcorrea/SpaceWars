@@ -75,7 +75,6 @@ void getNavePadrao(Nave *n)
 	n->HP = 0;
 	n->cooldown = 0;
 	getObjetoPadrao(&(n->o));
-	printf("img = %d\n", n->projetil.spr.img);
 }
 
 void getPlanetaPadrao(Planeta *p)
