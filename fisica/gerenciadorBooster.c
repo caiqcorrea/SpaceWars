@@ -34,7 +34,7 @@ void defineBoosterPadrao()
     BoosterPadrao()->nome = mallocSafe(sizeof(char) * TAM_MAX_NOMES);
 	strcpy(BoosterPadrao()->nome, "PADRÃO");
     BoosterPadrao()->vidaAdicional = 0;
-    BoosterPadrao()->proj.cadencia = 10;
+    BoosterPadrao()->proj.cadencia = 1000;
     BoosterPadrao()->proj.dano = 1;
     BoosterPadrao()->proj.tempoRestante = 1000;
     BoosterPadrao()->proj.mass = 100;
@@ -50,7 +50,7 @@ void defineBoosterPadrao()
     BoosterPadrao()->vel.x = 0;
     BoosterPadrao()->vel.y = 0;
     BoosterPadrao()->radius = 0;
-    BoosterPadrao()->spr.img = 0;
+    BoosterPadrao()->spr.img = 4;
     BoosterPadrao()->spr.angle = 0;
     BoosterPadrao()->proj.pos.x = 0;
     BoosterPadrao()->proj.pos.y = 0;
@@ -144,6 +144,8 @@ void defineBoosterComo(Booster *b, Booster ref)
     b->proj.vel = ref.proj.vel;
     b->proj.mass = ref.proj.mass;
     b->proj.radius = ref.proj.radius;
+    b->proj.spr.img = ref.proj.spr.img;
+    b->proj.spr.angle = ref.proj.spr.angle;
     b->aceleracao = ref.aceleracao;
     b->mass = ref.mass;
     b->radius = ref.radius;

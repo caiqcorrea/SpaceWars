@@ -34,7 +34,7 @@
 #include <math.h>
 #include <stddef.h>
 #include <string.h>
-#include<stdio.h>
+#include <stdio.h>
 
 /*--------------- V A R I Á V E I S   G L O B A I S ---------------*/
 
@@ -75,6 +75,7 @@ void getNavePadrao(Nave *n)
 	n->HP = 0;
 	n->cooldown = 0;
 	getObjetoPadrao(&(n->o));
+	printf("img = %d\n", n->projetil.spr.img);
 }
 
 void getPlanetaPadrao(Planeta *p)
@@ -233,7 +234,7 @@ void AtualizaObjetos()
 
 void giraObjetoVel(Objeto *o)
 {
-	if(norma(o->v) == 0)
+	if (norma(o->v) == 0)
 		setSpriteAng(&(o->s), 0);
 	else
 		setSpriteAng(&(o->s), anguloX(o->v));
@@ -242,9 +243,9 @@ void giraObjetoVel(Objeto *o)
 void giraObjetoVelTipo(TipoObj tipo)
 {
 	int i;
-	if(tipo>NUM_TIPO_OBJ)
+	if (tipo > NUM_TIPO_OBJ)
 		throwException("giraObjetoVelTipo", "Esse tipo não existe", index_out_of_range_exception);
-	for(i=0; i<tot_obj[tipo]; i++)
+	for (i = 0; i < tot_obj[tipo]; i++)
 		giraObjetoVel(GetObjeto(tipo, i));
 }
 
@@ -275,14 +276,15 @@ void CriaProjetil(Nave n)
 
 	//Começa um pouco distante da nave
 	projs[tot_obj[PROJETIL]].pos = soma(mult((n.radius + projs[tot_obj[PROJETIL]].radius + 100), rotaciona(I_VET, n.spr.angle)),
-				 n.pos);
+										n.pos);
 	//O 100 é uma distância de segurança para não colidirem
 
 	//Começa com velocidade vInicial e direção da velocidade da nave
 	projs[tot_obj[PROJETIL]].vel = mult(n.projetil.vInicial, rotaciona(I_VET, n.spr.angle));
 
 	projs[tot_obj[PROJETIL]].mass = n.projetil.mass;
-	projs[tot_obj[PROJETIL]].spr = n.projetil.spr;
+	projs[tot_obj[PROJETIL]].spr.img = n.projetil.spr.img;
+	projs[tot_obj[PROJETIL]].spr.angle = n.projetil.spr.angle;
 	projs[tot_obj[PROJETIL]].dano = n.projetil.dano;
 	projs[tot_obj[PROJETIL]].tempoRestante = n.projetil.tempoRestante;
 
@@ -432,7 +434,7 @@ void Atira(Nave *n)
 	if (n->cooldown <= 0)
 	{
 		CriaProjetil(*n);
-		n->cooldown = (double) n->projetil.cadencia;
+		n->cooldown = (double)n->projetil.cadencia;
 	}
 	//Se não, nada acontece
 }
@@ -447,16 +449,14 @@ void Acelera(Nave *n)
 void Rotaciona(Nave *n, Bool horario)
 {
 	//Rodamos a nave um pequeno angulo
-	rotateSprite(&(n->spr), (horario?-1:1)*V_ANG*dt);
+	rotateSprite(&(n->spr), (horario ? -1 : 1) * V_ANG * dt);
 }
 
 void AtualizaCooldown()
 {
 	int i;
 	for (i = 0; i < tot_obj[NAVE]; i++)
-	{
 		naves[i].cooldown -= dt;
-	}
 }
 
 void freeFisica()
@@ -464,4 +464,5 @@ void freeFisica()
 	int i;
 	for (i = 0; i < tot_obj[NAVE]; i++)
 		freeSafe(naves[i].nome);
+	freeSafe(boostersPreCriados);
 }
