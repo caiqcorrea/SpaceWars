@@ -164,7 +164,7 @@ void IncVel(vet2D F, Objeto *o)
 	if (norma(o->v) > MAX_VEL)
 	{
 		normaliza(&(o->v));  //Guardamos sua direção
-		mult(MAX_VEL, o->v); //Fazemos seu módulo ser a velocidade máxima
+		o->v = mult(MAX_VEL, o->v); //Fazemos seu módulo ser a velocidade máxima
 	}
 }
 

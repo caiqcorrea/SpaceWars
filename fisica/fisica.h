@@ -44,7 +44,7 @@
 #define MAX_PLANETAS 1  //Número de planetas
 #define MAX_BOOSTERS 10 //Número máximo de boosters
 
-#define MAX_VEL 300 //Móudlo da velocidade máxima dos objetos
+#define MAX_VEL 100 //Módulo da velocidade máxima dos objetos
 
 #define TAM_MAX_NOMES 100
 
@@ -55,7 +55,7 @@
 //Array contendo o número máximo de cada tipo de objeto
 //MAX_OBJ[NAVE] := MAX_NAVES e assim por diante
 
-#define V_ANG 1e-2	//Quando a nave roda em um frame
+#define V_ANG 2e-2	//Quando a nave roda em um frame
 
 /*--------------- E S T R U T U R A S ---------------*/
 
