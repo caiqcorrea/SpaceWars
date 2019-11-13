@@ -3,7 +3,7 @@
 #include "../base/auxiliar.h"
 #include "../graficos/xwc.h"
 
-static Bool isKeyPressed[MAX_KEYS];
+static Bool isKeyPressed[MAX_KEYS+1];
 
 static KeyNameEnum KeySym_To_Enum(KeySym key);
 
