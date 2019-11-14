@@ -42,7 +42,9 @@ void defineBoosterPadrao()
     BoosterPadrao()->proj.spr.img = IMG_PROJ_PADRAO;
     BoosterPadrao()->proj.spr.angle = 0;
     BoosterPadrao()->aceleracao = 7e-2;
+    BoosterPadrao()->rotacao = 1e-2;
     BoosterPadrao()->proj.vInicial = 50;
+    BoosterPadrao()->spr.img = NON_IMG;
     //As variáveis abaixo são indiferentes para o booster padrão
     BoosterPadrao()->mass = 0;
     BoosterPadrao()->pos.x = 0;
@@ -50,7 +52,6 @@ void defineBoosterPadrao()
     BoosterPadrao()->vel.x = 0;
     BoosterPadrao()->vel.y = 0;
     BoosterPadrao()->radius = 0;
-    BoosterPadrao()->spr.img = 4;
     BoosterPadrao()->spr.angle = 0;
     BoosterPadrao()->proj.pos.x = 0;
     BoosterPadrao()->proj.pos.y = 0;
@@ -146,6 +147,7 @@ void defineBoosterComo(Booster *b, Booster ref)
     b->proj.spr.img = ref.proj.spr.img;
     b->proj.spr.angle = ref.proj.spr.angle;
     b->aceleracao = ref.aceleracao;
+    b->rotacao = ref.rotacao;
     b->mass = ref.mass;
     b->radius = ref.radius;
     b->pos = ref.pos;

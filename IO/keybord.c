@@ -30,7 +30,6 @@ static KeyNameEnum KeySym_To_Enum(KeySym key)
         return NAVE2_DIS;
     }
 
-    throwException("KeySym_To_Enum", "Tecla invalida", index_out_of_range_exception);
     return MAX_KEYS;
 }
 

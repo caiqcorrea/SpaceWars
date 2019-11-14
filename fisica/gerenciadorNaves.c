@@ -78,7 +78,7 @@ void Acelera(Nave *n)
 void Rotaciona(Nave *n, Bool horario)
 {
 	//Rodamos a nave um pequeno angulo
-	rotateSprite(&(n->spr), (horario ? -1 : 1) * V_ANG * dt);
+	rotateSprite(&(n->spr), (horario ? -1 : 1) * n->boosterAtual.rotacao * dt);
 }
 
 void AtualizaCooldown()
