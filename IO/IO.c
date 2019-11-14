@@ -34,6 +34,13 @@ void lerInputs(string nome)
 {
 	int indicePlaneta, indiceNave;
 	indiceNave = indicePlaneta = 0;
+
+	//Valores padrões para variáveis importantes
+	//Se elas não estiver especificadas no arquivo, serão estes seus valores
+	dt = 0.5;
+	maxVelMod = 50;
+
+
 	initLeitor(nome);
 
 	//A ideia é que cada iteração do while leia uma linha inteira
@@ -42,6 +49,8 @@ void lerInputs(string nome)
 	{
 		if (strigual("dt"))
 			leVerificaIgualAtribuiDouble(&dt, "dt");
+		else if (strigual("maxvel"))
+			leVerificaIgualAtribuiDouble(&maxVelMod, "maxvel");
 		else if (strigual("planeta"))
 		{
 			proxLeitura();
@@ -274,5 +283,5 @@ static void leVerificaIgualAtribuiString(string s, string nomeVar)
 	verificaIgualApos(nomeVar);
 
 	//Assume que s é uma string já mallocada!
-	strcpy(s, proxLeitura());
+	strncpy(s, proxLeitura(), TAM_MAX_NOMES);
 }

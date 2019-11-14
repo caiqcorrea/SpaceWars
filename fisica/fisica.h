@@ -44,9 +44,7 @@
 #define MAX_PLANETAS 1  //Número de planetas
 #define MAX_BOOSTERS 10 //Número máximo de boosters
 
-#define MAX_VEL 50 //Módulo da velocidade máxima dos objetos
-
-#define TAM_MAX_NOMES 100
+#define TAM_MAX_NOMES 100 //Tamanho máximo dos nomes das naves
 
 #define MAX_OBJ                                         \
 	{                                                   \
@@ -54,8 +52,6 @@
 	}
 //Array contendo o número máximo de cada tipo de objeto
 //MAX_OBJ[NAVE] := MAX_NAVES e assim por diante
-
-#define V_ANG 1e-2	//Quando a nave roda em um frame
 
 /*--------------- E S T R U T U R A S ---------------*/
 
@@ -187,6 +183,9 @@ extern Booster boosters[MAX_BOOSTERS]; //O array que contém os booster que est�
 
 //Intervalo de tempo da simulacao, lido no arquivo principal.
 extern double dt;
+
+//Módulo da velocidade limite do jogo
+extern double maxVelMod;
 
 /* VARIAVEIS GLOBAIS DOS BOOSTERS */
 

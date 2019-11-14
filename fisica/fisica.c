@@ -53,6 +53,9 @@ Booster boosters[MAX_BOOSTERS]; //O array que contém os boosters que estão atu
 //Intervalo de tempo da simulacao, lido no arquivo principal.
 double dt;
 
+//Módulo da velocidade limite do jogo
+double maxVelMod;
+
 /*--------------- I M P L E M E N T A Ç Ã O   D A S   F U N Ç Õ E S ---------------*/
 
 void getObjetoPadrao(Objeto *o)
@@ -161,10 +164,10 @@ vet2D Forca(Objeto o1, Objeto o2)
 void IncVel(vet2D F, Objeto *o)
 {
 	o->v = soma(o->v, mult((dt / (o->m)), F));
-	if (norma(o->v) > MAX_VEL)
+	if (norma(o->v) > maxVelMod)
 	{
 		normaliza(&(o->v));  //Guardamos sua direção
-		o->v = mult(MAX_VEL, o->v); //Fazemos seu módulo ser a velocidade máxima
+		o->v = mult(maxVelMod, o->v); //Fazemos seu módulo ser a velocidade máxima
 	}
 }
 
