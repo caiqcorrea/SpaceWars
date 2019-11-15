@@ -4,10 +4,11 @@
  * por eles terem muitas peculiaridades próprias. Ele é um módulo da biblioteca
  * física.h
  */
+#include "fisica.h"
 
 #include "../base/auxiliar.h"
 #include "../base/vetores.h"
-#include "fisica.h"
+#include "../graficos/graficos.h"
 
 #include <string.h>
 

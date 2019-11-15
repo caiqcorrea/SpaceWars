@@ -13,10 +13,10 @@ OBJ_PATH = ./obj
 
 default : game move_o
 
-game : game.o IO.o auxiliar.o vetores.o fisica.o leitor.o gerenciadorBooster.o graficos.o xwc.o display.o keybord.o gerenciadorNaves.o
+game : game.o IO.o auxiliar.o vetores.o leitor.o fisica.o gerenciadorBooster.o gerenciadorNaves.o xwc.o graficos.o display.o keybord.o
 	${CC} $^ ${CFLAGS} -o $@
 
-game.o : game.c IO.h fisica.h graficos.h display.h
+game.o : game.c auxiliar.h IO.h fisica.h graficos.h display.h keybord.h
 	${CC} -c $< ${CFLAGS} -o $@
 
 IO.o : IO.c IO.h vetores.h fisica.h auxiliar.h leitor.h
@@ -28,10 +28,16 @@ auxiliar.o : auxiliar.c auxiliar.h
 vetores.o : vetores.c vetores.h
 	${CC} -c $< ${CFLAGS} -o $@
 
-fisica.o : fisica.c fisica.h vetores.h auxiliar.h gerenciadorBooster.c graficos.h gerenciadorNaves.c
+leitor.o : leitor.c leitor.h auxiliar.h
 	${CC} -c $< ${CFLAGS} -o $@
 
-leitor.o : leitor.c leitor.h auxiliar.h
+fisica.o : fisica.c fisica.h vetores.h auxiliar.h graficos.h
+	${CC} -c $< ${CFLAGS} -o $@
+
+gerenciadorBooster.o : gerenciadorBooster.c fisica.h vetores.h auxiliar.h graficos.h
+	${CC} -c $< ${CFLAGS} -o $@
+
+gerenciadorNaves.o : gerenciadorNaves.c fisica.h vetores.h auxiliar.h graficos.h
 	${CC} -c $< ${CFLAGS} -o $@
 
 graficos.o : graficos.c graficos.h vetores.h auxiliar.h xwc.h

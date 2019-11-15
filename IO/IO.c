@@ -12,7 +12,6 @@
 #include "../base/vetores.h"
 #include "../base/auxiliar.h"
 #include "../base/leitor.h"
-#include "../graficos/display.h"
 
 #include <stdio.h>
 #include <stdlib.h>

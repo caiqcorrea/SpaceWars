@@ -2,6 +2,7 @@
  *
  */
 #include "leitor.h"
+
 #include "../base/auxiliar.h"
 
 #include <stdio.h>

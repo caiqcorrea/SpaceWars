@@ -10,9 +10,11 @@
  * ler o arquivo booster.cfg e atribuir valores às variáveis e arrays desse cabeçalho.
  */
 
+#include "fisica.h"
+
 #include "../base/auxiliar.h"
 #include "../base/vetores.h"
-#include "fisica.h"
+#include "../graficos/graficos.h"
 
 #include <string.h>
 #include <stdlib.h>
