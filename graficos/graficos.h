@@ -45,24 +45,21 @@ typedef enum
 	IMG_BOOSTER_GUBI,	   //16
 	IMG_BOOSTER_CARLINHOS, //17
 	IMG_FUNDO,			   //18
-	NUM_SPR	//SEMPRE POR ÚLTIMO, ESTE É APENAS O NÚMERO DE ELEMENTOS DO ENUM
+	NUM_SPR,	//SEMPRE POR ÚLTIMO, ESTE É APENAS O NÚMERO DE ELEMENTOS DO ENUM
+	IMG_LIFEBAR1,		   //20
+	IMG_LIFEBAR2		   //21
 } NOME_SPR;
 
-//Estrutura que contém um array de PICs, junto com o número de elementos do array
+//Estrutura que contém um array de PICs e MASKs associadas, junto com o número de elementos do array
 //e o tamanho dos PICs
 
-//Array que contém todas as imagens do jogo
-//Cada índice possui um struct Pics, que é uma struct com uma imagem e todas suas rotações.
-//Além disso, essa estrutura possui, para auxílio, o número de rotações e
-//o comprimento e altura da imagem
-
-struct
+typedef struct
 {
 	PIC *imgs;		   //Array de imagens
 	MASK *msks;		   //Array de masks associado
 	int n_imgs;		   //Número de imagens
 	int height, width; //Tamanho em pixels
-} pics[NUM_SPR];
+} PicMsk;
 
 typedef struct
 {
@@ -99,6 +96,15 @@ PIC getImg(Sprite spr);
 
 //Dada uma sprite, retorna a mascara associada a imagem atual da sprite, de acordo com seu angulo
 MASK getMsk(Sprite spr);
+
+//Retorna pics[index]
+PicMsk getPicMsk(NOME_SPR index);
+
+//Desenha o indice i de um PisMsk pm na janela win, na posicao p
+void desenhaPicMskEm(WINDOW *win, int i, PicMsk pm, vet2D p);
+
+//Chama desenhaPisMskEm no workbench
+void desenhaPicMsk(int i, PicMsk pm, vet2D p);
 
 //Dados dois indices, retorna um sprite com a img e o angulo certo para que
 //getImg e getMsk retornem pics[spr].imgs[i] e pics[spr].msks[i], respectivamente

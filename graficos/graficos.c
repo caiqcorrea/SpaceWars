@@ -21,6 +21,12 @@ static WINDOW *workbench;
 //ao mudar de quadro, damos um workbenchFlush() para atualizar a showingWindow.
 static WINDOW *showingWindow;
 
+//Array que contém todas as imagens do jogo
+//Cada índice possui um struct Pics, que é uma struct com uma imagem e todas suas rotações.
+//Além disso, essa estrutura possui, para auxílio, o número de rotações e
+//o comprimento e altura da imagem
+static PicMsk pics[NUM_SPR];
+
 void winsInit()
 {
 	showingWindow = InitGraph(SIZE_X_WIN, SIZE_Y_WIN, "Space Wars");
@@ -46,7 +52,12 @@ void picsInit(WINDOW *win)
 		spr_file = fopen(filename, "r");
 
 		if (spr_file == NULL)
-			throwException("picsInit", strcat(filename, " não encontrado."), file_not_found_exception);
+		{
+			pics[i] = pics[NON_IMG];
+			fprintf(stderr, "[WARNING] Na funcao picsInit(): %s não encontrado.", filename);
+			break;
+			//throwException("picsInit", strcat(filename, " não encontrado."), file_not_found_exception);
+		}
 
 		fscanf(spr_file, "%d %d ", &sizex_aux, &sizey_aux);
 
@@ -80,7 +91,7 @@ void grafInit()
 
 PIC getImg(Sprite spr)
 {
-	if (spr.img >= NUM_SPR)
+	if (spr.img < 0 || spr.img >= NUM_SPR)
 		throwException("getSprite()", "Índice do Sprite inválido", index_out_of_range_exception);
 	//Retorna a img com rotação mais próxima do ângulo atual
 	return pics[spr.img].imgs[((int)round((pics[spr.img].n_imgs * spr.angle) / (2 * M_PI))) % pics[spr.img].n_imgs];
@@ -88,10 +99,31 @@ PIC getImg(Sprite spr)
 
 MASK getMsk(Sprite spr)
 {
-	if (spr.img >= NUM_SPR)
-		throwException("getSprite()", "Índice do Sprite inválido", index_out_of_range_exception);
+	if (spr.img < 0 || spr.img >= NUM_SPR)
+		throwException("getMsk()", "Índice do Sprite inválido", index_out_of_range_exception);
 	//Retorna a img com rotação mais próxima do ângulo atual
 	return pics[spr.img].msks[((int)round((pics[spr.img].n_imgs * spr.angle) / (2 * M_PI))) % pics[spr.img].n_imgs];
+}
+
+PicMsk getPicMsk(NOME_SPR index)
+{
+	if(index < 0 || index >= NUM_SPR)
+		throwException("getPicMsk()", "Índice de pics inválido", index_out_of_range_exception);
+	return pics[index];
+}
+
+void desenhaPicMskEm(WINDOW *win, int i, PicMsk pm, vet2D p)
+{
+	SetMask(win, pm.msks[i]);
+	PutPic(win, pm.imgs[i], 0, 0, pm.width, pm.height,
+		   ((int)round(p.x)) - (pm.width / 2),
+		   ((int)round(p.y)) - (pm.height / 2));
+	UnSetMask(win);
+}
+
+void desenhaPicMsk(int i, PicMsk pm, vet2D p)
+{
+	desenhaPicMskEm(workbench, i, pm, p);
 }
 
 Sprite getSpriteFromPic(NOME_SPR nome, int i)

@@ -8,38 +8,25 @@
 #include "../base/vetores.h"
 #include "../fisica/fisica.h"
 
+#define MAX_EXPLOSOES 20
+
 //Função que, dada uma posição utilizada pela biblioteca física, converte para
 //uma posição para ser utilizada pela biblioteca gráfica.
 //Por exemplo, o ponto (0,0) da física é (width/2 , height/2) da tela
 //Esta função deve fazer essa conversãoS
 vet2D converteParaPixel(vet2D pos_em_metros);
 
-//Desenha o pleneta p na janela win
-void desenhaPlaneta(Planeta p);
+//Desenha um objeto
+void desenhaObjeto(Objeto o);
 
-//Desenha a nave n na janela win
-void desenhaNave(Nave n);
+//Desenha todos os objetos de um tipo
+void desenhaTodosDoTipo(TipoObj tipo);
 
-//Desenha o projétil p na janela win
-void desenhaProj(Projetil p);
-
-//Desenha todos os planetas na janela win
-void desenhaPlanetas();
-
-//Desenha todos as naves na janela win
-void desenhaNaves();
-
-//Desenha todos os projéteis na janela win
-void desenhaProjs();
-
-//Desenha todos os objetos na janela win
+//Desenha todos os objetos
 void desenhaTodos();
 
-//Desenha uma explosao na posição p
-void desenhaExplosao(vet2D p);
-
-//Desenha um booster na posição p
-void desenhaBooster(vet2D p);
+//Desenha um frame de explosao na posição p
+void desenhaFrameExplosao(int frame, vet2D p);
 
 //Dado um objeto, a função olha sua sprite para definir o raio do objeto
 void defineRaio(Objeto *o);

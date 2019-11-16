@@ -39,14 +39,27 @@ void desenhaTodos()
 
 void desenhaFrameExplosao(int frame, vet2D p)
 {
-    desenhaSprite(getSpriteFromPic(IMG_EXPLOSAO, frame), p);
+    //desenhaSprite(getSpriteFromPic(IMG_EXPLOSAO, frame), p);
+    desenhaPicMsk(frame, getPicMsk(IMG_EXPLOSAO), p);
 }
+
+/* Estou tentando fazer a explosao, favor n mexer
+
+void Explode(vet2D p)
+{
+    explosoes[num_explosoes]
+}
+
+void desenhaExplosoes()
+{
+
+} */
 
 void defineRaio(Objeto *o)
 {
     int diamentro, h, w;
-    h = pics[o->s.img].height;
-    w = pics[o->s.img].width;
+    h = getPicMsk(o->s.img).height;
+    w = getPicMsk(o->s.img).width;
     diamentro = MIN(h, w); /* O cálculo poderia ser de outra forma */ 
     o->r = diamentro / 3.0;
     
