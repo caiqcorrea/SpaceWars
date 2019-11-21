@@ -37,24 +37,6 @@ void desenhaTodos()
         desenhaTodosDoTipo(i);
 }
 
-void desenhaFrameExplosao(int frame, vet2D p)
-{
-    //desenhaSprite(getSpriteFromPic(IMG_EXPLOSAO, frame), p);
-    desenhaPicMsk(frame, getPicMsk(IMG_EXPLOSAO), p);
-}
-
-/* Estou tentando fazer a explosao, favor n mexer
-
-void Explode(vet2D p)
-{
-    explosoes[num_explosoes]
-}
-
-void desenhaExplosoes()
-{
-
-} */
-
 void defineRaio(Objeto *o)
 {
     int diamentro, h, w;

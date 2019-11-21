@@ -126,20 +126,6 @@ void desenhaPicMsk(int i, PicMsk pm, vet2D p)
 	desenhaPicMskEm(workbench, i, pm, p);
 }
 
-Sprite getSpriteFromPic(NOME_SPR nome, int i)
-{
-	Sprite spr;
-
-	if (i > pics[nome].n_imgs)
-		throwException("getImgFromPics",
-					   "O número passado é maior que o número de rotações",
-					   index_out_of_range_exception);
-
-	spr.img = nome;
-	spr.angle = (double)i * (2 * M_PI) / pics[nome].n_imgs;
-	return spr;
-}
-
 void rotateSprite(Sprite *spr, double ang)
 {
 	spr->angle += ang;

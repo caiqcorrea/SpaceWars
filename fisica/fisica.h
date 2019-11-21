@@ -42,7 +42,7 @@
 #define MAX_PROJ 100	//Número máximo de projéteis
 #define MAX_NAVES 2		//Número de naves
 #define MAX_PLANETAS 1  //Número de planetas
-#define MAX_BOOSTERS 10 //Número máximo de boosters
+#define MAX_BOOSTERS 100 //Número máximo de boosters
 
 #define TAM_MAX_NOMES 100 //Tamanho máximo dos nomes das naves
 

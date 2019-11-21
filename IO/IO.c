@@ -152,6 +152,7 @@ void lerBoosters()
 {
 	int indice = 1;
 
+	totalBoostersPreCriados = 0;
 	initLeitor(BOOSTERCFG_PATH);
 
 	//A ideia é que cada iteração do while leia uma linha inteira
@@ -217,6 +218,8 @@ void lerBooster(int index)
 			leVerificaIgualAtribuiDouble(&(novo.proj.cadencia), "cadencia");
 		else if (strigual("dano"))
 			leVerificaIgualAtribuiInt(&(novo.proj.dano), "dano");
+		else if (strigual("proj_spr"))
+			leVerificaIgualAtribuiInt((int *)&(novo.proj.spr.img), "proj_spr");
 		else if (strigual("tempoProj"))
 			leVerificaIgualAtribuiDouble(&(novo.proj.tempoRestante), "tempoProj");
 		else if (strigual("massProj"))

@@ -25,9 +25,6 @@ void desenhaTodosDoTipo(TipoObj tipo);
 //Desenha todos os objetos
 void desenhaTodos();
 
-//Desenha um frame de explosao na posição p
-void desenhaFrameExplosao(int frame, vet2D p);
-
 //Dado um objeto, a função olha sua sprite para definir o raio do objeto
 void defineRaio(Objeto *o);
 

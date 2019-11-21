@@ -45,9 +45,7 @@ typedef enum
 	IMG_BOOSTER_GUBI,	   //16
 	IMG_BOOSTER_CARLINHOS, //17
 	IMG_FUNDO,			   //18
-	NUM_SPR,	//SEMPRE POR ÚLTIMO, ESTE É APENAS O NÚMERO DE ELEMENTOS DO ENUM
-	IMG_LIFEBAR1,		   //20
-	IMG_LIFEBAR2		   //21
+	NUM_SPR	//SEMPRE POR ÚLTIMO, ESTE É APENAS O NÚMERO DE ELEMENTOS DO ENUM
 } NOME_SPR;
 
 //Estrutura que contém um array de PICs e MASKs associadas, junto com o número de elementos do array
@@ -105,10 +103,6 @@ void desenhaPicMskEm(WINDOW *win, int i, PicMsk pm, vet2D p);
 
 //Chama desenhaPisMskEm no workbench
 void desenhaPicMsk(int i, PicMsk pm, vet2D p);
-
-//Dados dois indices, retorna um sprite com a img e o angulo certo para que
-//getImg e getMsk retornem pics[spr].imgs[i] e pics[spr].msks[i], respectivamente
-Sprite getSpriteFromPic(NOME_SPR spr, int i);
 
 //Dada uma sprite e um ângulo ang, incrementa o ângulo da imagem em ang
 void rotateSprite(Sprite *spr, double ang);
