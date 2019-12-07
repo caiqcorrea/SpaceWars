@@ -89,6 +89,11 @@ void grafInit()
 	picsInit(workbench);
 }
 
+void desenhaMsg(vet2D p, char* msg)
+{
+	WPrint(workbench, (int)round(p.x), (int)round(p.y), msg);
+}
+
 PIC getImg(Sprite spr)
 {
 	if (spr.img < 0 || spr.img >= NUM_SPR)
@@ -203,8 +208,8 @@ void grafFree()
 		freeSafe(pics[i].imgs); //Free na pic em si
 	}
 
-	FreePic(showingWindow);
 	FreePic(workbench);
+	FreePic(showingWindow);
 }
 
 WINDOW *mainWindow()

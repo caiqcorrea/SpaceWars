@@ -120,22 +120,20 @@ int main(int argc, char *argv[])
     //Mais para frente, será feita uma função de inicialização
     //para que se configure as principais variáveis no início do código
 
-    lerBoosters();
-
     if (debug_mode)
         testeFisicaBasica(pause_mode, usleep_timer);
     else
         jogoJogo(pause_mode, usleep_timer);
 
     printf("Fim\n");
-    freeAll();
+
     return 0;
 }
 
 Bool AtualizaJogo()
 {
     int i;
-    Bool todasNavesVivas;
+    int nave_que_morreu = -1;
 
     //Primeiro atualizamos a posição e velocidade de todos os objetos
     AtualizaObjetos();
@@ -153,10 +151,10 @@ Bool AtualizaJogo()
     AtualizaCooldown();
 
     ChecaTodasColisoes();
-    todasNavesVivas = TodasEstaoVivas();
+    nave_que_morreu = TodasEstaoVivas();
 
     //E a simulação continua enquanto o tempo for positivo e não há naves mortas
-    return (todasNavesVivas);
+    return (nave_que_morreu);
 }
 
 void leFisica()
@@ -181,13 +179,16 @@ void testeFisicaBasica(Bool pause_teste, int usleep_timer)
 {
     double tempo = 0;
 
-    grafInit();
+    lerBoosters();
 
-    leFisica();    //Lemos os parâmetros da fisica
+    grafInit();
+    initKeybord(mainWindow());
+    leFisica();
+
     imprimeTudo(); //Jogamos tudo o que foi lido na tela
 
     //Enquanto a simulação não terminar...
-    while (AtualizaJogo() == TRUE)
+    while (AtualizaJogo() == -1)
     {
         giraObjetoVelTipo(NAVE);
         giraObjetoVelTipo(PROJETIL);
@@ -216,41 +217,85 @@ void testeFisicaBasica(Bool pause_teste, int usleep_timer)
 
 void jogoJogo(Bool pause_mode, int usleep_timer)
 {
+    int mode = -1;
+    int pontos[tot_obj[NAVE]];
+    int i;
+
     grafInit();
-    leFisica();
     initKeybord(mainWindow());
 
-    while (AtualizaJogo() == TRUE)
+    for (i = 0; i < tot_obj[NAVE]; i++)
+        pontos[i] = 0;
+
+    while (mode == -1)
     {
-        atualizaKeybord(mainWindow());
 
-        if (isPressed(NAVE1_HOR))
-            Rotaciona(&naves[0], TRUE);
-        if (isPressed(NAVE1_ANT))
-            Rotaciona(&naves[0], FALSE);
-        if (isPressed(NAVE1_ACE))
-            Acelera(&naves[0]);
-        if (isPressed(NAVE1_DIS))
-            Atira(&naves[0]);
+        lerBoosters();
+        leFisica();
 
-        if (isPressed(NAVE2_HOR))
-            Rotaciona(&naves[1], TRUE);
-        if (isPressed(NAVE2_ANT))
-            Rotaciona(&naves[1], FALSE);
-        if (isPressed(NAVE2_ACE))
-            Acelera(&naves[1]);
-        if (isPressed(NAVE2_DIS))
-            Atira(&naves[1]);
+        while ((mode = AtualizaJogo()) == -1)
+        {
+            atualizaKeybord(mainWindow());
 
-        giraObjetoVelTipo(PROJETIL);
+            if (isPressed(NAVE1_HOR))
+                Rotaciona(&naves[0], TRUE);
+            if (isPressed(NAVE1_ANT))
+                Rotaciona(&naves[0], FALSE);
+            if (isPressed(NAVE1_ACE))
+                Acelera(&naves[0]);
+            if (isPressed(NAVE1_DIS))
+                Atira(&naves[0]);
 
-        desenhaFundoWorkbench();
-        desenhaTodos();
-        workbenchFlush();
-        usleep(usleep_timer);
+            if (isPressed(NAVE2_HOR))
+                Rotaciona(&naves[1], TRUE);
+            if (isPressed(NAVE2_ANT))
+                Rotaciona(&naves[1], FALSE);
+            if (isPressed(NAVE2_ACE))
+                Acelera(&naves[1]);
+            if (isPressed(NAVE2_DIS))
+                Atira(&naves[1]);
 
-        if (pause_mode)
-            pause_aux();
+            giraObjetoVelTipo(PROJETIL);
+
+            desenhaFundoWorkbench();
+            desenhaTodos();
+            workbenchFlush();
+            usleep(usleep_timer);
+
+            if (pause_mode)
+                pause_aux();
+        }
+
+        pontos[mode]++;
+
+        printf("\nPlacar:\n| ");
+        for (i = 0; i < tot_obj[NAVE]; i++)
+            printf("%s %d | ", naves[i].nome, pontos[i]);
+
+        usleep(20000);
+        while (getchar() != '\n');
+        printf("\n\nDeseja jogar outra rodada? (Y - sim/N - não)");
+
+        switch (getchar())
+        {
+        case 'Y':
+        case 'y':
+            mode = -1;
+            break;
+
+        case 'N':
+        case 'n':
+            break;
+
+        default:
+            printf("\nOpção desconhecida. Supondo \'Y\'\n");
+            mode = -1;
+            break;
+        }
+
+        freeFisica();
+
+        while (getchar() != '\n');
     }
 }
 

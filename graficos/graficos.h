@@ -89,6 +89,9 @@ void picsInit(WINDOW *win);
 //Inicializa os pics e as janelas corretamente
 void grafInit();
 
+//Desenha uma msg na posicao p
+void desenhaMsg(vet2D p, char* msg);
+
 //Dada uma sprite, retorna a imamgem atual da sprite de acordo com o ângulo atual dela
 PIC getImg(Sprite spr);
 

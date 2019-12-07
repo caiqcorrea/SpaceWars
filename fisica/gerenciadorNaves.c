@@ -50,8 +50,8 @@ Bool TodasEstaoVivas()
 	int i;
 	for (i = 0; i < tot_obj[NAVE]; i++)
 		if (!EstaViva(naves[i]))
-			return FALSE;
-	return TRUE;
+			return i;
+	return -1;
 }
 
 void Destroi(Nave *n)
