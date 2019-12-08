@@ -8,16 +8,19 @@
 #include <math.h>
 
 static vet2D pos_booster_HUD[] =
-{
-    {31, 87},
-    {SIZE_X_WIN - 31, SIZE_Y_WIN - 87}
-};
+    {
+        {31, 87},
+        {SIZE_X_WIN - 31, SIZE_Y_WIN - 87}};
 
 static vet2D pos_nave_HUD[] =
-{
-    {31, 23},
-    {SIZE_X_WIN - 25, SIZE_Y_WIN - 23}
-};
+    {
+        {31, 23},
+        {SIZE_X_WIN - 25, SIZE_Y_WIN - 23}};
+
+static vet2D pos_life_HUD[] =
+    {
+        {78, 10},
+        {SIZE_X_WIN - 78, SIZE_Y_WIN - 10}};
 
 vet2D converteParaPixel(vet2D pos_em_metros)
 {
@@ -54,9 +57,9 @@ void defineRaio(Objeto *o)
     int diamentro, h, w;
     h = getPicMsk(o->s.img).height;
     w = getPicMsk(o->s.img).width;
-    diamentro = MIN(h, w); /* O cálculo poderia ser de outra forma */ 
+    diamentro = MIN(h, w); /* O cálculo poderia ser de outra forma */
     o->r = diamentro / 3.0;
-    
+
     /* O raio ainda está em pixels, devemos passar para a unidade da física */
     o->r *= SIZE_X_FIS / SIZE_X_WIN;
 }
@@ -69,25 +72,30 @@ void defineRaios()
      *  mais tipos de objeto.
      */
 
-    for(i = 0; i < NUM_TIPO_OBJ; i++)
-        for(j = 0; j < tot_obj[i]; j++)
-           defineRaio(GetObjeto(i, j));
+    for (i = 0; i < NUM_TIPO_OBJ; i++)
+        for (j = 0; j < tot_obj[i]; j++)
+            defineRaio(GetObjeto(i, j));
 }
 
 void desenhaLifebars()
 {
     int life, i;
-    for(i=0 ; i<tot_obj[NAVE] ; i++)
+    vet2D p;
+    for (i = 0; i < tot_obj[NAVE]; i++)
     {
-        for(life = naves[i].HP; life>0 ; life--)
-            WFillRect(workbench_func(), 67 + 24*(life-1), 3, 22, 14, WNamedColor("white"));
+        p.y = pos_life_HUD[i].y;
+        for (life = naves[i].HP + naves[i].boosterAtual.vidaAdicional; life > 0; life--)
+        {
+            p.x = pos_life_HUD[i].x + (i ? -1 : 1) * 24 * (life - 1);
+            desenhaPicMsk(0, pics[IMG_BAR_AZUL + i], p);
+        }
     }
 }
 
 void desenhaBoosterHUD()
 {
     int i;
-    for(i=0 ; i<tot_obj[NAVE] ; i++)
+    for (i = 0; i < tot_obj[NAVE]; i++)
     {
         naves[i].boosterAtual.pos = pos_booster_HUD[i];
         desenhaSprite(naves[i].boosterAtual.spr, naves[i].boosterAtual.pos);
