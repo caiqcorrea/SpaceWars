@@ -259,6 +259,9 @@ void jogoJogo(Bool pause_mode, int usleep_timer)
 
             desenhaFundoWorkbench();
             desenhaTodos();
+            //desenhaLifebars();
+            desenhaHUD();
+            desenhaBoosterHUD();
             workbenchFlush();
             usleep(usleep_timer);
 

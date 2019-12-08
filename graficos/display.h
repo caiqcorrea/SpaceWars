@@ -31,4 +31,10 @@ void defineRaio(Objeto *o);
 //Define todos os raios de todos os objetos
 void defineRaios();
 
+//Desenha as lifebars
+void desenhaLifebars();
+
+//Desenha os booster na HUD
+void desenhaBoosterHUD();
+
 #endif

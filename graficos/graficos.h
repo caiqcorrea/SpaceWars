@@ -45,6 +45,9 @@ typedef enum
 	IMG_BOOSTER_GUBI,	   //16
 	IMG_BOOSTER_CARLINHOS, //17
 	IMG_FUNDO,			   //18
+	IMG_NADA = 19,
+	IMG_ESCUDO = 23,
+	IMG_HUD = 24,
 	NUM_SPR	//SEMPRE POR ÚLTIMO, ESTE É APENAS O NÚMERO DE ELEMENTOS DO ENUM
 } NOME_SPR;
 
@@ -64,6 +67,8 @@ typedef struct
 	NOME_SPR img; //Array de rotação uniforme da imagem
 	double angle; //Ângulo atual da sprite
 } Sprite;
+
+extern PicMsk pics[NUM_SPR];
 
 /* ---- FUNÇÕES ---- */
 
@@ -140,5 +145,9 @@ void grafFree();
 
 //Retorna a janela principal
 WINDOW *mainWindow();
+
+WINDOW *workbench_func();
+
+void desenhaHUD();
 
 #endif

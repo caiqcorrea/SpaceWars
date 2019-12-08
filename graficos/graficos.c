@@ -25,7 +25,7 @@ static WINDOW *showingWindow;
 //Cada índice possui um struct Pics, que é uma struct com uma imagem e todas suas rotações.
 //Além disso, essa estrutura possui, para auxílio, o número de rotações e
 //o comprimento e altura da imagem
-static PicMsk pics[NUM_SPR];
+PicMsk pics[NUM_SPR];
 
 void winsInit()
 {
@@ -215,4 +215,17 @@ void grafFree()
 WINDOW *mainWindow()
 {
 	return showingWindow;
+}
+
+WINDOW *workbench_func()
+{
+	return workbench;
+}
+
+void desenhaHUD()
+{
+	vet2D p;
+	p.x = SIZE_X_WIN/2;
+	p.y = SIZE_Y_WIN/2;
+    desenhaPicMsk(0, pics[IMG_HUD], p);
 }

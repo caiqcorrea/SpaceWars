@@ -7,6 +7,18 @@
 
 #include <math.h>
 
+static vet2D pos_booster_HUD[] =
+{
+    {31, 87},
+    {SIZE_X_WIN - 31, SIZE_Y_WIN - 87}
+};
+
+static vet2D pos_nave_HUD[] =
+{
+    {31, 23},
+    {SIZE_X_WIN - 25, SIZE_Y_WIN - 23}
+};
+
 vet2D converteParaPixel(vet2D pos_em_metros)
 {
     mat2D E = {{((double)SIZE_X_WIN) / SIZE_X_FIS, 0}, {0, ((double)SIZE_Y_WIN) / SIZE_Y_FIS}};
@@ -60,4 +72,25 @@ void defineRaios()
     for(i = 0; i < NUM_TIPO_OBJ; i++)
         for(j = 0; j < tot_obj[i]; j++)
            defineRaio(GetObjeto(i, j));
+}
+
+void desenhaLifebars()
+{
+    int life, i;
+    for(i=0 ; i<tot_obj[NAVE] ; i++)
+    {
+        for(life = naves[i].HP; life>0 ; life--)
+            WFillRect(workbench_func(), 67 + 24*(life-1), 3, 22, 14, WNamedColor("white"));
+    }
+}
+
+void desenhaBoosterHUD()
+{
+    int i;
+    for(i=0 ; i<tot_obj[NAVE] ; i++)
+    {
+        naves[i].boosterAtual.pos = pos_booster_HUD[i];
+        desenhaSprite(naves[i].boosterAtual.spr, naves[i].boosterAtual.pos);
+        desenhaSprite(naves[i].spr, pos_nave_HUD[i]);
+    }
 }
